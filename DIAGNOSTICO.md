@@ -7,9 +7,9 @@ La URL del blog no carga correctamente en el servidor.
 
 ### 1. **Case Sensitivity (Más Probable)**
 - **Problema:** Los servidores Linux distinguen entre mayúsculas y minúsculas
-- **Carpeta local:** `Blog/` (con B mayúscula)
+- **Carpeta local:** `blog/` (con B mayúscula)
 - **URL intentada:** Puede ser `/blog/` (con b minúscula)
-- **Solución:** Usar la URL exacta `/Blog/` o configurar redirecciones
+- **Solución:** Usar la URL exacta `/blog/` o configurar redirecciones
 
 ### 2. **Permisos de Archivos**
 - **Problema:** Los archivos/carpetas pueden no tener permisos correctos
@@ -17,7 +17,7 @@ La URL del blog no carga correctamente en el servidor.
 
 ### 3. **Archivo Index Faltante**
 - **Problema:** El servidor no encuentra `index.html` en la carpeta Blog
-- **Solución:** Verificar que existe `Blog/index.html`
+- **Solución:** Verificar que existe `blog/index.html`
 
 ## ✅ Soluciones Implementadas
 
@@ -32,7 +32,7 @@ Se creó `.htaccess` con:
 ```
 obs360/
 ├── index.html (principal)
-├── Blog/
+├── blog/
 │   ├── index.html ✅
 │   ├── amazon-cpc-analysis.html ✅
 │   ├── cristal-up-agosto-2025.html ✅
@@ -53,8 +53,8 @@ Prueba estas URLs en orden:
 
 2. **URL del Blog (con mayúscula):**
    ```
-   https://obs360.com/Blog/
-   https://obs360.com/Blog/index.html
+   https://obs360.com/blog/
+   https://obs360.com/blog/index.html
    ```
 
 3. **URL del Blog (con minúscula - debe redirigir):**
@@ -71,9 +71,9 @@ Prueba estas URLs en orden:
 
 5. **Artículos individuales:**
    ```
-   https://obs360.com/Blog/amazon-cpc-analysis.html
-   https://obs360.com/Blog/cristal-up-agosto-2025.html
-   https://obs360.com/Blog/vajillas-corona-higiene.html
+   https://obs360.com/blog/amazon-cpc-analysis.html
+   https://obs360.com/blog/cristal-up-agosto-2025.html
+   https://obs360.com/blog/vajillas-corona-higiene.html
    ```
 
 ## 🔧 Comandos para Verificar en cPanel
@@ -84,11 +84,11 @@ Prueba estas URLs en orden:
 ls -la /home/usuario/public_html/
 
 # Verificar que existe la carpeta Blog
-ls -la /home/usuario/public_html/Blog/
+ls -la /home/usuario/public_html/blog/
 
 # Corregir permisos si es necesario
 chmod 755 /home/usuario/public_html/Blog
-chmod 644 /home/usuario/public_html/Blog/*.html
+chmod 644 /home/usuario/public_html/blog/*.html
 ```
 
 ### Opción 2: File Manager en cPanel
@@ -105,15 +105,15 @@ chmod 644 /home/usuario/public_html/Blog/*.html
 **Causa:** La carpeta o archivo no existe
 **Solución:**
 1. Verificar que la carpeta se llama exactamente `Blog` (con B mayúscula)
-2. Verificar que existe `Blog/index.html`
-3. Usar la URL exacta: `https://obs360.com/Blog/`
+2. Verificar que existe `blog/index.html`
+3. Usar la URL exacta: `https://obs360.com/blog/`
 
 ### Error 403 - Forbidden
 **Causa:** Permisos incorrectos
 **Solución:**
 ```bash
-chmod 755 Blog/
-chmod 644 Blog/*.html
+chmod 755 blog/
+chmod 644 blog/*.html
 ```
 
 ### Error 500 - Internal Server Error
@@ -126,10 +126,10 @@ chmod 644 Blog/*.html
 ## 📝 Checklist de Verificación
 
 - [ ] La carpeta se llama `Blog` (con B mayúscula)
-- [ ] Existe el archivo `Blog/index.html`
+- [ ] Existe el archivo `blog/index.html`
 - [ ] Los permisos son correctos (755 para carpetas, 644 para archivos)
 - [ ] El archivo `.htaccess` está en `public_html/`
-- [ ] Se probó con la URL exacta: `https://obs360.com/Blog/`
+- [ ] Se probó con la URL exacta: `https://obs360.com/blog/`
 - [ ] Se limpió el cache del navegador (Ctrl+Shift+R)
 
 ## 🔗 Enlaces de Referencia
@@ -140,7 +140,7 @@ chmod 644 Blog/*.html
 
 ## 💡 Próximos Pasos
 
-1. **Verificar URL exacta:** Usa `https://obs360.com/Blog/` (con B mayúscula)
+1. **Verificar URL exacta:** Usa `https://obs360.com/blog/` (con B mayúscula)
 2. **Revisar permisos:** En cPanel File Manager
 3. **Limpiar cache:** Del navegador y del servidor (si aplica)
 4. **Probar sin .htaccess:** Renombrar temporalmente si hay problemas

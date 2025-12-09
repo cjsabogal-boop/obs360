@@ -32,7 +32,7 @@ Mejora:  ~50% más rápido ⚡
 
 #### Correcciones Aplicadas:
 
-**Blog Index (`Blog/index.html`):**
+**Blog Index (`blog/index.html`):**
 - ✅ Texto hero: `rgba(255,255,255,0.85)` → `#ffffff` + text-shadow
 - ✅ Badge privado: Fondo más opaco + text-shadow para mejor legibilidad
 - ✅ Títulos de artículos: `#1f2937` → `#111827` (más oscuro)
@@ -96,11 +96,11 @@ Contraseña: OBS2025Blog!
 ## 📁 Estructura de Archivos Creados
 
 ```
-Obs 2025 - Blog/
+Obs 2025 - blog/
 ├── admin/
 │   ├── index.html          ← CMS Principal
 │   └── README.md           ← Documentación del CMS
-├── Blog/
+├── blog/
 │   ├── index.html          ← Índice del blog (mejorado)
 │   ├── amazon-cpc-analysis.html (optimizado)
 │   ├── cristal-up-agosto-2025.html (optimizado)

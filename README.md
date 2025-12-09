@@ -5,7 +5,7 @@ Blog privado de OBS360 con sistema de administración de contenido (CMS) para ge
 ## 🌐 Sitio Web
 
 **URL Principal:** [https://obs360.com](https://obs360.com)  
-**Blog:** [https://obs360.com/Blog/](https://obs360.com/Blog/)  
+**Blog:** [https://obs360.com/blog/](https://obs360.com/blog/)  
 **CMS Admin:** [https://obs360.com/admin/](https://obs360.com/admin/)
 
 ## 🔐 Acceso al CMS
@@ -42,7 +42,7 @@ Blog privado de OBS360 con sistema de administración de contenido (CMS) para ge
 ```
 obs360/
 ├── index.html              # Página principal OBS360
-├── Blog/
+├── blog/
 │   ├── index.html          # Índice del blog
 │   ├── amazon-cpc-analysis.html
 │   ├── cristal-up-agosto-2025.html

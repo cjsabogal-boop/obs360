@@ -2,9 +2,9 @@
 RewriteEngine On
 RewriteBase /
 
-# Redirigir /blog a /Blog (case-insensitive)
-RewriteCond %{REQUEST_URI} ^/blog(/.*)?$ [NC]
-RewriteRule ^blog(/.*)?$ /Blog$1 [R=301,L]
+# Redirigir /Blog a /blog (mantener compatibilidad)
+RewriteCond %{REQUEST_URI} ^/Blog(/.*)?$ [NC]
+RewriteRule ^Blog(/.*)?$ /blog$1 [R=301,L]
 
 # Habilitar compresión GZIP
 <IfModule mod_deflate.c>
