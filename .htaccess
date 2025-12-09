@@ -16,7 +16,7 @@ RewriteBase /
 <IfModule mod_expires.c>
     ExpiresActive On
     
-    # Imágenes
+    # Imágenes - Cache largo
     ExpiresByType image/webp "access plus 1 year"
     ExpiresByType image/jpeg "access plus 1 year"
     ExpiresByType image/jpg "access plus 1 year"
@@ -24,19 +24,48 @@ RewriteBase /
     ExpiresByType image/gif "access plus 1 year"
     ExpiresByType image/svg+xml "access plus 1 year"
     
-    # CSS y JavaScript
+    # CSS y JavaScript - Cache medio
     ExpiresByType text/css "access plus 1 month"
     ExpiresByType application/javascript "access plus 1 month"
     ExpiresByType text/javascript "access plus 1 month"
     
-    # Fuentes
+    # Fuentes - Cache largo
     ExpiresByType font/woff "access plus 1 year"
     ExpiresByType font/woff2 "access plus 1 year"
     ExpiresByType application/font-woff "access plus 1 year"
     ExpiresByType application/font-woff2 "access plus 1 year"
     
-    # HTML
+    # HTML - Sin cache (siempre actualizado)
     ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+# Headers de Cache Control
+<IfModule mod_headers.c>
+    # HTML - No cache
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires 0
+    </FilesMatch>
+    
+    # CSS y JS - Cache con revalidación
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "public, max-age=2592000, must-revalidate"
+    </FilesMatch>
+    
+    # Imágenes - Cache largo
+    <FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    
+    # Fuentes - Cache largo
+    <FilesMatch "\.(woff|woff2|ttf|otf|eot)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    
+    # ETag para validación
+    Header unset ETag
+    FileETag None
 </IfModule>
 
 # Seguridad - Ocultar archivos que empiezan con punto
