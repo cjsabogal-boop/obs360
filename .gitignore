@@ -14,9 +14,16 @@ Thumbs.db
 *.swo
 *~
 
-# Node modules (si usas Node.js en el futuro)
+# Node modules y archivos de Node.js
 node_modules/
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+.pnpm-debug.log*
+
+# Variables de entorno (mantener .env.example)
+server/.env
 
 # Archivos temporales
 *.tmp
