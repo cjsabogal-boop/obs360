@@ -1,10 +1,11 @@
-# Redirigir URLs con mayúsculas a minúsculas para compatibilidad
+# Configuración Apache para OBS360
 RewriteEngine On
 RewriteBase /
 
-# Redirigir /Blog a /blog (mantener compatibilidad)
-RewriteCond %{REQUEST_URI} ^/Blog(/.*)?$ [NC]
-RewriteRule ^Blog(/.*)?$ /blog$1 [R=301,L]
+# NO redirigir, la carpeta ya está en minúsculas
+# (Comentado para evitar loops)
+# RewriteCond %{REQUEST_URI} ^/Blog(/.*)?$ [NC]
+# RewriteRule ^Blog(/.*)?$ /blog$1 [R=301,L]
 
 # Habilitar compresión GZIP
 <IfModule mod_deflate.c>
@@ -44,27 +45,18 @@ RewriteRule ^Blog(/.*)?$ /blog$1 [R=301,L]
     Deny from all
 </FilesMatch>
 
+# Permitir .well-known para SSL
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_URI} !^/\.well-known/
+    RewriteRule ^\.well-known/ - [L]
+</IfModule>
+
 # Prevenir acceso a archivos sensibles
-<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|sql|md)$">
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|sql)$">
     Order allow,deny
     Deny from all
 </FilesMatch>
 
-# Permitir acceso a README.md y MEJORAS.md (opcional, comentar si no quieres que sean públicos)
-<FilesMatch "^(README|MEJORAS)\.md$">
-    Order allow,deny
-    Allow from all
-</FilesMatch>
-
-# Habilitar páginas de error personalizadas (opcional)
-# ErrorDocument 404 /404.html
-# ErrorDocument 500 /500.html
-
-# Forzar HTTPS (descomenta si tienes SSL instalado)
-# RewriteCond %{HTTPS} off
-# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-
-# Prevenir hotlinking de imágenes (opcional)
-# RewriteCond %{HTTP_REFERER} !^$
-# RewriteCond %{HTTP_REFERER} !^https?://(www\.)?obs360\.com [NC]
-# RewriteRule \.(jpg|jpeg|png|gif|webp)$ - [F,L]
+# DirectoryIndex - Asegurar que index.html se cargue
+DirectoryIndex index.html index.php
