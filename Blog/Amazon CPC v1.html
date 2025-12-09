@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>In-Depth Analysis of the Amazon Ads CPC Environment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: A thematic, single-page dashboard designed for progressive learning. It starts with a high-level "Overview" defining core concepts. Users then flow into "CPC Drivers," an interactive section to explore *why* costs fluctuate. Next, the "Strategic Levers" section provides actionable advice on *how* to manage these costs. It concludes with "Market Trends" to look at the future. This structure was chosen to guide a user from foundational knowledge to strategic application, making a complex topic digestible and empowering. Navigation is handled by a sticky header for easy access to each thematic block. -->
+    <!-- Visualization & Content Choices: 
+        - Key Metrics (Inform): Interactive cards with hover effects to reveal definitions, keeping the UI clean. Method: HTML/CSS.
+        - Ad Auction Process (Organize): A simple, clear flowchart. Method: Styled HTML/Tailwind, avoiding complex libraries for a straightforward concept.
+        - CPC Drivers Chart (Compare/Relationships): An interactive horizontal bar chart. Goal: Show the relative impact of different factors. Interaction: Clicking a bar updates a text panel with a detailed explanation. This turns the chart into a navigation element for the section's content. Library: Chart.js (Canvas).
+        - Strategic Levers (Organize/Inform): A grid of accordion-style cards. Goal: Present actionable strategies cleanly. Interaction: Clicking a card expands it to show details. Method: HTML/Tailwind with Vanilla JS for toggling.
+        - CPC Trend Chart (Change): A line chart showing historical CPC trends. Goal: Illustrate market maturation and increasing costs. Interaction: Standard tooltips on hover. Library: Chart.js (Canvas).
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4;
+            color: #374151;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #0d9488;
+            border-bottom-color: #0d9488;
+        }
+        .strategy-card {
+            transition: all 0.3s ease-in-out;
+            border: 1px solid #E5E7EB;
+        }
+        .strategy-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border-color: #0d9488;
+        }
+        .details-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .details-content.open {
+            max-height: 500px;
+        }
+        .driver-text-panel {
+            min-height: 250px;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header id="header" class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-teal-700">Amazon Ads CPC Analysis</h1>
+                </div>
+                <nav class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#overview" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-600">Overview</a>
+                        <a href="#drivers" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-600">CPC Drivers</a>
+                        <a href="#strategies" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-600">Strategic Levers</a>
+                        <a href="#trends" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-600">Market Trends</a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <section id="overview" class="scroll-mt-20 mb-16">
+            <h2 class="text-3xl font-bold tracking-tight text-gray-800 text-center">Understanding the Amazon CPC Ecosystem</h2>
+            <p class="mt-4 max-w-3xl mx-auto text-center text-lg text-gray-600">This dashboard provides a comprehensive look into the Cost-Per-Click (CPC) environment for Amazon advertising. We will explore what CPC is, how the ad auction works, and the core metrics that define success on the platform. This foundational knowledge is essential for building effective and profitable campaigns.</p>
+            
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                    <h3 class="font-semibold text-teal-700">CPC (Cost-Per-Click)</h3>
+                    <p class="text-gray-600 mt-2 text-sm">The exact amount an advertiser pays each time a shopper clicks on their ad. It's the primary cost model for most Amazon ads.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                    <h3 class="font-semibold text-teal-700">ACoS (Advertising Cost of Sale)</h3>
+                    <p class="text-gray-600 mt-2 text-sm">The percentage of attributed sales spent on advertising. Calculated as (Ad Spend ÷ Ad Sales). A key measure of campaign profitability.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                    <h3 class="font-semibold text-teal-700">CTR (Click-Through Rate)</h3>
+                    <p class="text-gray-600 mt-2 text-sm">The percentage of shoppers who click an ad after seeing it. Calculated as (Clicks ÷ Impressions). It indicates ad relevance.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                    <h3 class="font-semibold text-teal-700">RoAS (Return on Ad Spend)</h3>
+                    <p class="text-gray-600 mt-2 text-sm">Measures the gross revenue generated for every dollar spent on advertising. Calculated as (Ad Sales ÷ Ad Spend). The inverse of ACoS.</p>
+                </div>
+            </div>
+
+            <div class="mt-12 bg-white p-8 rounded-lg shadow-lg">
+                <h3 class="text-2xl font-semibold text-center text-gray-800">The Amazon Ad Auction Explained</h3>
+                <p class="mt-2 text-center text-gray-600 max-w-2xl mx-auto">Amazon uses a second-price auction system. You don't pay your maximum bid; you pay just $0.01 more than the next highest bidder. Winning the auction depends on both your bid and your ad's relevance.</p>
+                <div class="mt-8 flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">
+                    <div class="text-center p-4 bg-teal-50 rounded-lg border border-teal-200">
+                        <div class="text-lg font-semibold">Your Bid</div>
+                        <div class="text-sm text-gray-600">The maximum you're willing to pay per click.</div>
+                    </div>
+                    <div class="font-bold text-2xl text-teal-600">×</div>
+                    <div class="text-center p-4 bg-teal-50 rounded-lg border border-teal-200">
+                        <div class="text-lg font-semibold">Relevance Score</div>
+                        <div class="text-sm text-gray-600">Based on CTR, conversion rate, and listing quality.</div>
+                    </div>
+                    <div class="font-bold text-2xl text-teal-600">=</div>
+                     <div class="text-center p-4 bg-green-50 rounded-lg border border-green-300">
+                        <div class="text-lg font-semibold">Ad Rank</div>
+                        <div class="text-sm text-gray-600">Determines your ad's position. Higher rank wins.</div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <section id="drivers" class="scroll-mt-20 mb-16">
+            <h2 class="text-3xl font-bold tracking-tight text-gray-800 text-center">What Makes CPC Change? Key Drivers</h2>
+            <p class="mt-4 max-w-3xl mx-auto text-center text-lg text-gray-600">Cost-Per-Click is not a static number; it's a dynamic value influenced by numerous factors in the marketplace. Understanding these drivers is the first step to managing your ad spend effectively. Interact with the chart below to explore the primary forces that impact your ad costs.</p>
+
+            <div class="mt-12 flex flex-col lg:flex-row gap-8 items-center">
+                <div class="w-full lg:w-1/2">
+                    <div class="chart-container">
+                        <canvas id="cpcDriversChart"></canvas>
+                    </div>
+                </div>
+                <div class="w-full lg:w-1/2 bg-white p-6 rounded-lg shadow-md border border-gray-200 driver-text-panel">
+                    <h3 id="driver-title" class="text-xl font-bold text-teal-700">Select a Driver</h3>
+                    <p id="driver-description" class="mt-2 text-gray-600">Click on a bar in the chart to the left to see a detailed explanation of how that factor influences Amazon CPC. This will help you understand the context behind cost fluctuations in your campaigns.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="strategies" class="scroll-mt-20 mb-16">
+            <h2 class="text-3xl font-bold tracking-tight text-gray-800 text-center">Strategic Levers to Manage CPC</h2>
+            <p class="mt-4 max-w-3xl mx-auto text-center text-lg text-gray-600">While market forces affect CPC, advertisers have significant control. By employing smart strategies, you can improve efficiency, lower your ACoS, and increase profitability. Explore these key levers to optimize your campaign performance. Click on each card for more details.</p>
+
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="strategy-card bg-white rounded-lg shadow-sm cursor-pointer" data-target="details-1">
+                    <div class="p-6">
+                        <h3 class="font-semibold text-lg text-gray-800">🎯 Keyword Optimization</h3>
+                        <p class="text-gray-600 mt-2 text-sm">Refine your targeting to reach the most relevant shoppers.</p>
+                    </div>
+                    <div id="details-1" class="details-content bg-gray-50 px-6">
+                        <p class="py-4 text-sm text-gray-700"><strong>Negative Keywords:</strong> Add irrelevant search terms as negative keywords to prevent wasted ad spend on unqualified clicks. <br><br> <strong>Match Types:</strong> Use a mix of broad, phrase, and exact match keywords. Funnel converting search terms from broad campaigns into more controlled exact match campaigns for better efficiency. <br><br> <strong>Long-Tail Keywords:</strong> Target longer, more specific keywords. They often have lower competition (and lower CPCs) and higher conversion rates.</p>
+                    </div>
+                </div>
+
+                <div class="strategy-card bg-white rounded-lg shadow-sm cursor-pointer" data-target="details-2">
+                    <div class="p-6">
+                        <h3 class="font-semibold text-lg text-gray-800">💰 Bidding Strategy</h3>
+                        <p class="text-gray-600 mt-2 text-sm">Adjust how you bid to match your campaign goals.</p>
+                    </div>
+                     <div id="details-2" class="details-content bg-gray-50 px-6">
+                        <p class="py-4 text-sm text-gray-700"><strong>Dynamic Bids - Down Only:</strong> Amazon will lower your bids in real-time for clicks that seem less likely to convert. This is the safest option for controlling costs.<br><br><strong>Dynamic Bids - Up and Down:</strong> Amazon can increase your bid (by up to 100%) for placements at the top of the first page of search results and decrease it for all other placements. Use this to maximize visibility.<br><br><strong>Fixed Bids:</strong> Amazon will use your exact bid without making adjustments. Use this when you have strong data and want maximum control over your bids.</p>
+                    </div>
+                </div>
+
+                <div class="strategy-card bg-white rounded-lg shadow-sm cursor-pointer" data-target="details-3">
+                    <div class="p-6">
+                        <h3 class="font-semibold text-lg text-gray-800">🛒 Listing Optimization (CRO)</h3>
+                        <p class="text-gray-600 mt-2 text-sm">Improve your conversion rate to boost ad relevance.</p>
+                    </div>
+                    <div id="details-3" class="details-content bg-gray-50 px-6">
+                        <p class="py-4 text-sm text-gray-700">A higher conversion rate signals to Amazon that your product is a good match for a search query, which improves your ad's relevance score and can lead to lower CPCs and better placements.<br><br><strong>Key Areas:</strong><br>- High-quality images and video.<br>- Compelling, benefit-driven titles and bullet points.<br>- A+ Content to tell your brand story.<br>- Positive reviews and high star rating.</p>
+                    </div>
+                </div>
+                 <div class="strategy-card bg-white rounded-lg shadow-sm cursor-pointer" data-target="details-4">
+                    <div class="p-6">
+                        <h3 class="font-semibold text-lg text-gray-800">📊 Campaign Structure</h3>
+                        <p class="text-gray-600 mt-2 text-sm">Organize campaigns for granular control and clear data.</p>
+                    </div>
+                    <div id="details-4" class="details-content bg-gray-50 px-6">
+                        <p class="py-4 text-sm text-gray-700">Avoid lumping all your products and keywords into one campaign. A granular structure allows for better budget control and performance analysis.<br><br><strong>Best Practices:</strong><br>- Separate campaigns by product category or brand.<br>- Isolate top-performing keywords in their own campaigns (often called "Performance" or "Exact" campaigns).<br>- Use "Discovery" or "Auto" campaigns to find new, effective keywords that you can then move to manual campaigns.</p>
+                    </div>
+                </div>
+                 <div class="strategy-card bg-white rounded-lg shadow-sm cursor-pointer" data-target="details-5">
+                    <div class="p-6">
+                        <h3 class="font-semibold text-lg text-gray-800">🗓️ Dayparting & Scheduling</h3>
+                        <p class="text-gray-600 mt-2 text-sm">Advertise when your customers are most likely to buy.</p>
+                    </div>
+                    <div id="details-5" class="details-content bg-gray-50 px-6">
+                        <p class="py-4 text-sm text-gray-700">Analyze your campaign data (accessible through advertising reports) to identify peak conversion times and days of the week. While Amazon's native tools for this are limited, third-party software allows you to automate "dayparting"—turning ads on or off, or adjusting bids, at specific times.<br><br>This ensures your budget is spent during the most profitable hours, improving your overall RoAS and preventing budget exhaustion during low-traffic periods.</p>
+                    </div>
+                </div>
+                 <div class="strategy-card bg-white rounded-lg shadow-sm cursor-pointer" data-target="details-6">
+                    <div class="p-6">
+                        <h3 class="font-semibold text-lg text-gray-800">🎯 Ad Placement Modifiers</h3>
+                        <p class="text-gray-600 mt-2 text-sm">Bid more aggressively for the most valuable ad spots.</p>
+                    </div>
+                    <div id="details-6" class="details-content bg-gray-50 px-6">
+                        <p class="py-4 text-sm text-gray-700">Amazon allows you to adjust your bids based on ad placement. You can increase your bid by up to 900% for two key locations: "Top of search" and "Product pages."<br><br>Analyze your campaign placement reports. If you find that one placement converts significantly better than others, you can apply a modifier to bid more competitively for that spot. This can dramatically increase visibility and sales, but should be used carefully to control costs.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="trends" class="scroll-mt-20">
+             <h2 class="text-3xl font-bold tracking-tight text-gray-800 text-center">Market Trends & Future Outlook</h2>
+            <p class="mt-4 max-w-3xl mx-auto text-center text-lg text-gray-600">The Amazon advertising landscape is constantly evolving. Staying ahead of trends is crucial for long-term success. Competition is increasing, leading to a general rise in CPCs over time, which makes efficiency and strategy more important than ever.</p>
+            
+            <div class="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div>
+                     <div class="chart-container">
+                        <canvas id="cpcTrendChart"></canvas>
+                    </div>
+                </div>
+                <div class="space-y-6">
+                    <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
+                        <h3 class="font-semibold text-gray-800">📈 Focus on Profitability (RoAS > ACoS)</h3>
+                        <p class="text-gray-600 mt-1 text-sm">Mature advertisers are shifting focus from just managing ACoS to maximizing RoAS. This means prioritizing campaigns that drive the most revenue for every dollar spent, not just those with the lowest percentage cost.</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
+                        <h3 class="font-semibold text-gray-800">📹 Rise of Sponsored Brands Video</h3>
+                        <p class="text-gray-600 mt-1 text-sm">Video ads in search results have a high engagement rate and CTR. Expect CPCs for these placements to rise as more advertisers adopt video, making it a competitive but powerful format.</p>
+                    </div>
+                     <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
+                        <h3 class="font-semibold text-gray-800">🌐 Full-Funnel Advertising</h3>
+                        <p class="text-gray-600 mt-1 text-sm">Sellers are increasingly using a combination of Sponsored Products (bottom-funnel), Sponsored Brands (mid-funnel), and Sponsored Display (top-funnel/retargeting) to guide customers through the entire buying journey, not just capturing the final click.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white mt-16 border-t">
+        <div class="container mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-gray-500 text-sm">
+            <p>This interactive report provides a detailed analysis of the Amazon Ads CPC environment. Data is representative of general market trends.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            const driverData = {
+                labels: ['Competition', 'Seasonality', 'Ad Placement', 'Relevance Score', 'Product Category', 'Targeting Type'],
+                datasets: [{
+                    label: 'Relative Impact on CPC',
+                    data: [90, 85, 75, 70, 60, 50],
+                    backgroundColor: 'rgba(13, 148, 136, 0.6)',
+                    borderColor: 'rgba(15, 118, 110, 1)',
+                    borderWidth: 1,
+                    hoverBackgroundColor: 'rgba(13, 148, 136, 1)',
+                }]
+            };
+
+            const driverDescriptions = {
+                'Competition': {
+                    title: ' intense Competition',
+                    description: 'This is the single biggest factor. As more sellers bid on the same keywords, the auction price is driven up. Highly competitive niches like electronics or supplements will naturally have much higher CPCs than less saturated categories.'
+                },
+                'Seasonality': {
+                    title: 'Seasonal Demand',
+                    description: 'Major shopping events like Q4 (Black Friday, Cyber Monday, Christmas), Prime Day, or Valentine\'s Day see a huge influx of shoppers and advertisers. This increased demand and competition leads to significantly higher CPCs across the board.'
+                },
+                'Ad Placement': {
+                    title: 'Premium Ad Placement',
+                    description: 'Where your ad appears matters. The "Top of Search" is the most valuable and therefore most expensive placement. Ads on product detail pages or further down the search results generally have a lower CPC.'
+                },
+                'Relevance Score': {
+                    title: 'Ad Quality & Relevance Score',
+                    description: 'Amazon rewards ads that shoppers find useful. Ads with a high Click-Through Rate (CTR) and a strong conversion rate are deemed more relevant. A higher relevance score can result in a better Ad Rank even with a lower bid, effectively reducing your CPC.'
+                },
+                'Product Category': {
+                    title: 'Product Category & Price Point',
+                    description: 'The price and margin of the product being advertised play a huge role. Sellers of high-ticket items (e.g., mattresses, furniture) are willing to bid much more per click because the potential return is higher. This drives up the average CPC in those categories.'
+                },
+                'Targeting Type': {
+                    title: 'Keyword & Targeting Specificity',
+                    description: 'The type of targeting used affects cost. Broad match keywords are generally cheaper but less specific. Exact match keywords target a very specific search term, often have higher intent, and can be more competitive and costly, but also more efficient.'
+                }
+            };
+            
+            const cpcDriversCtx = document.getElementById('cpcDriversChart').getContext('2d');
+            const cpcDriversChart = new Chart(cpcDriversCtx, {
+                type: 'bar',
+                data: driverData,
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Relative Impact of CPC Drivers'
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                           grid: {
+                                color: '#E5E7EB'
+                           }
+                        }
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const index = elements[0].index;
+                            const label = driverData.labels[index];
+                            const data = driverDescriptions[label];
+                            document.getElementById('driver-title').innerText = data.title;
+                            document.getElementById('driver-description').innerText = data.description;
+                            
+                            cpcDriversChart.data.datasets[0].backgroundColor = driverData.labels.map((l, i) => i === index ? 'rgba(13, 148, 136, 1)' : 'rgba(13, 148, 136, 0.6)');
+                            cpcDriversChart.update();
+                        }
+                    }
+                }
+            });
+
+            const trendData = {
+                labels: ['2020', '2021', '2022', '2023', '2024', '2025 (est.)'],
+                datasets: [{
+                    label: 'Average Global CPC on Amazon',
+                    data: [0.77, 0.85, 0.92, 1.05, 1.18, 1.25],
+                    fill: true,
+                    backgroundColor: 'rgba(13, 148, 136, 0.2)',
+                    borderColor: 'rgba(13, 148, 136, 1)',
+                    tension: 0.3
+                }]
+            };
+
+            const cpcTrendCtx = document.getElementById('cpcTrendChart').getContext('2d');
+            new Chart(cpcTrendCtx, {
+                type: 'line',
+                data: trendData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                           display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'General Upward Trend of Average CPC'
+                        }
+                    },
+                    scales: {
+                         y: {
+                            beginAtZero: false,
+                             ticks: {
+                                callback: function(value, index, values) {
+                                    return '$' + value.toFixed(2);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const strategyCards = document.querySelectorAll('.strategy-card');
+            strategyCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const targetId = card.getAttribute('data-target');
+                    const detailsContent = document.getElementById(targetId);
+                    
+                    const wasOpen = detailsContent.classList.contains('open');
+                    
+                    document.querySelectorAll('.details-content.open').forEach(openContent => {
+                        openContent.classList.remove('open');
+                    });
+
+                    if (!wasOpen) {
+                       detailsContent.classList.add('open');
+                    }
+                });
+            });
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('section');
+            
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 80) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                })
+            });
+        });
+    </script>
+</body>
+</html>

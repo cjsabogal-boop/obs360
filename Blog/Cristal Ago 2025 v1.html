@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe de Gestión: Cristal Up</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fc;
+            color: #333;
+        }
+    </style>
+</head>
+<body class="p-8">
+
+    <!-- Header Section -->
+    <header class="bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-300 rounded-2xl shadow-lg p-6 mb-8 flex items-center justify-between">
+        <div class="flex items-center">
+            <!-- Icon -->
+            <svg class="h-16 w-16 text-white mr-4" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/>
+            </svg>
+            <div>
+                <h1 class="text-white text-3xl md:text-4xl font-bold">Cristal Up</h1>
+                <p class="text-white text-xl md:text-2xl font-semibold">Informe de Gestión - Agosto 2025</p>
+            </div>
+        </div>
+        <img src="https://placehold.co/100x40/ffffff/000000?text=OBS360" alt="OBS360 Logo" class="w-24 h-auto md:w-32 rounded-lg">
+    </header>
+
+    <!-- Executive Summary -->
+    <section class="bg-white rounded-xl shadow-md p-6 mb-8">
+        <h2 class="text-2xl md:text-3xl font-bold text-indigo-700 mb-4">Resumen Ejecutivo: Un Mes de Crecimiento Impulsado por la Estrategia</h2>
+        <p class="text-gray-700 mb-6">
+            Agosto ha sido un mes excepcional para Cristal Up, marcando un hito de **crecimiento acelerado y una mejora significativa en la rentabilidad**. Superamos los $4,700 USD en ventas, con un total de 481 unidades vendidas, consolidando nuestra presencia en el mercado. Más allá de los números, la marca demuestra una gestión ágil y una estrategia publicitaria cada vez más eficiente, lo que valida nuestra inversión y nos posiciona para un crecimiento sostenible a largo plazo.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Sales Card -->
+            <div class="bg-blue-100 rounded-xl p-4 shadow-sm border border-blue-200">
+                <p class="text-blue-800 font-bold text-lg">Ventas del Mes</p>
+                <p class="text-blue-600 text-3xl font-extrabold">$4,777.33</p>
+                <p class="text-blue-600 text-sm">481 unidades vendidas</p>
+            </div>
+            <!-- Profitability Card -->
+            <div class="bg-green-100 rounded-xl p-4 shadow-sm border border-green-200">
+                <p class="text-green-800 font-bold text-lg">Ganancia Neta</p>
+                <p class="text-green-600 text-3xl font-extrabold">$391.93</p>
+                <p class="text-green-600 text-sm">Margen: 8.20%</p>
+            </div>
+            <!-- Advertising Card -->
+            <div class="bg-purple-100 rounded-xl p-4 shadow-sm border border-purple-200">
+                <p class="text-purple-800 font-bold text-lg">Inversión Publicitaria</p>
+                <p class="text-purple-600 text-3xl font-extrabold">$1,446.51</p>
+                <p class="text-purple-600 text-sm">ROAS: 2.56</p>
+            </div>
+            <!-- Units Card -->
+            <div class="bg-yellow-100 rounded-xl p-4 shadow-sm border border-yellow-200">
+                <p class="text-yellow-800 font-bold text-lg">Tasa de Conversión</p>
+                <p class="text-yellow-600 text-3xl font-extrabold">11.50%</p>
+                <p class="text-yellow-600 text-sm">Gran eficiencia del tráfico</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Tables and Charts Section -->
+    <section class="bg-white rounded-xl shadow-md p-6 mb-8">
+        <h2 class="text-2xl md:text-3xl font-bold text-indigo-700 mb-4">Análisis de Datos Clave</h2>
+    
+        <!-- Sales and Units Chart -->
+        <h3 class="text-xl md:text-2xl font-semibold text-gray-800 mb-3">Ventas y Unidades Vendidas (2024 - 2025)</h3>
+        <p class="text-gray-700 mb-4">La siguiente gráfica ilustra el crecimiento constante en ventas y unidades vendidas, destacando la fuerte tendencia alcista de la marca.</p>
+        <div class="bg-gray-50 p-4 rounded-xl mb-6">
+            <canvas id="salesChart"></canvas>
+        </div>
+    
+        <!-- Key Metrics Table -->
+        <h3 class="text-xl md:text-2xl font-semibold text-gray-800 mb-3">Métricas Financieras del Mes</h3>
+        <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200">
+            <table class="min-w-full bg-white text-left text-sm">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 font-medium text-gray-900">Métrica</th>
+                        <th scope="col" class="px-6 py-3 font-medium text-gray-900">Valor</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Ingresos</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">$4,777.33</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Inversión Publicidad</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">-$1,446.51</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Costo de Bienes</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">-$1,242.50</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Ganancia Neta</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">$391.93</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">Margen</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-gray-700">8.20%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Business Area Analysis -->
+    <section class="bg-white rounded-xl shadow-md p-6 mb-8">
+        <h2 class="text-2xl md:text-3xl font-bold text-indigo-700 mb-4">Análisis Detallado por Área de Negocio</h2>
+
+        <!-- Product Portfolio Section -->
+        <h3 class="text-xl md:text-2xl font-semibold text-gray-800 mb-3">Portafolio de Productos</h3>
+        <p class="text-gray-700 mb-4">
+            Nuestro portafolio sigue demostrando su fortaleza, con productos que lideran en ventas y otros que se destacan por su alta rentabilidad. Es una excelente señal de que estamos construyendo una base sólida.
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <!-- Best Seller -->
+            <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 shadow-sm">
+                <p class="font-bold text-lg text-slate-800">Producto Más Vendido</p>
+                <p class="text-slate-600">SKU LMML: 117 unidades</p>
+                <p class="mt-2 text-sm text-slate-500">Este producto es el motor de volumen de la marca. Su rentabilidad, que antes era un desafío, ahora ha sido optimizada, demostrando el éxito de nuestra gestión de campañas. Esto valida el enfoque de inversión para ganar tracción.</p>
+            </div>
+            <!-- Most Profitable -->
+            <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4 shadow-sm">
+                <p class="font-bold text-lg text-emerald-800">Producto Más Rentable</p>
+                <p class="text-emerald-600">SKU LMMB: $238.02 de ganancia</p>
+                <p class="mt-2 text-sm text-emerald-500">Con un impresionante margen del 39%, este SKU es la joya de la corona. Su fuerte posicionamiento orgánico, con una mínima inversión publicitaria, demuestra la alta demanda del mercado y la calidad del producto.</p>
+            </div>
+        </div>
+        
+        <!-- SKU Performance Chart -->
+        <div class="bg-gray-50 p-4 rounded-xl mb-6">
+            <canvas id="skuChart"></canvas>
+        </div>
+
+        <!-- Advertising Section -->
+        <h3 class="text-xl md:text-2xl font-semibold text-gray-800 mb-3">Publicidad y Tráfico</h3>
+        <p class="text-gray-700 mb-4">
+            Nuestra inversión publicitaria se está volviendo cada vez más eficiente, lo que se refleja en un **ROAS de 2.56**. Esto indica que cada dólar invertido está generando un retorno saludable, atrayendo a clientes de alta calidad. La estrategia de impulsar los SKUs con ROAS más bajos es una inversión para ganar una base de clientes sólida y visibilidad en el mercado.
+        </p>
+        <!-- Advertising Chart -->
+        <div class="bg-gray-50 p-4 rounded-xl mb-6">
+            <canvas id="adChart"></canvas>
+        </div>
+        
+        <!-- Inventory Section -->
+        <h3 class="text-xl md:text-2xl font-semibold text-gray-800 mb-3">Inventario y Logística</h3>
+        <p class="text-gray-700 mb-4">
+            Los quiebres de stock en productos clave como SKU LMMB y LMMP no son un problema, sino un claro indicador del éxito. Este es un desafío de crecimiento que valida la alta demanda del mercado y la urgencia de seguir reabasteciendo para no perder el impulso que hemos construido.
+        </p>
+        <!-- Inventory Table -->
+        <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200">
+            <table class="min-w-full bg-white text-left text-sm">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 font-medium text-gray-900">SKU</th>
+                        <th scope="col" class="px-6 py-3 font-medium text-gray-900">Nombre del Producto</th>
+                        <th scope="col" class="px-6 py-3 font-medium text-gray-900">Stock FBA</th>
+                        <th scope="col" class="px-6 py-3 font-medium text-gray-900">Estado</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">LMMB</td>
+                        <td class="px-6 py-4 text-gray-700">Crystal Nail File 1.6 in</td>
+                        <td class="px-6 py-4 text-gray-700">8</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Crítico</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">LMMP</td>
+                        <td class="px-6 py-4 text-gray-700">Crystal Nail File 1.6 in</td>
+                        <td class="px-6 py-4 text-gray-700">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Agotado</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">LPJL</td>
+                        <td class="px-6 py-4 text-gray-700">Crystal Nail File 3 in</td>
+                        <td class="px-6 py-4 text-gray-700">0</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Agotado</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">LPRM</td>
+                        <td class="px-6 py-4 text-gray-700">Crystal Nail File 3 in</td>
+                        <td class="px-6 py-4 text-gray-700">4</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Crítico</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Year-to-Date Summary -->
+    <section class="bg-white rounded-xl shadow-md p-6 mb-8">
+        <h2 class="text-2xl md:text-3xl font-bold text-indigo-700 mb-4">Resumen Acumulado del Año (Ene-Ago 2025)</h2>
+        <p class="text-gray-700 mb-4">
+            Observar el progreso del mes de agosto dentro de la estrategia anual es clave. Con ventas acumuladas de **$21,125.57 USD** y un margen de rentabilidad global positivo, aunque ajustado, el mes de agosto confirma que la marca ha superado su fase de lanzamiento y está firmemente en camino hacia un crecimiento rentable y sostenible. Cada mes de inversión se traduce en una mayor tracción y un mejor posicionamiento a largo plazo.
+        </p>
+    </section>
+
+    <!-- Conclusion and Recommendations -->
+    <section class="bg-white rounded-xl shadow-md p-6">
+        <h2 class="text-2xl md:text-3xl font-bold text-indigo-700 mb-4">Conclusiones y Próximos Pasos</h2>
+        <p class="text-gray-700 mb-4">
+            El desempeño de agosto demuestra que nuestra estrategia es la correcta. Hemos logrado un crecimiento explosivo y una mejora notable en la rentabilidad. Ahora es el momento de capitalizar este impulso.
+        </p>
+        <ul class="list-none space-y-4">
+            <li class="flex items-start">
+                <svg class="w-6 h-6 text-indigo-500 mt-1 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <p class="text-gray-800"><strong class="font-semibold">Resolver Quiebres de Stock:</strong> Priorizar el reabastecimiento de SKUs clave (LMMB, LMMP) para evitar perder ventas de nuestros productos más demandados. Esto no es un problema, sino una oportunidad de crecimiento.</p>
+            </li>
+            <li class="flex items-start">
+                <svg class="w-6 h-6 text-indigo-500 mt-1 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <p class="text-gray-800"><strong class="font-semibold">Optimizar el Motor de Ventas:</strong> Concentrar esfuerzos en mejorar la eficiencia publicitaria del SKU LMML, el cual es nuestro principal impulsor de volumen. Una ligera mejora en su ACOS tendrá un impacto significativo en la rentabilidad total.</p>
+            </li>
+            <li class="flex items-start">
+                <svg class="w-6 h-6 text-indigo-500 mt-1 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <p class="text-gray-800"><strong class="font-semibold">Replicar el Éxito:</strong> Analizar la estrategia y el posicionamiento de los SKUs altamente rentables (como LMMB) para replicar sus tácticas en otros productos. Esto nos permitirá diversificar nuestras fuentes de ganancia.</p>
+            </li>
+        </ul>
+    </section>
+
+    <script>
+        const ctx = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Ene 25', 'Feb 25', 'Mar 25', 'Abr 25', 'May 25', 'Jun 25', 'Jul 25', 'Ago 25'],
+                datasets: [
+                    {
+                        label: 'Ventas ($ USD)',
+                        data: [1436.4, 1424.2, 1600.0, 1530.0, 2300.0, 3500.0, 4094.39, 4777.33],
+                        borderColor: '#4338ca',
+                        backgroundColor: 'rgba(67, 56, 202, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                    },
+                    {
+                        label: 'Unidades Vendidas',
+                        data: [150, 145, 165, 158, 240, 350, 400, 481],
+                        borderColor: '#ec4899',
+                        backgroundColor: 'rgba(236, 72, 153, 0.1)',
+                        tension: 0.4,
+                        fill: false,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: false,
+                        text: 'Ventas y Unidades Vendidas'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Valor / Unidades'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Mes'
+                        }
+                    }
+                }
+            }
+        });
+        
+        const skuCtx = document.getElementById('skuChart').getContext('2d');
+        const skuChart = new Chart(skuCtx, {
+            type: 'bar',
+            data: {
+                labels: ['LMML', 'LMMB', 'LPC', 'LMMC', 'LMMP', 'LBB'],
+                datasets: [{
+                    label: 'Ganancia Neta ($ USD)',
+                    data: [61.73, 238.02, -113.62, -189.10, 152.28, 30.30],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(255, 99, 132, 0.6)',
+                        'rgba(54, 162, 235, 0.6)',
+                        'rgba(75, 192, 192, 0.6)'
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(75, 192, 192, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Rendimiento de SKUs Principales (Ganancia Neta)'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Ganancia Neta ($ USD)'
+                        }
+                    }
+                }
+            }
+        });
+
+        const adCtx = document.getElementById('adChart').getContext('2d');
+        const adChart = new Chart(adCtx, {
+            type: 'line',
+            data: {
+                labels: ['Ago 1', 'Ago 5', 'Ago 9', 'Ago 13', 'Ago 17', 'Ago 21', 'Ago 25', 'Ago 29'],
+                datasets: [
+                    {
+                        label: 'Inversión ($ USD)',
+                        data: [150, 50, 200, 120, 150, 100, 220, 180],
+                        borderColor: '#8b5cf6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.2)',
+                        tension: 0.4,
+                        fill: false,
+                    },
+                    {
+                        label: 'Ventas ($ USD)',
+                        data: [350, 120, 500, 300, 450, 250, 600, 480],
+                        borderColor: '#22c55e',
+                        backgroundColor: 'rgba(34, 197, 94, 0.2)',
+                        tension: 0.4,
+                        fill: false,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Inversión Publicitaria vs. Ventas (Agosto)'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Valor ($ USD)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Día de Agosto'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
