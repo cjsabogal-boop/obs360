@@ -25,6 +25,123 @@ const authenticate = (req, res, next) => {
     }
 };
 
+// ==================== TEMPLATES OBS360 ====================
+
+// CSS y HTML estándar para todos los artículos
+const OBS360_CSS = `
+    /* OBS360 Header Styles */
+    .obs-header {
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 15px 0;
+        position: sticky;
+        top: 0;
+        z-index: 1100;
+    }
+    .obs-header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .obs-logo img { height: 45px; width: auto; }
+    .obs-back-link {
+        color: #28529a;
+        text-decoration: none;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 25px;
+        background: #f3f6fa;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+    .obs-back-link:hover { background: #28529a; color: white; }
+    .obs-footer {
+        background: linear-gradient(135deg, #1f2937 0%, #28529a 100%);
+        padding: 40px 0;
+        text-align: center;
+        margin-top: 60px;
+    }
+    .obs-footer img { height: 50px; margin-bottom: 15px; filter: brightness(0) invert(1); }
+    .obs-footer p { color: rgba(255, 255, 255, 0.7); font-size: 14px; }
+    .obs-footer-btn {
+        display: inline-block;
+        background: #84cc16;
+        color: white;
+        padding: 12px 30px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        margin-top: 20px;
+        transition: all 0.3s ease;
+    }
+    .obs-footer-btn:hover { background: #65a30d; transform: translateY(-2px); }
+`;
+
+const OBS360_HEADER = `
+    <!-- OBS360 Header -->
+    <header class="obs-header">
+        <div class="obs-header-content">
+            <a href="index.html" class="obs-logo">
+                <img src="../Logo-Obs360.co_.webp" alt="OBS360 Logo" />
+            </a>
+            <a href="index.html" class="obs-back-link">← Volver a Recursos</a>
+        </div>
+    </header>
+`;
+
+const OBS360_FOOTER = `
+    <!-- OBS360 Footer -->
+    <footer class="obs-footer">
+        <div class="max-w-7xl mx-auto px-4">
+            <img src="../Logo-Obs360.co_.webp" alt="OBS360" />
+            <p>Recurso exclusivo para clientes de OBS360</p>
+            <a href="https://wa.me/19803370518" target="_blank" class="obs-footer-btn">Contactar a OBS360</a>
+        </div>
+    </footer>
+`;
+
+// Función para envolver HTML con template OBS360
+function wrapWithOBS360Template(htmlContent) {
+    const $ = cheerio.load(htmlContent);
+
+    // 1. Agregar meta noindex, nofollow si no existe
+    if (!$('meta[name="robots"]').length) {
+        $('head').append('<meta name="robots" content="noindex, nofollow" />');
+    }
+
+    // 2. Agregar favicon si no existe
+    if (!$('link[rel="icon"]').length) {
+        $('head').append('<link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp" />');
+    }
+
+    // 3. Agregar CSS si no existe
+    if (!$('.obs-header').length) {
+        if ($('style').length) {
+            $('style').first().append(OBS360_CSS);
+        } else {
+            $('head').append('<style>' + OBS360_CSS + '</style>');
+        }
+    }
+
+    // 4. Agregar header si no existe
+    if (!$('.obs-header').length) {
+        $('body').prepend(OBS360_HEADER);
+    }
+
+    // 5. Agregar footer si no existe
+    if (!$('.obs-footer').length) {
+        $('body').append(OBS360_FOOTER);
+    }
+
+    return $.html();
+}
+
 // ==================== RUTAS ====================
 
 // Login
@@ -179,8 +296,11 @@ app.post('/api/articles', async (req, res) => {
             return res.status(500).json({ error: 'Error generando ID único, intenta de nuevo' });
         }
 
-        // Guardar archivo
-        await fs.writeFile(filePath, content, 'utf-8');
+        // Aplicar template OBS360 (header, footer, meta noindex)
+        const wrappedContent = wrapWithOBS360Template(content);
+
+        // Guardar archivo con template aplicado
+        await fs.writeFile(filePath, wrappedContent, 'utf-8');
 
         // Actualizar mapeo de URLs
         const mapping = await loadUrlMapping();
