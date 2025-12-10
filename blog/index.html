@@ -596,6 +596,10 @@
                     style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
                     📁 Otras
                 </button>
+                <button class="category-filter" data-category="Herramientas"
+                    style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                    🛠️ Herramientas
+                </button>
             </div>
 
             <div class="articles-grid" id="articlesGrid">
@@ -680,6 +684,14 @@
                 return 'Estrategia';
             }
 
+            // Herramientas keywords (Tools)
+            if (titleLower.includes('simulator') || titleLower.includes('simulador') ||
+                titleLower.includes('calculator') || titleLower.includes('calculador') ||
+                titleLower.includes('kdp') || titleLower.includes('tool') ||
+                titleLower.includes('herramienta') || titleLower.includes('budget')) {
+                return 'Herramientas';
+            }
+
             return 'Otras';
         }
 
@@ -690,6 +702,7 @@
                 'Informe Mensual': '💎',
                 'Estrategia': '🍽️',
                 'Capacitación': '🎓',
+                'Herramientas': '🛠️',
                 'Otras': '📁'
             };
             return icons[category] || '📄';
@@ -758,6 +771,7 @@
                 'Informe Mensual': 'cristal',
                 'Estrategia': 'porcelana',
                 'Capacitación': 'cpc',
+                'Herramientas': 'porcelana',
                 'Otras': 'cristal'
             };
 

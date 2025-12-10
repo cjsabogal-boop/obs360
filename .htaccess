@@ -95,3 +95,14 @@ DirectoryIndex index.html index.php
 
 # DirectoryIndex - Asegurar que index.html se cargue
 DirectoryIndex index.html index.php
+
+# Protección adicional para /blog/ - Headers noindex para bots
+<IfModule mod_headers.c>
+    <If "%{REQUEST_URI} =~ m#^/blog/#">
+        Header set X-Robots-Tag "noindex, nofollow, noarchive, nosnippet"
+    </If>
+    <If "%{REQUEST_URI} =~ m#^/admin/#">
+        Header set X-Robots-Tag "noindex, nofollow, noarchive, nosnippet"
+    </If>
+</IfModule>
+

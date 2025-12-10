@@ -1,18 +1,67 @@
 User-agent: *
 Allow: /
+Disallow: /blog/
+Disallow: /admin/
 
 # Sitemap
-Sitemap: https://obs360.com/sitemap.xml
+Sitemap: https://obs360.co/sitemap.xml
 
-# Specific bots
+# Specific search engine bots - Allow main site, block private areas
 User-agent: Googlebot
 Allow: /
+Disallow: /blog/
+Disallow: /admin/
 
 User-agent: Bingbot
 Allow: /
+Disallow: /blog/
+Disallow: /admin/
 
 User-agent: Slurp
 Allow: /
+Disallow: /blog/
+Disallow: /admin/
+
+# Block AI/LLM crawlers completely from private content
+User-agent: GPTBot
+Disallow: /blog/
+Disallow: /admin/
+
+User-agent: ChatGPT-User
+Disallow: /blog/
+Disallow: /admin/
+
+User-agent: CCBot
+Disallow: /blog/
+Disallow: /admin/
+
+User-agent: anthropic-ai
+Disallow: /blog/
+Disallow: /admin/
+
+User-agent: Claude-Web
+Disallow: /blog/
+Disallow: /admin/
+
+User-agent: Google-Extended
+Disallow: /blog/
+Disallow: /admin/
+
+User-agent: Bytespider
+Disallow: /blog/
+Disallow: /admin/
+
+User-agent: cohere-ai
+Disallow: /blog/
+Disallow: /admin/
+
+User-agent: PerplexityBot
+Disallow: /blog/
+Disallow: /admin/
+
+User-agent: FacebookBot
+Disallow: /blog/
+Disallow: /admin/
 
 # Crawl-delay for general bots
 Crawl-delay: 1
