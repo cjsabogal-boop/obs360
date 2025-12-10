@@ -1,181 +1,250 @@
-# 📝 OBS360 Blog - Centro de Recursos
+# 🚀 OBS360 - Blog Privado con CMS
 
-Blog privado de OBS360 con sistema de administración de contenido (CMS) para gestionar artículos y reportes de clientes.
+Sistema completo de blog privado con backend Node.js y panel de administración.
 
-## 🌐 Sitio Web
-
-**URL Principal:** [https://obs360.com](https://obs360.com)  
-**Blog:** [https://obs360.com/blog/](https://obs360.com/blog/)  
-**CMS Admin:** [https://obs360.com/admin/](https://obs360.com/admin/)
-
-## 🔐 Acceso al CMS
-
-**URL:** `/admin/index.html`
-
-**Credenciales:**
-- **Usuario:** `obs360admin`
-- **Contraseña:** `OBS2025Blog!`
-
-## ✨ Características
-
-### 📚 Blog de Recursos
-- **Diseño Profesional** - Interfaz moderna y responsive
-- **Categorización Automática** - 3 categorías predefinidas con colores distintivos
-- **SEO Optimizado** - Meta tags y estructura semántica
-- **Performance Optimizado** - Carga rápida (~1-2 segundos)
-
-### 🎨 Categorías de Artículos
-1. **📊 Análisis** (Teal) - Estudios detallados y análisis de datos
-2. **💎 Informe Mensual** (Rosa/Púrpura) - Reportes mensuales de clientes
-3. **🍽️ Estrategia** (Azul) - Artículos de estrategias y mejores prácticas
-
-### 🛠️ Sistema CMS
-- ✅ Crear, editar y eliminar artículos
-- ✅ Editor visual completo
-- ✅ Generación automática de URLs (slugs)
-- ✅ Mantiene estilo consistente
-- ✅ Almacenamiento local (localStorage)
-- ✅ Sin necesidad de base de datos
+---
 
 ## 📁 Estructura del Proyecto
 
 ```
 obs360/
-├── index.html              # Página principal OBS360
-├── blog/
-│   ├── index.html          # Índice del blog
-│   ├── amazon-cpc-analysis.html
-│   ├── cristal-up-agosto-2025.html
-│   └── vajillas-corona-higiene.html
-├── admin/
-│   ├── index.html          # CMS Principal
-│   └── README.md           # Documentación del CMS
-├── logos/                  # Logos de clientes
-├── optimize-images.sh      # Script de optimización
-├── MEJORAS.md             # Resumen de mejoras
-└── README.md              # Este archivo
+├── index.html              # Página principal de OBS360
+├── blog/                   # Blog privado para clientes
+│   ├── index.html         # Listado de artículos (con login)
+│   └── r-*.html           # Artículos (URLs ofuscadas)
+├── admin/                  # Panel de administración
+│   └── index.html         # CMS para gestionar artículos
+├── server/                 # Backend Node.js
+│   ├── server.js          # API REST
+│   ├── package.json       # Dependencias
+│   └── .env               # Variables de entorno
+├── .htaccess              # Configuración Apache + Proxy
+└── INSTRUCCIONES-NODE.md  # Guía de deployment
 ```
-
-## 🚀 Deployment
-
-### Subir cambios a GitHub:
-```bash
-git add .
-git commit -m "Descripción de cambios"
-git push origin main
-```
-
-### Deployment en Namecheap:
-1. Accede a tu cPanel
-2. Ve a "Git Version Control"
-3. Pull los cambios del repositorio
-4. Los cambios se reflejarán automáticamente
-
-## 📝 Cómo Usar el CMS
-
-### 1. Acceder al Panel
-```
-1. Abre: https://obs360.com/admin/
-2. Usuario: obs360admin
-3. Contraseña: OBS2025Blog!
-```
-
-### 2. Crear un Artículo
-```
-1. Click en "✏️ Nuevo Artículo"
-2. Completa el formulario:
-   - Título del Artículo
-   - Fecha de Publicación
-   - Categoría (Análisis/Informe/Estrategia)
-   - Emoji/Icono
-   - Descripción Breve
-   - Contenido HTML
-3. Click en "💾 Guardar Artículo"
-```
-
-### 3. Gestionar Artículos
-- **Ver todos:** Click en "📚 Mis Artículos"
-- **Editar:** Click en "✏️ Editar" en cualquier artículo
-- **Eliminar:** Click en "🗑️ Eliminar" (con confirmación)
-
-## 🎨 Guía de Colores por Categoría
-
-### Análisis (Teal)
-```css
-background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
-```
-
-### Informe Mensual (Rosa/Púrpura)
-```css
-background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
-```
-
-### Estrategia (Azul)
-```css
-background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-```
-
-## 🔧 Optimización de Imágenes
-
-### Uso del Script:
-```bash
-cd /ruta/al/proyecto
-./optimize-images.sh
-```
-
-### Qué hace:
-- Convierte PNG/JPG a WebP
-- Calidad optimizada (85%)
-- Muestra reducción de tamaño
-- Preserva archivos originales
-
-## 📊 Métricas de Performance
-
-| Métrica | Antes | Después | Mejora |
-|---------|-------|---------|--------|
-| Tiempo de carga | 3-4s | 1-2s | 50% ⚡ |
-| Tamaño de página | ~150KB | ~100KB | 33% 📉 |
-| Contraste textos | 3.2:1 | 7.5:1 | WCAG AAA ✅ |
-
-## 🔒 Seguridad
-
-- Blog privado (`noindex, nofollow`)
-- Autenticación en CMS
-- Datos en localStorage (local)
-
-### Para Producción (Recomendado):
-- 🔄 Backend con Node.js/PHP
-- 🔄 Base de datos (MySQL/MongoDB)
-- 🔄 Autenticación JWT
-
-## 📱 Responsive Design
-
-Todos los componentes son 100% responsive:
-- 📱 Móviles (< 768px)
-- 💻 Tablets (768px - 1024px)
-- 🖥️ Desktop (> 1024px)
-
-## 🛠️ Tecnologías Utilizadas
-
-- **HTML5** - Estructura semántica
-- **CSS3** - Estilos y animaciones
-- **JavaScript** - Interactividad
-- **Tailwind CSS** - Framework CSS (en artículos)
-- **Chart.js** - Gráficos interactivos
-- **LocalStorage** - Persistencia de datos
-
-## 📞 Soporte
-
-**Contacto:**
-- WhatsApp: [+1 (980) 337-0518](https://wa.me/19803370518)
-- Email: contacto@obs360.com
-- GitHub: [cjsabogal-boop/obs360](https://github.com/cjsabogal-boop/obs360)
-
-## 📄 Licencia
-
-© 2025 OBS360 - Online Business Strategizer. Todos los derechos reservados.
 
 ---
 
-**Última actualización:** Diciembre 9, 2025  
-**Versión:** 2.0.0
+## ✨ Características
+
+### **Blog Privado (`/blog`)**
+- ✅ Sistema de login para clientes
+- ✅ Listado dinámico de artículos desde API
+- ✅ Filtros por categoría (Análisis, Informes, Estrategia, Capacitación)
+- ✅ URLs ofuscadas para seguridad (`r-xxxxxxxx.html`)
+- ✅ Diseño responsive y moderno
+
+### **Panel Admin (`/admin`)**
+- ✅ Login seguro para administradores
+- ✅ Crear, editar y eliminar artículos
+- ✅ Vista previa en tiempo real
+- ✅ Generación automática de URLs ofuscadas
+- ✅ Categorización automática
+
+### **Backend Node.js (`/server`)**
+- ✅ API REST completa
+- ✅ Lectura automática de artículos HTML
+- ✅ Categorización inteligente por keywords
+- ✅ Actualización dinámica del índice
+- ✅ CORS habilitado
+
+---
+
+## 🔐 Credenciales
+
+### **Blog (Clientes)**
+```
+Usuario: obs360client
+Contraseña: Resources2025!
+```
+
+### **Admin (Administradores)**
+```
+Usuario: obs360admin
+Contraseña: [Configurar en .env]
+```
+
+---
+
+## 🚀 Deployment
+
+### **Estado Actual**
+- ✅ Código completo y funcional
+- ✅ `.htaccess` configurado con proxy
+- ✅ Variables de entorno configuradas
+- ⏳ **PENDIENTE:** Activar Node.js en cPanel
+
+### **Próximos Pasos**
+
+1. **Sube el código a tu servidor:**
+   ```bash
+   git add .
+   git commit -m "Backend Node.js completo"
+   git push origin main
+   ```
+
+2. **Sigue la guía de deployment:**
+   - Lee: `INSTRUCCIONES-NODE.md`
+   - Configura Node.js en cPanel
+   - Inicia la aplicación
+
+3. **Verifica que funciona:**
+   - API: `https://obs360.co/api/articles`
+   - Blog: `https://obs360.co/blog/`
+   - Admin: `https://obs360.co/admin/`
+
+---
+
+## 📊 Endpoints de la API
+
+### **Obtener todos los artículos**
+```
+GET /api/articles
+```
+
+**Respuesta:**
+```json
+{
+  "articles": [
+    {
+      "id": "r-3n8mcrjz",
+      "slug": "r-3n8mcrjz",
+      "title": "Análisis de CPC",
+      "date": "9 de diciembre de 2025",
+      "category": "Análisis",
+      "icon": "📊",
+      "excerpt": "Análisis detallado...",
+      "filename": "r-3n8mcrjz.html"
+    }
+  ]
+}
+```
+
+### **Obtener un artículo específico**
+```
+GET /api/articles/:slug
+```
+
+### **Crear nuevo artículo**
+```
+POST /api/articles
+Content-Type: application/json
+
+{
+  "title": "Nuevo Artículo",
+  "content": "<html>...</html>",
+  "category": "Análisis",
+  "icon": "📊",
+  "excerpt": "Descripción..."
+}
+```
+
+### **Actualizar artículo**
+```
+PUT /api/articles/:slug
+```
+
+### **Eliminar artículo**
+```
+DELETE /api/articles/:slug
+```
+
+---
+
+## 🛠️ Tecnologías
+
+- **Frontend:** HTML5, CSS3, JavaScript (Vanilla)
+- **Backend:** Node.js + Express
+- **Servidor:** Apache (Namecheap)
+- **Proxy:** mod_proxy (Apache → Node.js)
+- **Fonts:** Montserrat, Inter (Google Fonts)
+
+---
+
+## 📝 Categorías de Artículos
+
+El sistema categoriza automáticamente los artículos por keywords:
+
+| Categoría | Keywords | Icono |
+|-----------|----------|-------|
+| **Análisis** | análisis, cpc, metrics, opportunity | 📊 |
+| **Informe Mensual** | informe, report, cristal, summary | 💎 |
+| **Estrategia** | estrategia, strategy, higiene, market | 🍽️ |
+| **Capacitación** | guide, guía, playbook, mentor, principios | 🎓 |
+| **Otras** | Todo lo demás | 📁 |
+
+---
+
+## 🔒 Seguridad
+
+- ✅ URLs ofuscadas (`r-xxxxxxxx.html`)
+- ✅ Login requerido para blog y admin
+- ✅ Credenciales en variables de entorno
+- ✅ `noindex, nofollow` en meta tags
+- ✅ CORS configurado
+- ✅ Archivos sensibles protegidos en `.htaccess`
+
+---
+
+## 🐛 Troubleshooting
+
+### **Error: "⚠️ Error al cargar artículos"**
+
+**Causa:** El servidor Node.js no está corriendo o el proxy no funciona.
+
+**Solución:**
+1. Verifica que Node.js esté "Running" en cPanel
+2. Prueba: `https://obs360.co/api/articles`
+3. Revisa logs en cPanel → Node.js App → View Logs
+
+### **Error: "Cannot find module"**
+
+**Solución:**
+```bash
+cd public_html/server
+npm install
+```
+
+### **Error: "403 Forbidden en /api"**
+
+**Solución:**
+- Contacta a soporte de Namecheap
+- Pide habilitar `mod_proxy` y `mod_proxy_http`
+
+---
+
+## 📚 Documentación Adicional
+
+- **Deployment Backend:** `DEPLOYMENT-BACKEND.md`
+- **Configuración Cloudflare:** `CLOUDFLARE-SETUP.md`
+- **Instrucciones Node.js:** `INSTRUCCIONES-NODE.md`
+- **Diagnóstico:** `DIAGNOSTICO.md`
+
+---
+
+## 🎯 Roadmap
+
+- [x] Sistema de login para blog
+- [x] Backend Node.js con API REST
+- [x] Panel de administración
+- [x] URLs ofuscadas
+- [x] Categorización automática
+- [ ] Activar Node.js en servidor
+- [ ] Conectar admin con API
+- [ ] Sistema de búsqueda
+- [ ] Paginación de artículos
+- [ ] Upload de imágenes
+
+---
+
+## 📞 Soporte
+
+Si necesitas ayuda:
+1. Revisa `INSTRUCCIONES-NODE.md`
+2. Consulta `DEPLOYMENT-BACKEND.md`
+3. Contacta a soporte de Namecheap para Node.js
+
+---
+
+**Última actualización:** Diciembre 2025  
+**Versión:** 2.0.0  
+**Estado:** ✅ Listo para deployment
