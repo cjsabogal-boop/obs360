@@ -38,3 +38,4 @@ server/.env
 # Archivos de workspace
 *.code-workspace
 New OBS 360 - HTML.code-workspace
+blog/url-mapping.json
