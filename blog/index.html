@@ -382,69 +382,70 @@
         <div class="container">
             <h2 class="section-title">Recursos Disponibles</h2>
 
-            <div class="articles-grid">
-                <!-- Article 1: Amazon CPC -->
-                <a href="amazon-cpc-analysis.html" class="article-card">
-                    <div class="article-thumbnail cpc">
-                        <span class="article-category">Análisis</span>
-                        <span class="article-icon">📊</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">In-Depth Analysis of the Amazon Ads CPC Environment</h3>
-                        <p class="article-excerpt">
-                            Análisis completo del ecosistema CPC de Amazon: factores que afectan los costos,
-                            estrategias de optimización y tendencias del mercado. Dashboard interactivo con
-                            métricas clave.
-                        </p>
-                        <span class="article-read-more">
-                            Ver análisis completo →
-                        </span>
-                    </div>
-                </a>
-
-                <!-- Article 2: Cristal Up -->
-                <a href="cristal-up-agosto-2025.html" class="article-card">
-                    <div class="article-thumbnail cristal">
-                        <span class="article-category">Informe Mensual</span>
-                        <span class="article-icon">💎</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Agosto 2025</span>
-                        <h3 class="article-title">Informe de Gestión: Cristal Up</h3>
-                        <p class="article-excerpt">
-                            Mes excepcional con $4,700+ USD en ventas y 481 unidades vendidas.
-                            Análisis de rendimiento por SKU, eficiencia publicitaria con ROAS 2.56,
-                            y recomendaciones estratégicas.
-                        </p>
-                        <span class="article-read-more">
-                            Ver informe completo →
-                        </span>
-                    </div>
-                </a>
-
-                <!-- Article 3: Vajillas Corona -->
-                <a href="vajillas-corona-higiene.html" class="article-card">
-                    <div class="article-thumbnail porcelana">
-                        <span class="article-category">Estrategia</span>
-                        <span class="article-icon">🍽️</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Noviembre 2025</span>
-                        <h3 class="article-title">Reporte de Higiene de Cuenta: VAJILLAS Corona</h3>
-                        <p class="article-excerpt">
-                            Estrategia detallada de Negative Keywords para proteger el ROAS en el
-                            segmento Premium. Incluye simulación visual de filtrado de tráfico y
-                            recomendaciones de optimización.
-                        </p>
-                        <span class="article-read-more">
-                            Ver reporte completo →
-                        </span>
-                    </div>
-                </a>
+            <div class="articles-grid" id="articlesGrid">
+                <!-- Articles will be loaded dynamically -->
+                <p style="text-align: center; color: #6b7280; padding: 40px;">Cargando artículos...</p>
             </div>
         </div>
     </section>
+
+    <script>
+        // Load articles from API
+        async function loadArticles() {
+            const grid = document.getElementById('articlesGrid');
+
+            try {
+                const API_URL = window.location.hostname === 'localhost'
+                    ? 'http://localhost:3000/api'
+                    : 'https://obs360.co/api';
+
+                const response = await fetch(`${API_URL}/articles`);
+                const data = await response.json();
+                const articles = data.articles || [];
+
+                if (articles.length === 0) {
+                    grid.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 40px;">No hay artículos disponibles.</p>';
+                    return;
+                }
+
+                // Map categories to colors
+                const categoryColors = {
+                    'Análisis': 'cpc',
+                    'Informe Mensual': 'cristal',
+                    'Estrategia': 'porcelana',
+                    'Guía': 'cpc',
+                    'Tutorial': 'cristal',
+                    'Caso de Estudio': 'porcelana'
+                };
+
+                grid.innerHTML = articles.map(article => {
+                    const colorClass = categoryColors[article.category] || 'cpc';
+                    return `
+                        <a href="${article.filename}" class="article-card">
+                            <div class="article-thumbnail ${colorClass}">
+                                <span class="article-category">${article.category}</span>
+                                <span class="article-icon">${article.icon}</span>
+                            </div>
+                            <div class="article-content">
+                                <span class="article-date">${article.date}</span>
+                                <h3 class="article-title">${article.title}</h3>
+                                <p class="article-excerpt">${article.excerpt}</p>
+                                <span class="article-read-more">
+                                    Ver completo →
+                                </span>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading articles:', error);
+                grid.innerHTML = '<p style="text-align: center; color: #ef4444; padding: 40px;">⚠️ Error al cargar artículos. Por favor, recarga la página.</p>';
+            }
+        }
+
+        // Load articles when page loads
+        document.addEventListener('DOMContentLoaded', loadArticles);
+    </script>
 
     <!-- Footer -->
     <footer class="blog-footer">
