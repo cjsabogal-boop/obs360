@@ -27,40 +27,11 @@ const authenticate = (req, res, next) => {
 
 // ==================== TEMPLATES OBS360 ====================
 
-// CSS y HTML estándar para todos los artículos
+// Nota: NO incluimos header con "Volver a Recursos" porque los clientes
+// reciben URLs directas a sus documentos y no deben poder navegar al índice
+
+// CSS solo para el footer
 const OBS360_CSS = `
-    /* OBS360 Header Styles */
-    .obs-header {
-        background: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        padding: 15px 0;
-        position: sticky;
-        top: 0;
-        z-index: 1100;
-    }
-    .obs-header-content {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .obs-logo img { height: 45px; width: auto; }
-    .obs-back-link {
-        color: #28529a;
-        text-decoration: none;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 10px 20px;
-        border-radius: 25px;
-        background: #f3f6fa;
-        font-size: 14px;
-        transition: all 0.3s ease;
-    }
-    .obs-back-link:hover { background: #28529a; color: white; }
     .obs-footer {
         background: linear-gradient(135deg, #1f2937 0%, #28529a 100%);
         padding: 40px 0;
@@ -83,17 +54,8 @@ const OBS360_CSS = `
     .obs-footer-btn:hover { background: #65a30d; transform: translateY(-2px); }
 `;
 
-const OBS360_HEADER = `
-    <!-- OBS360 Header -->
-    <header class="obs-header">
-        <div class="obs-header-content">
-            <a href="index.html" class="obs-logo">
-                <img src="../Logo-Obs360.co_.webp" alt="OBS360 Logo" />
-            </a>
-            <a href="index.html" class="obs-back-link">← Volver a Recursos</a>
-        </div>
-    </header>
-`;
+// Nota: NO incluimos header con "Volver a Recursos" porque los clientes
+// reciben URLs directas a sus documentos y no deben poder navegar al índice
 
 const OBS360_FOOTER = `
     <!-- OBS360 Footer -->
@@ -106,11 +68,12 @@ const OBS360_FOOTER = `
     </footer>
 `;
 
-// Función para envolver HTML con template OBS360
+
+// Función para envolver HTML con template OBS360 (solo footer, sin header)
 function wrapWithOBS360Template(htmlContent) {
     const $ = cheerio.load(htmlContent);
 
-    // 1. Agregar meta noindex, nofollow si no existe
+    // 1. Agregar meta noindex, nofollow si no existe (privacidad)
     if (!$('meta[name="robots"]').length) {
         $('head').append('<meta name="robots" content="noindex, nofollow" />');
     }
@@ -120,8 +83,8 @@ function wrapWithOBS360Template(htmlContent) {
         $('head').append('<link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp" />');
     }
 
-    // 3. Agregar CSS si no existe
-    if (!$('.obs-header').length) {
+    // 3. Agregar CSS del footer si no existe
+    if (!$('.obs-footer').length) {
         if ($('style').length) {
             $('style').first().append(OBS360_CSS);
         } else {
@@ -129,12 +92,7 @@ function wrapWithOBS360Template(htmlContent) {
         }
     }
 
-    // 4. Agregar header si no existe
-    if (!$('.obs-header').length) {
-        $('body').prepend(OBS360_HEADER);
-    }
-
-    // 5. Agregar footer si no existe
+    // 4. Agregar footer si no existe (sin header - clientes no deben navegar)
     if (!$('.obs-footer').length) {
         $('body').append(OBS360_FOOTER);
     }
