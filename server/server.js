@@ -36,8 +36,8 @@ app.post('/api/login', authenticate, (req, res) => {
 app.get('/api/articles', async (req, res) => {
     try {
         const files = await fs.readdir(BLOG_DIR);
-        const htmlFiles = files.filter(file => 
-            file.endsWith('.html') && 
+        const htmlFiles = files.filter(file =>
+            file.endsWith('.html') &&
             file !== 'index.html' &&
             !file.includes('v1') // Excluir archivos originales
         );
@@ -52,7 +52,7 @@ app.get('/api/articles', async (req, res) => {
             // Extraer metadatos del HTML
             const title = $('title').text().split('|')[0].trim() || file.replace('.html', '');
             const slug = file.replace('.html', '');
-            
+
             // Intentar extraer fecha y categoría del contenido
             let date = 'Sin fecha';
             let category = 'Sin categoría';
@@ -62,7 +62,7 @@ app.get('/api/articles', async (req, res) => {
             // Buscar en diferentes posibles ubicaciones
             const headerText = $('header').first().text();
             const h1Text = $('h1').first().text();
-            
+
             // Detectar categoría por el contenido
             if (content.includes('CPC') || content.includes('Amazon Ads')) {
                 category = 'Análisis';
@@ -113,7 +113,7 @@ app.get('/api/articles/:slug', async (req, res) => {
         const $ = cheerio.load(content);
 
         const title = $('title').text().split('|')[0].trim();
-        
+
         res.json({
             slug,
             title,
@@ -126,34 +126,81 @@ app.get('/api/articles/:slug', async (req, res) => {
     }
 });
 
+// Función para generar ID aleatorio
+function generateObfuscatedId() {
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    let id = 'r-';
+    for (let i = 0; i < 8; i++) {
+        id += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return id;
+}
+
+// Función para cargar/guardar mapeo de URLs
+async function loadUrlMapping() {
+    const mappingPath = path.join(BLOG_DIR, 'url-mapping.json');
+    try {
+        if (await fs.pathExists(mappingPath)) {
+            const content = await fs.readFile(mappingPath, 'utf-8');
+            return JSON.parse(content);
+        }
+    } catch (error) {
+        console.error('Error loading URL mapping:', error);
+    }
+    return {};
+}
+
+async function saveUrlMapping(mapping) {
+    const mappingPath = path.join(BLOG_DIR, 'url-mapping.json');
+    try {
+        await fs.writeFile(mappingPath, JSON.stringify(mapping, null, 2), 'utf-8');
+    } catch (error) {
+        console.error('Error saving URL mapping:', error);
+    }
+}
+
 // Crear nuevo artículo
 app.post('/api/articles', async (req, res) => {
     try {
-        const { slug, title, content, date, category, icon, excerpt } = req.body;
+        const { title, content, date, category, icon, excerpt } = req.body;
 
-        if (!slug || !content) {
-            return res.status(400).json({ error: 'Slug y contenido son requeridos' });
+        if (!title || !content) {
+            return res.status(400).json({ error: 'Título y contenido son requeridos' });
         }
 
-        const filename = `${slug}.html`;
+        // Generar ID ofuscado
+        const obfuscatedId = generateObfuscatedId();
+        const filename = `${obfuscatedId}.html`;
         const filePath = path.join(BLOG_DIR, filename);
 
-        // Verificar si ya existe
+        // Verificar que el ID no exista (muy improbable, pero por seguridad)
         if (await fs.pathExists(filePath)) {
-            return res.status(409).json({ error: 'Ya existe un artículo con ese slug' });
+            // Generar otro ID
+            return res.status(500).json({ error: 'Error generando ID único, intenta de nuevo' });
         }
 
         // Guardar archivo
         await fs.writeFile(filePath, content, 'utf-8');
 
+        // Actualizar mapeo de URLs
+        const mapping = await loadUrlMapping();
+        const originalSlug = title.toLowerCase()
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+
+        mapping[`${originalSlug}.html`] = filename;
+        await saveUrlMapping(mapping);
+
         // Actualizar índice del blog
         await updateBlogIndex();
 
-        res.json({ 
-            success: true, 
+        res.json({
+            success: true,
             message: 'Artículo creado exitosamente',
-            slug,
-            filename 
+            slug: obfuscatedId,
+            filename,
+            obfuscatedUrl: filename
         });
     } catch (error) {
         console.error('Error al crear artículo:', error);
@@ -179,10 +226,10 @@ app.put('/api/articles/:slug', async (req, res) => {
         // Actualizar índice
         await updateBlogIndex();
 
-        res.json({ 
-            success: true, 
+        res.json({
+            success: true,
             message: 'Artículo actualizado exitosamente',
-            slug 
+            slug
         });
     } catch (error) {
         console.error('Error al actualizar artículo:', error);
@@ -206,9 +253,9 @@ app.delete('/api/articles/:slug', async (req, res) => {
         // Actualizar índice
         await updateBlogIndex();
 
-        res.json({ 
-            success: true, 
-            message: 'Artículo eliminado exitosamente' 
+        res.json({
+            success: true,
+            message: 'Artículo eliminado exitosamente'
         });
     } catch (error) {
         console.error('Error al eliminar artículo:', error);
@@ -221,15 +268,15 @@ app.delete('/api/articles/:slug', async (req, res) => {
 async function updateBlogIndex() {
     try {
         const indexPath = path.join(BLOG_DIR, 'index.html');
-        
+
         // Leer el index actual
         let indexContent = await fs.readFile(indexPath, 'utf-8');
         const $ = cheerio.load(indexContent);
 
         // Obtener todos los artículos
         const files = await fs.readdir(BLOG_DIR);
-        const htmlFiles = files.filter(file => 
-            file.endsWith('.html') && 
+        const htmlFiles = files.filter(file =>
+            file.endsWith('.html') &&
             file !== 'index.html' &&
             !file.includes('v1')
         );
@@ -245,7 +292,7 @@ async function updateBlogIndex() {
 
             const title = article$('title').text().split('|')[0].trim();
             const slug = file.replace('.html', '');
-            
+
             // Detectar categoría y color
             let category = 'Análisis';
             let categoryClass = 'cpc';
@@ -283,7 +330,7 @@ async function updateBlogIndex() {
 
         // Guardar index actualizado
         await fs.writeFile(indexPath, $.html(), 'utf-8');
-        
+
         console.log('✅ Índice del blog actualizado');
     } catch (error) {
         console.error('Error al actualizar índice:', error);
