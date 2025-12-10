@@ -112,6 +112,164 @@
             overflow: hidden;
         }
 
+        .blog-hero.hidden {
+            display: none;
+        }
+
+        /* Login Screen - Full Page */
+        .login-screen {
+            display: none;
+            min-height: calc(100vh - 80px);
+            background: linear-gradient(135deg, #28529a 0%, #1e3a6e 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-screen::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(132, 204, 22, 0.1) 0%, transparent 50%);
+            animation: pulse 8s infinite;
+        }
+
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 80px);
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header .lock-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #28529a, #84cc16);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 28px;
+        }
+
+        .login-header h2 {
+            font-family: 'Montserrat', sans-serif;
+            color: #1f2937;
+            font-size: 1.75rem;
+            margin-bottom: 8px;
+        }
+
+        .login-header p {
+            color: #6b7280;
+            font-size: 15px;
+        }
+
+        .login-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .login-form label {
+            display: block;
+            margin-bottom: 8px;
+            color: #374151;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .login-form input:focus {
+            outline: none;
+            border-color: #28529a;
+            box-shadow: 0 0 0 4px rgba(40, 82, 154, 0.1);
+        }
+
+        .login-form button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #28529a, #84cc16);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(40, 82, 154, 0.3);
+        }
+
+        .login-error {
+            display: none;
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .login-branding {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .login-branding img {
+            height: 35px;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 30px 24px;
+            }
+
+            .login-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .login-header .lock-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 24px;
+            }
+        }
+
         .blog-hero::before {
             content: "";
             position: absolute;
@@ -377,34 +535,33 @@
         </div>
     </section>
 
-    <!-- Login Screen -->
-    <div id="loginScreen" style="display: none; padding: 80px 20px; background: white;">
-        <div style="max-width: 400px; margin: 0 auto; text-align: center;">
-            <h2 style="font-family: 'Montserrat', sans-serif; color: #1f2937; margin-bottom: 10px;">Acceso Restringido
-            </h2>
-            <p style="color: #6b7280; margin-bottom: 30px;">Ingresa tus credenciales para acceder a los recursos</p>
-            <div id="loginError"
-                style="display: none; background: #fee2e2; color: #dc2626; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 14px;">
-                Credenciales incorrectas
+    <!-- Login Screen - Full Page -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <div class="lock-icon">🔒</div>
+                    <h2>Centro de Recursos</h2>
+                    <p>Ingresa tus credenciales para acceder</p>
+                </div>
+                <div id="loginError" class="login-error">
+                    Credenciales incorrectas
+                </div>
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <label for="username">Usuario</label>
+                        <input type="text" id="username" required placeholder="Tu usuario">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Contraseña</label>
+                        <input type="password" id="password" required placeholder="Tu contraseña">
+                    </div>
+                    <button type="submit">Acceder</button>
+                </form>
+                <div class="login-branding">
+                    <img src="../Logo-Obs360.co_.webp" alt="OBS360">
+                </div>
             </div>
-            <form id="loginForm" style="text-align: left;">
-                <div style="margin-bottom: 20px;">
-                    <label
-                        style="display: block; margin-bottom: 8px; color: #374151; font-weight: 600; font-size: 14px;">Usuario</label>
-                    <input type="text" id="username" required
-                        style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 14px;">
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <label
-                        style="display: block; margin-bottom: 8px; color: #374151; font-weight: 600; font-size: 14px;">Contraseña</label>
-                    <input type="password" id="password" required
-                        style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 14px;">
-                </div>
-                <button type="submit"
-                    style="width: 100%; padding: 14px; background: linear-gradient(135deg, #28529a, #84cc16); color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 14px;">
-                    Acceder
-                </button>
-            </form>
         </div>
     </div>
 
@@ -464,7 +621,9 @@
         if (sessionStorage.getItem('blog_logged_in') === 'true') {
             showArticles();
         } else {
+            // Show login screen and hide hero
             document.getElementById('loginScreen').style.display = 'block';
+            document.querySelector('.blog-hero').classList.add('hidden');
         }
 
         // Login form handler
@@ -483,6 +642,8 @@
         });
 
         function showArticles() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.querySelector('.blog-hero').classList.remove('hidden');
             document.getElementById('articlesSection').style.display = 'block';
             loadArticles();
         }
