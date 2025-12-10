@@ -27,11 +27,24 @@ const authenticate = (req, res, next) => {
 
 // ==================== TEMPLATES OBS360 ====================
 
-// Nota: NO incluimos header con "Volver a Recursos" porque los clientes
-// reciben URLs directas a sus documentos y no deben poder navegar al índice
-
-// CSS solo para el footer
+// CSS para header (solo logo) y footer
 const OBS360_CSS = `
+    /* OBS360 Header - Solo logo */
+    .obs-header {
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 15px 0;
+    }
+    .obs-header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    .obs-logo img {
+        height: 45px;
+        width: auto;
+    }
+    /* OBS360 Footer */
     .obs-footer {
         background: linear-gradient(135deg, #1f2937 0%, #28529a 100%);
         padding: 40px 0;
@@ -54,9 +67,19 @@ const OBS360_CSS = `
     .obs-footer-btn:hover { background: #65a30d; transform: translateY(-2px); }
 `;
 
-// Nota: NO incluimos header con "Volver a Recursos" porque los clientes
-// reciben URLs directas a sus documentos y no deben poder navegar al índice
+// Header con solo el logo (sin botón de navegación)
+const OBS360_HEADER = `
+    <!-- OBS360 Header -->
+    <header class="obs-header">
+        <div class="obs-header-content">
+            <div class="obs-logo">
+                <img src="../Logo-Obs360.co_.webp" alt="OBS360" />
+            </div>
+        </div>
+    </header>
+`;
 
+// Footer estándar
 const OBS360_FOOTER = `
     <!-- OBS360 Footer -->
     <footer class="obs-footer">
@@ -69,7 +92,7 @@ const OBS360_FOOTER = `
 `;
 
 
-// Función para envolver HTML con template OBS360 (solo footer, sin header)
+// Función para envolver HTML con template OBS360 (header con logo + footer)
 function wrapWithOBS360Template(htmlContent) {
     const $ = cheerio.load(htmlContent);
 
@@ -83,8 +106,8 @@ function wrapWithOBS360Template(htmlContent) {
         $('head').append('<link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp" />');
     }
 
-    // 3. Agregar CSS del footer si no existe
-    if (!$('.obs-footer').length) {
+    // 3. Agregar CSS si no existe
+    if (!$('.obs-header').length || !$('.obs-footer').length) {
         if ($('style').length) {
             $('style').first().append(OBS360_CSS);
         } else {
@@ -92,7 +115,12 @@ function wrapWithOBS360Template(htmlContent) {
         }
     }
 
-    // 4. Agregar footer si no existe (sin header - clientes no deben navegar)
+    // 4. Agregar header con solo logo si no existe
+    if (!$('.obs-header').length) {
+        $('body').prepend(OBS360_HEADER);
+    }
+
+    // 5. Agregar footer si no existe
     if (!$('.obs-footer').length) {
         $('body').append(OBS360_FOOTER);
     }
