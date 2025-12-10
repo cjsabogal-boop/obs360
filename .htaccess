@@ -2,10 +2,12 @@
 RewriteEngine On
 RewriteBase /
 
-# NO redirigir, la carpeta ya está en minúsculas
-# (Comentado para evitar loops)
-# RewriteCond %{REQUEST_URI} ^/Blog(/.*)?$ [NC]
-# RewriteRule ^Blog(/.*)?$ /blog$1 [R=301,L]
+# Forzar minúsculas en /blog (evitar cache de mayúsculas)
+RewriteCond %{REQUEST_URI} ^/Blog [NC]
+RewriteRule ^Blog(.*)$ /blog$1 [R=301,L,NE]
+
+# Asegurar que /blog/ cargue index.html
+DirectoryIndex index.html index.php
 
 # Habilitar compresión GZIP
 <IfModule mod_deflate.c>
