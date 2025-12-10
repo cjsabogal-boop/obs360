@@ -559,6 +559,11 @@
     </div>
 
     <script>
+        // API Configuration
+        const API_URL = window.location.hostname === 'localhost'
+            ? 'http://localhost:3000/api'
+            : 'https://obs360.co/api';
+
         // Authentication
         const ADMIN_CREDENTIALS = {
             username: 'obs360admin',
@@ -597,17 +602,14 @@
 
         // Panel Navigation
         function showPanel(panelName) {
-            // Hide all panels
             document.querySelectorAll('.panel-section').forEach(panel => {
                 panel.classList.remove('active');
             });
 
-            // Remove active class from all buttons
             document.querySelectorAll('.sidebar-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
 
-            // Show selected panel
             if (panelName === 'articles') {
                 document.getElementById('articlesPanel').classList.add('active');
                 document.querySelectorAll('.sidebar-btn')[0].classList.add('active');
@@ -622,51 +624,50 @@
             }
         }
 
-        // Article Management
-        function getArticles() {
-            const articles = localStorage.getItem('obs360_articles');
-            return articles ? JSON.parse(articles) : [];
-        }
-
-        function saveArticles(articles) {
-            localStorage.setItem('obs360_articles', JSON.stringify(articles));
-            localStorage.setItem('obs360_last_update', new Date().toISOString());
-        }
-
-        function loadArticles() {
-            const articles = getArticles();
+        // Article Management with API
+        async function loadArticles() {
             const container = document.getElementById('articlesList');
+            container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">Cargando artículos...</p>';
 
-            if (articles.length === 0) {
-                container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">No hay artículos publicados aún. ¡Crea tu primer artículo!</p>';
-                return;
-            }
+            try {
+                const response = await fetch(`${API_URL}/articles`);
+                const data = await response.json();
+                const articles = data.articles || [];
 
-            container.innerHTML = articles.map((article, index) => `
-                <div class="article-card">
-                    <div class="article-card-header">
-                        <div>
-                            <span class="category-badge badge-${article.category}">${getCategoryName(article.category)}</span>
-                            <h3 class="article-card-title">${article.icon} ${article.title}</h3>
-                            <p class="article-card-meta">📅 ${article.date} • 🔗 ${article.slug}.html</p>
+                if (articles.length === 0) {
+                    container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">No hay artículos publicados aún. ¡Crea tu primer artículo!</p>';
+                    return;
+                }
+
+                container.innerHTML = articles.map((article, index) => `
+                    <div class="article-card">
+                        <div class="article-card-header">
+                            <div>
+                                <span class="category-badge badge-${getCategorySlug(article.category)}">${article.category}</span>
+                                <h3 class="article-card-title">${article.icon} ${article.title}</h3>
+                                <p class="article-card-meta">📅 ${article.date} • 🔗 ${article.slug}.html</p>
+                            </div>
+                        </div>
+                        <p class="article-card-excerpt">${article.excerpt}</p>
+                        <div class="article-actions">
+                            <button class="btn-edit" onclick="editArticle('${article.slug}')">✏️ Editar</button>
+                            <button class="btn-delete" onclick="deleteArticle('${article.slug}')">🗑️ Eliminar</button>
                         </div>
                     </div>
-                    <p class="article-card-excerpt">${article.excerpt}</p>
-                    <div class="article-actions">
-                        <button class="btn-edit" onclick="editArticle(${index})">✏️ Editar</button>
-                        <button class="btn-delete" onclick="deleteArticle(${index})">🗑️ Eliminar</button>
-                    </div>
-                </div>
-            `).join('');
+                `).join('');
+            } catch (error) {
+                console.error('Error loading articles:', error);
+                container.innerHTML = '<p style="color: #ef4444; text-align: center; padding: 40px;">⚠️ Error al cargar artículos. Verifica que el servidor esté corriendo.</p>';
+            }
         }
 
-        function getCategoryName(category) {
-            const names = {
-                'analisis': 'Análisis',
-                'informe': 'Informe Mensual',
-                'estrategia': 'Estrategia'
+        function getCategorySlug(category) {
+            const slugs = {
+                'Análisis': 'analisis',
+                'Informe Mensual': 'informe',
+                'Estrategia': 'estrategia'
             };
-            return names[category] || category;
+            return slugs[category] || 'analisis';
         }
 
         function generateSlug(title) {
@@ -676,8 +677,8 @@
                 .replace(/^-+|-+$/g, '');
         }
 
-        // Form Submission
-        document.getElementById('articleForm').addEventListener('submit', function (e) {
+        // Form Submission with API
+        document.getElementById('articleForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
             const article = {
@@ -687,88 +688,90 @@
                 icon: document.getElementById('articleIcon').value || '📄',
                 excerpt: document.getElementById('articleExcerpt').value,
                 content: document.getElementById('articleContent').value,
-                slug: generateSlug(document.getElementById('articleTitle').value),
-                createdAt: new Date().toISOString()
+                slug: generateSlug(document.getElementById('articleTitle').value)
             };
 
-            const articles = getArticles();
-            articles.unshift(article);
-            saveArticles(articles);
+            try {
+                const response = await fetch(`${API_URL}/articles`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(article)
+                });
 
-            // Generate HTML file
-            generateArticleHTML(article);
+                const result = await response.json();
 
-            // Update blog index
-            updateBlogIndex();
+                if (response.ok) {
+                    document.getElementById('successMessage').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('successMessage').style.display = 'none';
+                    }, 3000);
 
-            // Show success message
-            document.getElementById('successMessage').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('successMessage').style.display = 'none';
-            }, 3000);
-
-            // Reset form
-            this.reset();
-
-            // Reload articles list
-            loadArticles();
+                    this.reset();
+                    loadArticles();
+                    showPanel('articles');
+                } else {
+                    alert('Error al guardar artículo: ' + (result.error || 'Error desconocido'));
+                }
+            } catch (error) {
+                console.error('Error saving article:', error);
+                alert('Error al conectar con el servidor. Verifica que esté corriendo.');
+            }
         });
 
-        function editArticle(index) {
-            const articles = getArticles();
-            const article = articles[index];
+        async function editArticle(slug) {
+            try {
+                const response = await fetch(`${API_URL}/articles/${slug}`);
+                const article = await response.json();
 
-            document.getElementById('articleTitle').value = article.title;
-            document.getElementById('articleDate').value = article.date;
-            document.getElementById('articleCategory').value = article.category;
-            document.getElementById('articleIcon').value = article.icon;
-            document.getElementById('articleExcerpt').value = article.excerpt;
-            document.getElementById('articleContent').value = article.content;
+                document.getElementById('articleTitle').value = article.title;
+                document.getElementById('articleDate').value = article.date || 'Diciembre 2025';
+                document.getElementById('articleCategory').value = getCategorySlug(article.category);
+                document.getElementById('articleIcon').value = article.icon;
+                document.getElementById('articleExcerpt').value = article.excerpt;
+                document.getElementById('articleContent').value = article.content;
 
-            // Delete old article
-            articles.splice(index, 1);
-            saveArticles(articles);
-
-            showPanel('new');
-        }
-
-        function deleteArticle(index) {
-            if (confirm('¿Estás seguro de que deseas eliminar este artículo?')) {
-                const articles = getArticles();
-                articles.splice(index, 1);
-                saveArticles(articles);
-                loadArticles();
-                updateBlogIndex();
+                showPanel('new');
+            } catch (error) {
+                console.error('Error loading article:', error);
+                alert('Error al cargar el artículo');
             }
         }
 
-        function generateArticleHTML(article) {
-            const categoryColors = {
-                'analisis': { gradient: 'from-teal-600 to-teal-800', class: 'cpc' },
-                'informe': { gradient: 'from-pink-400 via-purple-400 to-indigo-400', class: 'cristal' },
-                'estrategia': { gradient: 'from-blue-600 to-blue-800', class: 'porcelana' }
-            };
+        async function deleteArticle(slug) {
+            if (confirm('¿Estás seguro de que deseas eliminar este artículo?')) {
+                try {
+                    const response = await fetch(`${API_URL}/articles/${slug}`, {
+                        method: 'DELETE'
+                    });
 
-            const color = categoryColors[article.category] || categoryColors['analisis'];
-
-            // This would normally save to server, but for demo we'll use localStorage
-            console.log('Article HTML generated for:', article.slug);
-            alert(`Artículo "${article.title}" guardado exitosamente.\n\nPara publicarlo, copia el contenido HTML y créalo como:\nblog/${article.slug}.html`);
+                    if (response.ok) {
+                        loadArticles();
+                        alert('Artículo eliminado exitosamente');
+                    } else {
+                        const result = await response.json();
+                        alert('Error al eliminar: ' + (result.error || 'Error desconocido'));
+                    }
+                } catch (error) {
+                    console.error('Error deleting article:', error);
+                    alert('Error al conectar con el servidor');
+                }
+            }
         }
 
-        function updateBlogIndex() {
-            console.log('Blog index updated');
-            // This would update the blog/index.html file with new articles
-        }
+        async function updateStats() {
+            try {
+                const response = await fetch(`${API_URL}/articles`);
+                const data = await response.json();
+                const articles = data.articles || [];
 
-        function updateStats() {
-            const articles = getArticles();
-            document.getElementById('totalArticles').textContent = articles.length;
-
-            const lastUpdate = localStorage.getItem('obs360_last_update');
-            if (lastUpdate) {
-                const date = new Date(lastUpdate);
-                document.getElementById('lastUpdate').textContent = date.toLocaleString('es-ES');
+                document.getElementById('totalArticles').textContent = articles.length;
+                document.getElementById('lastUpdate').textContent = new Date().toLocaleString('es-ES');
+            } catch (error) {
+                console.error('Error updating stats:', error);
+                document.getElementById('totalArticles').textContent = '?';
+                document.getElementById('lastUpdate').textContent = 'Error';
             }
         }
     </script>
