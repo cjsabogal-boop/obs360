@@ -734,8 +734,8 @@
                 });
 
                 articles = articles.map(article => {
-                    // Auto-categorize if no category or "Sin fecha"
-                    if (!article.category || article.category === 'Sin fecha') {
+                    // Auto-categorize if no category
+                    if (!article.category || article.category === 'Sin categoría') {
                         article.category = categorizeArticle(article.title, article.filename);
                     }
 

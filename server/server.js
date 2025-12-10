@@ -180,16 +180,49 @@ app.get('/api/articles', async (req, res) => {
             const headerText = $('header').first().text();
             const h1Text = $('h1').first().text();
 
-            // Detectar categoría por el contenido
-            if (content.includes('CPC') || content.includes('Amazon Ads')) {
+            // Detectar categoría por el contenido y título
+            const titleLower = title.toLowerCase();
+
+            // Herramientas (primero porque es específico)
+            if (titleLower.includes('simulator') || titleLower.includes('simulador') ||
+                titleLower.includes('calculator') || titleLower.includes('calculador') ||
+                titleLower.includes('kdp') || titleLower.includes('tool') ||
+                titleLower.includes('herramienta') || titleLower.includes('budget')) {
+                category = 'Herramientas';
+                icon = '🛠️';
+            }
+            // Capacitación
+            else if (titleLower.includes('guide') || titleLower.includes('guía') ||
+                titleLower.includes('playbook') || titleLower.includes('mentor') ||
+                titleLower.includes('principios') || content.includes('adb')) {
+                category = 'Capacitación';
+                icon = '🎓';
+            }
+            // Análisis
+            else if (content.includes('CPC') || content.includes('Amazon Ads') ||
+                titleLower.includes('analysis') || titleLower.includes('análisis') ||
+                titleLower.includes('metrics') || titleLower.includes('opportunity')) {
                 category = 'Análisis';
                 icon = '📊';
-            } else if (content.includes('Informe') || content.includes('Gestión')) {
+            }
+            // Informe Mensual
+            else if (content.includes('Informe') || content.includes('Gestión') ||
+                titleLower.includes('report') || titleLower.includes('cristal') ||
+                titleLower.includes('summary')) {
                 category = 'Informe Mensual';
                 icon = '💎';
-            } else if (content.includes('Estrategia') || content.includes('Higiene')) {
+            }
+            // Estrategia
+            else if (content.includes('Estrategia') || content.includes('Higiene') ||
+                titleLower.includes('strategy') || titleLower.includes('market') ||
+                titleLower.includes('vajillas')) {
                 category = 'Estrategia';
                 icon = '🍽️';
+            }
+            // Otras (fallback)
+            else {
+                category = 'Otras';
+                icon = '📁';
             }
 
             // Extraer excerpt del primer párrafo
