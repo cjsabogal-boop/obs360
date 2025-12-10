@@ -377,10 +377,69 @@
         </div>
     </section>
 
+    <!-- Login Screen -->
+    <div id="loginScreen" style="display: none; padding: 80px 20px; background: white;">
+        <div style="max-width: 400px; margin: 0 auto; text-align: center;">
+            <h2 style="font-family: 'Montserrat', sans-serif; color: #1f2937; margin-bottom: 10px;">Acceso Restringido
+            </h2>
+            <p style="color: #6b7280; margin-bottom: 30px;">Ingresa tus credenciales para acceder a los recursos</p>
+            <div id="loginError"
+                style="display: none; background: #fee2e2; color: #dc2626; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 14px;">
+                Credenciales incorrectas
+            </div>
+            <form id="loginForm" style="text-align: left;">
+                <div style="margin-bottom: 20px;">
+                    <label
+                        style="display: block; margin-bottom: 8px; color: #374151; font-weight: 600; font-size: 14px;">Usuario</label>
+                    <input type="text" id="username" required
+                        style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 14px;">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label
+                        style="display: block; margin-bottom: 8px; color: #374151; font-weight: 600; font-size: 14px;">Contraseña</label>
+                    <input type="password" id="password" required
+                        style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 14px;">
+                </div>
+                <button type="submit"
+                    style="width: 100%; padding: 14px; background: linear-gradient(135deg, #28529a, #84cc16); color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 14px;">
+                    Acceder
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- Articles Section -->
-    <section class="articles-section">
+    <section class="articles-section" id="articlesSection" style="display: none;">
         <div class="container">
             <h2 class="section-title">Recursos Disponibles</h2>
+
+            <!-- Category Filters -->
+            <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 40px; flex-wrap: wrap;">
+                <button class="category-filter active" data-category="all"
+                    style="padding: 10px 20px; border: 2px solid #28529a; background: #28529a; color: white; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                    Todos
+                </button>
+                <button class="category-filter" data-category="Análisis"
+                    style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                    📊 Análisis
+                </button>
+                <button class="category-filter" data-category="Informe Mensual"
+                    style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                    💎 Informes
+                </button>
+                <button class="category-filter" data-category="Estrategia"
+                    style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                    🍽️ Estrategia
+                </button>
+                <button class="category-filter" data-category="Capacitación"
+                    style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                    🎓 Capacitación
+                </button>
+                <button class="category-filter" data-category="Otras"
+                    style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                    📁 Otras
+                </button>
+            </div>
 
             <div class="articles-grid" id="articlesGrid">
                 <!-- Articles will be loaded dynamically -->
@@ -389,7 +448,92 @@
         </div>
     </section>
 
+
+
     <script>
+        // Authentication
+        const BLOG_CREDENTIALS = {
+            username: 'obs360client',
+            password: 'Resources2025!'
+        };
+
+        let allArticles = [];
+        let currentFilter = 'all';
+
+        // Check if already logged in
+        if (sessionStorage.getItem('blog_logged_in') === 'true') {
+            showArticles();
+        } else {
+            document.getElementById('loginScreen').style.display = 'block';
+        }
+
+        // Login form handler
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === BLOG_CREDENTIALS.username && password === BLOG_CREDENTIALS.password) {
+                sessionStorage.setItem('blog_logged_in', 'true');
+                document.getElementById('loginScreen').style.display = 'none';
+                showArticles();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        });
+
+        function showArticles() {
+            document.getElementById('articlesSection').style.display = 'block';
+            loadArticles();
+        }
+
+        // Categorize articles automatically
+        function categorizeArticle(title, filename) {
+            const titleLower = title.toLowerCase();
+            const filenameLower = filename.toLowerCase();
+
+            // Capacitación keywords
+            if (titleLower.includes('guide') || titleLower.includes('guía') ||
+                titleLower.includes('playbook') || titleLower.includes('mentor') ||
+                titleLower.includes('principios') || titleLower.includes('adb')) {
+                return 'Capacitación';
+            }
+
+            // Análisis keywords
+            if (titleLower.includes('analysis') || titleLower.includes('análisis') ||
+                titleLower.includes('cpc') || titleLower.includes('metrics') ||
+                titleLower.includes('opportunity')) {
+                return 'Análisis';
+            }
+
+            // Informe keywords
+            if (titleLower.includes('informe') || titleLower.includes('report') ||
+                titleLower.includes('cristal') || titleLower.includes('summary')) {
+                return 'Informe Mensual';
+            }
+
+            // Estrategia keywords
+            if (titleLower.includes('estrategia') || titleLower.includes('strategy') ||
+                titleLower.includes('higiene') || titleLower.includes('vajillas') ||
+                titleLower.includes('market') || titleLower.includes('loop')) {
+                return 'Estrategia';
+            }
+
+            return 'Otras';
+        }
+
+        // Get icon for category
+        function getCategoryIcon(category) {
+            const icons = {
+                'Análisis': '📊',
+                'Informe Mensual': '💎',
+                'Estrategia': '🍽️',
+                'Capacitación': '🎓',
+                'Otras': '📁'
+            };
+            return icons[category] || '📄';
+        }
+
         // Load articles from API
         async function loadArticles() {
             const grid = document.getElementById('articlesGrid');
@@ -401,50 +545,120 @@
 
                 const response = await fetch(`${API_URL}/articles`);
                 const data = await response.json();
-                const articles = data.articles || [];
+                let articles = data.articles || [];
 
                 if (articles.length === 0) {
                     grid.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 40px;">No hay artículos disponibles.</p>';
                     return;
                 }
 
-                // Map categories to colors
-                const categoryColors = {
-                    'Análisis': 'cpc',
-                    'Informe Mensual': 'cristal',
-                    'Estrategia': 'porcelana',
-                    'Guía': 'cpc',
-                    'Tutorial': 'cristal',
-                    'Caso de Estudio': 'porcelana'
-                };
+                // Process articles: categorize and set date
+                const today = new Date().toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
 
-                grid.innerHTML = articles.map(article => {
-                    const colorClass = categoryColors[article.category] || 'cpc';
-                    return `
-                        <a href="${article.filename}" class="article-card">
-                            <div class="article-thumbnail ${colorClass}">
-                                <span class="article-category">${article.category}</span>
-                                <span class="article-icon">${article.icon}</span>
-                            </div>
-                            <div class="article-content">
-                                <span class="article-date">${article.date}</span>
-                                <h3 class="article-title">${article.title}</h3>
-                                <p class="article-excerpt">${article.excerpt}</p>
-                                <span class="article-read-more">
-                                    Ver completo →
-                                </span>
-                            </div>
-                        </a>
-                    `;
-                }).join('');
+                articles = articles.map(article => {
+                    // Auto-categorize if no category or "Sin fecha"
+                    if (!article.category || article.category === 'Sin fecha') {
+                        article.category = categorizeArticle(article.title, article.filename);
+                    }
+
+                    // Set icon based on category
+                    if (!article.icon || article.icon === '📄') {
+                        article.icon = getCategoryIcon(article.category);
+                    }
+
+                    // Set today's date if no date
+                    if (!article.date || article.date === 'Sin fecha') {
+                        article.date = today;
+                    }
+
+                    return article;
+                });
+
+                allArticles = articles;
+                renderArticles(articles);
+                setupFilters();
             } catch (error) {
                 console.error('Error loading articles:', error);
                 grid.innerHTML = '<p style="text-align: center; color: #ef4444; padding: 40px;">⚠️ Error al cargar artículos. Por favor, recarga la página.</p>';
             }
         }
 
-        // Load articles when page loads
-        document.addEventListener('DOMContentLoaded', loadArticles);
+        // Render articles
+        function renderArticles(articles) {
+            const grid = document.getElementById('articlesGrid');
+
+            // Map categories to colors
+            const categoryColors = {
+                'Análisis': 'cpc',
+                'Informe Mensual': 'cristal',
+                'Estrategia': 'porcelana',
+                'Capacitación': 'cpc',
+                'Otras': 'cristal'
+            };
+
+            grid.innerHTML = articles.map(article => {
+                const colorClass = categoryColors[article.category] || 'cpc';
+                return `
+                    <a href="${article.filename}" class="article-card">
+                        <div class="article-thumbnail ${colorClass}">
+                            <span class="article-category">${article.category}</span>
+                            <span class="article-icon">${article.icon}</span>
+                        </div>
+                        <div class="article-content">
+                            <span class="article-date">${article.date}</span>
+                            <h3 class="article-title">${article.title}</h3>
+                            <p class="article-excerpt">${article.excerpt}</p>
+                            <span class="article-read-more">
+                                Ver completo →
+                            </span>
+                        </div>
+                    </a>
+                `;
+            }).join('');
+        }
+
+        // Setup category filters
+        function setupFilters() {
+            const filterButtons = document.querySelectorAll('.category-filter');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => {
+                        btn.style.background = 'white';
+                        btn.style.color = '#374151';
+                        btn.style.borderColor = '#e5e7eb';
+                        btn.classList.remove('active');
+                    });
+
+                    // Add active class to clicked button
+                    this.style.background = '#28529a';
+                    this.style.color = 'white';
+                    this.style.borderColor = '#28529a';
+                    this.classList.add('active');
+
+                    // Filter articles
+                    const category = this.getAttribute('data-category');
+                    currentFilter = category;
+
+                    if (category === 'all') {
+                        renderArticles(allArticles);
+                    } else {
+                        const filtered = allArticles.filter(article => article.category === category);
+                        renderArticles(filtered);
+                    }
+                });
+            });
+        }
+
+        // Load articles when page loads (if logged in)
+        if (sessionStorage.getItem('blog_logged_in') === 'true') {
+            document.addEventListener('DOMContentLoaded', loadArticles);
+        }
     </script>
 
     <!-- Footer -->
