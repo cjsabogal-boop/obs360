@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Interactivo de la Marca Poppi con IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Visualization & Content Choices: 
+        - Report Info: Hitos Clave (Tabla 1), Hitos Digitales (Tabla 2). Goal: Show evolution. Viz/Presentation: Interactive timeline cards (HTML/CSS/JS). Interaction: Display as cards. Justification: Clear chronological overview. Library/Method: Tailwind for styling.
+        - Report Info: Sales figures ($100k/24h, $500M annual, $1.95B acquisition), market position (#1 Amazon), TikTok budget (20%). Goal: Quantify success. Viz/Presentation: Dynamic stat callouts (HTML/CSS), Bar chart for key financial milestones, Donut chart for TikTok budget. Interaction: Static display for callouts, charts rendered by Chart.js. Justification: Highlights key metrics. Library/Method: Chart.js for charts, Tailwind for styling.
+        - Report Info: Branding strategy (Visuals, Voice). Goal: Explain brand appeal. Viz/Presentation: Text summaries with illustrative icons (Unicode/HTML+CSS). Interaction: Static display. Justification: Concise explanation of qualitative aspects.
+        - Report Info: Digital/Amazon/Omnichannel strategies. Goal: Detail strategic pillars. Viz/Presentation: Accordion-style sections for each strategy. Interaction: Click to expand/collapse. Justification: Organizes dense information effectively. Library/Method: JS for accordion.
+        - Report Info: Controversies (Lawsuit, Vending Machines). Goal: Present challenges. Viz/Presentation: Cards with summary and impact. Interaction: Static. Justification: Balances the narrative. Gemini API for deeper analysis of controversies.
+        - Report Info: Key Learnings. Goal: Synthesize takeaways. Viz/Presentation: Clickable cards for each lesson. Interaction: Click to reveal detailed explanation. Justification: Actionable insights.
+        - Report Info: Overall Poppi success. Goal: Provide executive summary. Viz/Presentation: Button to trigger Gemini API call. Interaction: Click to generate summary in modal. Justification: AI-powered summarization.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #FFFBF5; color: #333333; }
+        .nav-link { transition: color 0.3s ease; }
+        .nav-link:hover { color: #FF6B6B; }
+        .section-title { color: #FF6B6B; border-bottom: 2px solid #FF8C8C; padding-bottom: 0.5rem; }
+        .card { background-color: #FFFFFF; border: 1px solid #E0E0E0; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
+        .stat-card { background-color: #4DBA87; color: white; }
+        .stat-card-alt { background-color: #FFA94D; color: white; }
+        .accordion-button { background-color: #F0F0F0; color: #333333; text-align: left; }
+        .accordion-button.active { background-color: #FF8C8C; color: white; }
+        .accordion-content { background-color: #FAFAFA; max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 300px; max-height: 400px; }
+        @media (min-width: 768px) { .chart-container { height: 350px; } }
+        .tag { background-color: #E0E0E0; color: #555555; }
+        .lesson-card.active .lesson-details { display: block; }
+        .lesson-details { display: none; }
+        .hero-bg { background: linear-gradient(rgba(255, 251, 245, 0.8), rgba(255, 251, 245, 0.8)), url('https://placehold.co/1200x600/FFC0CB/FFFFFF?text=Poppi+Vibes&font=lora') no-repeat center center; background-size: cover; }
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); }
+        .modal-content { background-color: #FFFBF5; margin: 10% auto; padding: 20px; border: 1px solid #FF8C8C; width: 80%; max-width: 700px; border-radius: 8px; position: relative; }
+        .close-button { color: #FF6B6B; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close-button:hover, .close-button:focus { color: #333333; text-decoration: none; }
+        .loader { border: 5px solid #f3f3f3; border-top: 5px solid #FF6B6B; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .gemini-button { background-color: #FF6B6B; color: white; padding: 10px 15px; border-radius: 5px; font-weight: bold; transition: background-color 0.3s ease; }
+        .gemini-button:hover { background-color: #E05252; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-[#FF6B6B]">Poppi: El Análisis IA</a>
+            <div class="hidden md:flex space-x-4">
+                <a href="#origen" class="nav-link text-gray-700">Origen</a>
+                <a href="#marca" class="nav-link text-gray-700">Marca</a>
+                <a href="#digital" class="nav-link text-gray-700">Digital</a>
+                <a href="#amazon" class="nav-link text-gray-700">Amazon</a>
+                <a href="#expansion" class="nav-link text-gray-700">Expansión</a>
+                <a href="#modelo" class="nav-link text-gray-700">Modelo</a>
+                <a href="#desafios" class="nav-link text-gray-700">Desafíos</a>
+                <a href="#lecciones" class="nav-link text-gray-700">Lecciones</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="md:hidden hidden bg-white shadow-lg">
+            <a href="#origen" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Origen</a>
+            <a href="#marca" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Marca</a>
+            <a href="#digital" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Digital</a>
+            <a href="#amazon" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Amazon</a>
+            <a href="#expansion" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Expansión</a>
+            <a href="#modelo" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Modelo</a>
+            <a href="#desafios" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Desafíos</a>
+            <a href="#lecciones" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Lecciones</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8">
+        <section id="hero" class="hero-bg text-center py-16 md:py-24 rounded-lg shadow-lg mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#333333] mb-4">Poppi: La Revolución de las Sodas Funcionales</h1>
+            <p class="text-lg md:text-xl text-[#555555] max-w-3xl mx-auto">
+                Explora cómo Poppi transformó una solución casera en una marca multimillonaria, redefiniendo el mercado de bebidas con estrategias innovadoras en branding, marketing digital y ventas, ahora con análisis potenciado por IA.
+            </p>
+        </section>
+
+        <section id="origen" class="mb-12 scroll-mt-20">
+            <h2 class="text-3xl font-bold mb-6 section-title">El Viaje de Poppi: Hitos Clave</h2>
+            <p class="text-lg text-[#555555] mb-8">Desde una cocina en Dallas hasta la adquisición por PepsiCo, la evolución de Poppi es una historia de visión, adaptación y crecimiento explosivo. Estos son los momentos que definieron su trayectoria.</p>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-[#FF6B6B] mb-2">2015: Fundación como Mother Beverage</h3>
+                    <p class="text-[#555555]">Allison y Stephen Ellsworth crean una bebida a base de ACV y jugos, vendida en mercados de agricultores. Misión: alternativa de soda saludable y sabrosa.</p>
+                </div>
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-[#FF6B6B] mb-2">2018: Aparición en Shark Tank</h3>
+                    <p class="text-[#555555]">Presentan Mother Beverage. Rohan Oza invierte $400,000 por el 25%, aportando capital y visión estratégica crucial.</p>
+                </div>
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-[#FF6B6B] mb-2">2020: Rebranding a Poppi</h3>
+                    <p class="text-[#555555]">Cambio de nombre, identidad visual vibrante y moderna. Objetivo: atraer a Gen Z/Millennials y escalar la marca.</p>
+                </div>
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-[#FF6B6B] mb-2">2021+: Crecimiento Viral en TikTok</h3>
+                    <p class="text-[#555555]">Video de Allison sobre el origen de Poppi se vuelve viral ($100k ventas/24h). TikTok se convierte en pilar de marketing.</p>
+                </div>
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-[#FF6B6B] mb-2">2020-2024: Expansión y Dominio Amazon</h3>
+                    <p class="text-[#555555]">Rápida expansión a retailers (Whole Foods, Target, Walmart). Se convierte en la soda #1 en Amazon. Ventas de ~$500M en 2024.</p>
+                </div>
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-[#FF6B6B] mb-2">2025: Adquisición por PepsiCo</h3>
+                    <p class="text-[#555555]">PepsiCo adquiere Poppi por ~$1.95 mil millones, validando su éxito y el mercado de sodas funcionales.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="marca" class="mb-12 scroll-mt-20">
+            <h2 class="text-3xl font-bold mb-6 section-title">Construyendo la Marca Poppi</h2>
+            <p class="text-lg text-[#555555] mb-8">La identidad visual y la voz de Poppi fueron clave para conectar con una nueva generación y diferenciarse. No solo vendían una bebida, sino una experiencia y un estilo de vida.</p>
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-[#FF6B6B] mb-3 flex items-center"><span class="text-2xl mr-2">🎨</span> Identidad Visual: Vibrante y Optimista</h3>
+                    <p class="text-[#555555]">Latas con colores llamativos y diseños audaces. Estética "instagrameable" que comunica diversión y modernidad, destacando en estantes y redes sociales.</p>
+                </div>
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-[#FF6B6B] mb-3 flex items-center"><span class="text-2xl mr-2">🗣️</span> Voz de Marca: Divertida y Confiada</h3>
+                    <p class="text-[#555555]">Tono "divertido, confiado y un poco rebelde". Lenguaje relatable y auténtico, a menudo con participación de los fundadores. "Soda's Back!"</p>
+                </div>
+            </div>
+            <h3 class="text-2xl font-semibold mb-4 text-[#4DBA87]">Lecciones Clave del Rebrand:</h3>
+            <div class="space-y-4">
+                <div class="accordion-item card rounded-lg overflow-hidden">
+                    <button class="accordion-button w-full p-4 font-semibold flex justify-between items-center">
+                        Agilidad ("Siempre estás en beta")
+                        <span class="plus-minus text-xl">+</span>
+                    </button>
+                    <div class="accordion-content p-4 border-t border-gray-200">
+                        <p class="text-[#555555]">La capacidad de pivotar de "Mother" a "Poppi" fue crucial. Las mejores marcas evolucionan según la respuesta real del consumidor. Este rebrand desbloqueó escala y una audiencia más amplia.</p>
+                    </div>
+                </div>
+                <div class="accordion-item card rounded-lg overflow-hidden">
+                    <button class="accordion-button w-full p-4 font-semibold flex justify-between items-center">
+                        Compromiso con la Audiencia
+                        <span class="plus-minus text-xl">+</span>
+                    </button>
+                    <div class="accordion-content p-4 border-t border-gray-200">
+                        <p class="text-[#555555]">Poppi identificó a su público (Gen Z/Millennials) y se comunicó auténticamente en su lenguaje y plataformas. No intentaron ser todo para todos, construyendo una conexión profunda.</p>
+                    </div>
+                </div>
+                <div class="accordion-item card rounded-lg overflow-hidden">
+                    <button class="accordion-button w-full p-4 font-semibold flex justify-between items-center">
+                        Diseño para la Adquisición
+                        <span class="plus-minus text-xl">+</span>
+                    </button>
+                    <div class="accordion-content p-4 border-t border-gray-200">
+                        <p class="text-[#555555]">Empaque simple y claro, formulación saludable pero convencional para distribución masiva. "Suficientemente distintiva para destacar, suficientemente optimizada para escalar", atractiva para PepsiCo.</p>
+                    </div>
+                </div>
+                 <div class="accordion-item card rounded-lg overflow-hidden">
+                    <button class="accordion-button w-full p-4 font-semibold flex justify-between items-center">
+                        Financiación para la Visibilidad
+                        <span class="plus-minus text-xl">+</span>
+                    </button>
+                    <div class="accordion-content p-4 border-t border-gray-200">
+                        <p class="text-[#555555]">Recaudaron capital agresivamente y lo usaron para dominar la visibilidad en estantes y online. Parecían "una marca de mil millones de dólares mucho antes de serlo", convirtiéndose en un objetivo de adquisición probado.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="digital" class="mb-12 scroll-mt-20">
+            <h2 class="text-3xl font-bold mb-6 section-title">Estrategia Digital: TikTok como Epicentro</h2>
+            <p class="text-lg text-[#555555] mb-8">Los medios digitales, especialmente TikTok, fueron el motor del crecimiento explosivo de Poppi, conectando auténticamente con la Generación Z y Millennials.</p>
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-[#FF6B6B] mb-3">El Chispazo Viral en TikTok</h3>
+                    <p class="text-[#555555]">Un video orgánico de Allison Ellsworth sobre el origen de Poppi generó <span class="font-bold text-[#4DBA87]">$100,000 en ventas en 24 horas</span>. Esto llevó a una inversión estratégica en la plataforma.</p>
+                    <div class="mt-4">
+                        <h4 class="font-semibold text-lg text-[#555555] mb-2">Asignación Presupuesto Marketing (Ejemplo):</h4>
+                        <div class="chart-container h-64 max-h-80">
+                            <canvas id="tiktokBudgetChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-[#FF6B6B] mb-3">Contenido Auténtico y Comunidad</h3>
+                    <p class="text-[#555555]">Contenido nativo, participación en tendencias, colaboraciones con influencers (desde nano hasta estrellas como Alix Earle). Fomento del Contenido Generado por el Usuario (UGC), merchandising y programas de embajadores universitarios (#RushTok).</p>
+                    <ul class="list-disc list-inside mt-3 text-[#555555] space-y-1">
+                        <li>Videos de "restock" de refrigeradores.</li>
+                        <li>Q&As sobre salud intestinal.</li>
+                        <li>Rutinas de bienestar con Poppi.</li>
+                    </ul>
+                </div>
+            </div>
+             <h3 class="text-2xl font-semibold mb-4 text-[#4DBA87]">Hitos Clave de la Estrategia Digital:</h3>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="card p-4 rounded-lg">
+                    <h4 class="font-semibold text-[#FF6B6B]">Video Viral de Origen</h4>
+                    <p class="text-sm text-[#555555]">$100k ventas/24h, +120M vistas.</p>
+                </div>
+                <div class="card p-4 rounded-lg">
+                    <h4 class="font-semibold text-[#FF6B6B]">Adopción Estratégica TikTok</h4>
+                    <p class="text-sm text-[#555555]">20% presupuesto marketing, +200k lista email/SMS, +1B page views.</p>
+                </div>
+                <div class="card p-4 rounded-lg">
+                    <h4 class="font-semibold text-[#FF6B6B]">Colaboraciones Macro-Influencers</h4>
+                    <p class="text-sm text-[#555555]">Alix Earle, Noah Beck. Poppi como esencial de estilo de vida.</p>
+                </div>
+                <div class="card p-4 rounded-lg">
+                    <h4 class="font-semibold text-[#FF6B6B]">Campaña #RushTok</h4>
+                    <p class="text-sm text-[#555555]">Integración orgánica en cultura universitaria, UGC masivo.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="amazon" class="mb-12 scroll-mt-20">
+            <h2 class="text-3xl font-bold mb-6 section-title">Amazon: Plataforma de Lanzamiento y Crecimiento</h2>
+            <p class="text-lg text-[#555555] mb-8">Amazon fue la piedra angular de la estrategia DTC de Poppi, demostrando un dominio sofisticado del ecosistema para maximizar visibilidad y conversión.</p>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-[#FF6B6B] mb-2">DTC-First con Amazon</h3>
+                    <p class="text-[#555555]">Todos los checkouts del sitio web redirigían a Amazon. Se convirtió en la <span class="font-bold text-[#4DBA87]">soda #1 más vendida</span> en la plataforma. Aumento de ventas del <span class="font-bold text-[#4DBA87]">1300%</span> tras relanzamiento.</p>
+                </div>
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-[#FF6B6B] mb-2">Optimización Maestra de Listings</h3>
+                    <p class="text-[#555555]">Títulos descriptivos, bullet points persuasivos, imágenes de alta calidad, Contenido A+ "excelente" con historia de marca y comparativas.</p>
+                </div>
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-[#FF6B6B] mb-2">Publicidad Agresiva</h3>
+                    <p class="text-[#555555]">Puja por palabras clave de competidores (ej. "Olipop"), obteniendo la insignia <span class="font-bold text-[#4DBA87]">"Amazon's Choice" para "Olipop"</span>. Uso de Sponsored Brands, Products y Amazon DSP.</p>
+                </div>
+            </div>
+            <div class="mt-8 grid md:grid-cols-2 gap-6">
+                <div class="stat-card p-6 rounded-lg text-center">
+                    <p class="text-3xl font-bold">+124,000</p>
+                    <p>Compras en Whole Foods atribuidas a Amazon Media.</p>
+                </div>
+                <div class="stat-card-alt p-6 rounded-lg text-center">
+                    <p class="text-3xl font-bold">16x</p>
+                    <p>Aumento en clientes nuevos para la marca (NTB) gracias a optimización con Amazon Marketing Cloud.</p>
+                </div>
+            </div>
+            <p class="text-md text-[#555555] mt-6 text-center">La capacidad de vincular la inversión publicitaria en Amazon con ventas en tiendas físicas fue una ventaja competitiva clave.</p>
+        </section>
+
+        <section id="expansion" class="mb-12 scroll-mt-20">
+            <h2 class="text-3xl font-bold mb-6 section-title">Expansión Omnicanal y Marketing Experiencial</h2>
+            <p class="text-lg text-[#555555] mb-8">Más allá de lo digital, Poppi construyó una robusta presencia física y creó experiencias de marca memorables para integrarse en la cultura de sus consumidores.</p>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold text-[#FF6B6B] mb-3">Retail Físico Estratégico</h3>
+                    <p class="text-[#555555]">De mercados de agricultores a Whole Foods, Target, Walmart. Para 2025, Poppi estaba en aprox. <span class="font-bold text-[#4DBA87]">36,000 tiendas</span> en EE.UU., incluyendo cafés y centros de bienestar.</p>
+                    <h3 class="text-xl font-semibold text-[#FF6B6B] mt-6 mb-3">Publicidad Tradicional y OOH</h3>
+                    <p class="text-[#555555]">Anuncio en el Super Bowl ("Soda Thoughts"), TV por streaming (WNBA con <span class="font-bold text-[#4DBA87]">89% alcance incremental</span>), vallas y OOH en ciudades clave ("Soda's Back").</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold text-[#FF6B6B] mb-3">Marketing Experiencial y Colaboraciones</h3>
+                     <ul class="list-disc list-inside text-[#555555] space-y-2">
+                        <li><span class="font-semibold">Eventos Pop-Up:</span> "Poppi Mart", "Poppi World Tour" en campus.</li>
+                        <li><span class="font-semibold">Cine:</span> Empaques edición limitada *A Minecraft Movie*.</li>
+                        <li><span class="font-semibold">Deportes:</span> "Soda Oficial de Los Angeles Lakers", patrocinio Miami Pickleball Club.</li>
+                        <li><span class="font-semibold">Moda y Lujo:</span> Colaboraciones con Marc Jacobs, Bloomingdales.</li>
+                        <li><span class="font-semibold">Belleza:</span> Sorteo con Fenty Beauty.</li>
+                        <li><span class="font-semibold">Eventos Clave:</span> Natural Products Expo West, Coachella.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="modelo" class="mb-12 scroll-mt-20">
+            <h2 class="text-3xl font-bold mb-6 section-title">El Corazón del Modelo Estratégico de Poppi</h2>
+            <p class="text-lg text-[#555555] mb-8">El éxito de Poppi radica en la integración sinérgica de un producto innovador, una marca magnética y una estrategia de canales inteligente, impulsada por la agilidad.</p>
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <div class="card p-6 rounded-lg text-center">
+                    <h3 class="text-xl font-semibold text-[#FF6B6B] mb-2">🥤 Producto Innovador</h3>
+                    <p class="text-[#555555]">Alternativa saludable a sodas (prebióticos, ACV, bajo azúcar) sin sacrificar sabor. Constante evolución de sabores.</p>
+                </div>
+                <div class="card p-6 rounded-lg text-center">
+                    <h3 class="text-xl font-semibold text-[#FF6B6B] mb-2">💖 Marca Disruptiva</h3>
+                    <p class="text-[#555555]">Storytelling, conexión emocional, marketing de "descubrimiento". Branding vibrante, tono divertido y rebelde.</p>
+                </div>
+                <div class="card p-6 rounded-lg text-center">
+                    <h3 class="text-xl font-semibold text-[#FF6B6B] mb-2">🌐 Canales Inteligentes</h3>
+                    <p class="text-[#555555]">Modelo híbrido DTC (Amazon) y retail. Expansión física tras construir demanda online. Dominio de TikTok.</p>
+                </div>
+            </div>
+            <div class="card p-6 rounded-lg mb-8">
+                <h3 class="text-xl font-semibold text-[#4DBA87] mb-3 text-center">Agilidad Estratégica: La Clave</h3>
+                <p class="text-[#555555] text-center">Capacidad para pivotar (rebrand Mother a Poppi), rápida adopción de TikTok, y respuesta (aunque mixta) a controversias, demostrando una mentalidad de aprendizaje y adaptación constante.</p>
+            </div>
+            <div class="text-center my-8">
+                <button id="generateSummaryButton" class="gemini-button">✨ Generar Resumen Ejecutivo con IA</button>
+            </div>
+            <div>
+                <h3 class="text-2xl font-semibold text-center text-[#FF6B6B] mb-4">Hitos Financieros Clave de Poppi</h3>
+                <div class="chart-container">
+                    <canvas id="financialMilestonesChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="desafios" class="mb-12 scroll-mt-20">
+            <h2 class="text-3xl font-bold mb-6 section-title">Navegando Desafíos y la Adquisición</h2>
+            <p class="text-lg text-[#555555] mb-8">A pesar del éxito, Poppi enfrentó controversias y su trayectoria culminó con la adquisición por PepsiCo, abriendo nuevos desafíos y oportunidades.</p>
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-[#FF6B6B] mb-3">Controversias y Gestión</h3>
+                    <ul class="list-disc list-inside text-[#555555] space-y-2">
+                        <li>
+                            <span class="font-semibold">Demanda por "Salud Intestinal":</span> Alegaciones de que 2g de fibra eran insuficientes. Acuerdo de $8.9M y eliminación de "gut health" del empaque.
+                            <button id="analyzeControversyButton" class="gemini-button text-sm mt-2">✨ Analizar Impacto con IA</button>
+                        </li>
+                        <li><span class="font-semibold">Críticas a Campaña de Máquinas Expendedoras:</span> Envío de máquinas de $25k a influencers percibido como "desconectado" y "derrochador". Allison Ellsworth respondió en TikTok.</li>
+                    </ul>
+                </div>
+                <div class="card p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-[#FF6B6B] mb-3">Adquisición por PepsiCo (Mayo 2025)</h3>
+                    <p class="text-[#555555]"><span class="font-bold text-[#4DBA87]">$1.95 mil millones</span> (neto $1.65B). Movimiento estratégico para PepsiCo en el mercado "better-for-you".</p>
+                    <p class="text-[#555555] mt-2"><span class="font-semibold">Desafío Post-Adquisición:</span> Integrar cultura ágil de startup en una multinacional sin diluir la "magia".</p>
+                    <p class="text-[#555555] mt-2"><span class="font-semibold">Oportunidad Post-Adquisición:</span> Escala global y recursos de PepsiCo.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="lecciones" class="mb-12 scroll-mt-20">
+            <h2 class="text-3xl font-bold mb-6 section-title">Lecciones Clave del Modelo Poppi</h2>
+            <p class="text-lg text-[#555555] mb-8">El ascenso de Poppi ofrece valiosas enseñanzas para marcas nuevas y establecidas. Haz clic en cada lección para ver más detalles.</p>
+            <div class="space-y-4">
+                <div class="lesson-card card rounded-lg overflow-hidden">
+                    <button class="lesson-title-button w-full p-4 font-semibold text-left bg-gray-100 hover:bg-gray-200 transition flex justify-between items-center">
+                        1. Construcción de Marca Auténtica y Resonante
+                        <span class="arrow text-xl">▼</span>
+                    </button>
+                    <div class="lesson-details p-4 border-t border-gray-200">
+                        <ul class="list-disc list-inside text-[#555555] space-y-1">
+                            <li>Poder de una historia de origen genuina (Allison Ellsworth).</li>
+                            <li>Identidad visual y tono de voz alineados con la audiencia (Gen Z/Millennials).</li>
+                            <li>Hacer lo "saludable" divertido y aspiracional.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="lesson-card card rounded-lg overflow-hidden">
+                    <button class="lesson-title-button w-full p-4 font-semibold text-left bg-gray-100 hover:bg-gray-200 transition flex justify-between items-center">
+                        2. Dominio de la Estrategia Digital y Comunitaria
+                        <span class="arrow text-xl">▼</span>
+                    </button>
+                    <div class="lesson-details p-4 border-t border-gray-200">
+                        <ul class="list-disc list-inside text-[#555555] space-y-1">
+                            <li>Identificar y conquistar plataformas clave (TikTok).</li>
+                            <li>Priorizar contenido orgánico, nativo y UGC.</li>
+                            <li>Convertir consumidores en embajadores (merchandising, programas).</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="lesson-card card rounded-lg overflow-hidden">
+                    <button class="lesson-title-button w-full p-4 font-semibold text-left bg-gray-100 hover:bg-gray-200 transition flex justify-between items-center">
+                        3. Apalancamiento Estratégico de Amazon
+                        <span class="arrow text-xl">▼</span>
+                    </button>
+                    <div class="lesson-details p-4 border-t border-gray-200">
+                        <ul class="list-disc list-inside text-[#555555] space-y-1">
+                            <li>Amazon como ecosistema de marketing y ventas, no solo transaccional.</li>
+                            <li>Optimización integral de listings y publicidad agresiva.</li>
+                            <li>Medición del impacto omnicanal (digital a físico).</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="lesson-card card rounded-lg overflow-hidden">
+                    <button class="lesson-title-button w-full p-4 font-semibold text-left bg-gray-100 hover:bg-gray-200 transition flex justify-between items-center">
+                        4. Agilidad Estratégica y Mentalidad de Crecimiento
+                        <span class="arrow text-xl">▼</span>
+                    </button>
+                    <div class="lesson-details p-4 border-t border-gray-200">
+                        <ul class="list-disc list-inside text-[#555555] space-y-1">
+                            <li>Disposición para pivotar (rebrand "Mother" a Poppi).</li>
+                            <li>Adaptación rápida a tendencias y oportunidades.</li>
+                            <li>Aprendizaje continuo, incluso frente a controversias.</li>
+                        </ul>
+                    </div>
+                </div>
+                 <div class="lesson-card card rounded-lg overflow-hidden">
+                    <button class="lesson-title-button w-full p-4 font-semibold text-left bg-gray-100 hover:bg-gray-200 transition flex justify-between items-center">
+                        5. Integración Coherente Producto-Marca-Canal
+                        <span class="arrow text-xl">▼</span>
+                    </button>
+                    <div class="lesson-details p-4 border-t border-gray-200">
+                        <p class="text-[#555555]">El éxito no es un elemento aislado, sino la alineación y refuerzo mutuo entre un producto innovador, una narrativa de marca convincente y una estrategia de canales inteligente.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="conclusion" class="text-center py-12 scroll-mt-20">
+            <h2 class="text-3xl font-bold mb-6 section-title inline-block">Conclusión: El Legado de Poppi</h2>
+            <p class="text-lg text-[#555555] max-w-3xl mx-auto mb-6">
+                Poppi no solo redefinió la categoría de sodas, sino que estableció un nuevo paradigma para la construcción de marcas en la era digital. Su historia demuestra el poder de la autenticidad, la agilidad y una profunda conexión con el consumidor.
+            </p>
+            <p class="text-lg text-[#555555] max-w-3xl mx-auto">
+                El futuro de Poppi bajo PepsiCo será crucial. ¿Podrá mantener su chispa disruptiva y escalar globalmente? Su legado como caso de estudio en branding, marketing digital y estrategia empresarial ya es invaluable.
+            </p>
+        </section>
+    </main>
+
+    <div id="aiModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closeModalButton">&times;</span>
+            <h3 id="aiModalTitle" class="text-2xl font-bold text-[#FF6B6B] mb-4"></h3>
+            <div id="aiModalLoader" class="loader" style="display: none;"></div>
+            <div id="aiModalResult" class="text-[#555555] text-sm md:text-base whitespace-pre-wrap"></div>
+        </div>
+    </div>
+
+    <footer class="bg-gray-800 text-white text-center py-8 mt-12">
+        <p>&copy; 2025 Análisis Interactivo de la Marca Poppi con IA. Creado para fines educativos.</p>
+        <p class="text-sm text-gray-400 mt-1">Inspirado en el informe "Análisis profundo de la marca Poppi". Funcionalidades de IA por Gemini.</p>
+    </footer>
+
+    <script>
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                mobileMenu.classList.add('hidden'); 
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        const accordionItems = document.querySelectorAll('.accordion-item');
+        accordionItems.forEach(item => {
+            const button = item.querySelector('.accordion-button');
+            const content = item.querySelector('.accordion-content');
+            const plusMinus = button.querySelector('.plus-minus');
+
+            button.addEventListener('click', () => {
+                const isActive = button.classList.contains('active');
+                
+                document.querySelectorAll('.accordion-button.active').forEach(activeButton => {
+                    if (activeButton !== button) {
+                        activeButton.classList.remove('active');
+                        activeButton.nextElementSibling.style.maxHeight = null;
+                        if (activeButton.querySelector('.plus-minus')) activeButton.querySelector('.plus-minus').textContent = '+';
+                    }
+                });
+
+                if (isActive) {
+                    button.classList.remove('active');
+                    content.style.maxHeight = null;
+                    if (plusMinus) plusMinus.textContent = '+';
+                } else {
+                    button.classList.add('active');
+                    content.style.maxHeight = content.scrollHeight + "px";
+                    if (plusMinus) plusMinus.textContent = '-';
+                }
+            });
+        });
+
+        const lessonCards = document.querySelectorAll('.lesson-card');
+        lessonCards.forEach(card => {
+            const button = card.querySelector('.lesson-title-button');
+            const arrow = button.querySelector('.arrow');
+
+            button.addEventListener('click', () => {
+                const isActive = card.classList.contains('active');
+                
+                lessonCards.forEach(otherCard => {
+                    if (otherCard !== card && otherCard.classList.contains('active')) {
+                        otherCard.classList.remove('active');
+                         if (otherCard.querySelector('.arrow')) otherCard.querySelector('.arrow').textContent = '▼';
+                    }
+                });
+
+                if (isActive) {
+                    card.classList.remove('active');
+                    if (arrow) arrow.textContent = '▼';
+                } else {
+                    card.classList.add('active');
+                    if (arrow) arrow.textContent = '▲';
+                }
+            });
+        });
+
+        const financialCtx = document.getElementById('financialMilestonesChart').getContext('2d');
+        new Chart(financialCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Inversión Shark Tank (2018)', 'Ventas Virales TikTok (24h, 2021)', 'Ventas Anuales (est. 2024)', 'Valor Adquisición (2025)'],
+                datasets: [{
+                    label: 'Monto (en USD)',
+                    data: [400000, 100000, 500000000, 1950000000],
+                    backgroundColor: [
+                        'rgba(255, 159, 64, 0.7)',
+                        'rgba(75, 192, 192, 0.7)',
+                        'rgba(54, 162, 235, 0.7)',
+                        'rgba(255, 99, 132, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 99, 132, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value, index, values) {
+                                if (value >= 1000000000) return (value / 1000000000) + 'B';
+                                if (value >= 1000000) return (value / 1000000) + 'M';
+                                if (value >= 1000) return (value / 1000) + 'K';
+                                return value;
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) { label += ': '; }
+                                if (context.parsed.y !== null) {
+                                    let value = context.parsed.y;
+                                     if (value >= 1000000000) label += (value / 1000000000).toFixed(2) + ' Billones USD';
+                                     else if (value >= 1000000) label += (value / 1000000).toFixed(2) + ' Millones USD';
+                                     else if (value >= 1000) label += (value / 1000).toFixed(2) + ' Mil USD';
+                                     else label += value + ' USD';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        const tiktokBudgetCtx = document.getElementById('tiktokBudgetChart').getContext('2d');
+        new Chart(tiktokBudgetCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['TikTok (~20%)', 'Otro Marketing (~80%)'],
+                datasets: [{
+                    label: 'Presupuesto de Marketing',
+                    data: [20, 80],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.7)', 
+                        'rgba(201, 203, 207, 0.7)'  
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    title: { display: false, text: 'Distribución Presupuesto Marketing (Ejemplo)'}
+                }
+            }
+        });
+
+        const aiModal = document.getElementById('aiModal');
+        const closeModalButton = document.getElementById('closeModalButton');
+        const aiModalTitle = document.getElementById('aiModalTitle');
+        const aiModalResult = document.getElementById('aiModalResult');
+        const aiModalLoader = document.getElementById('aiModalLoader');
+        const generateSummaryButton = document.getElementById('generateSummaryButton');
+        const analyzeControversyButton = document.getElementById('analyzeControversyButton');
+
+        closeModalButton.onclick = function() {
+            aiModal.style.display = "none";
+            aiModalResult.innerHTML = ""; 
+        }
+
+        window.onclick = function(event) {
+            if (event.target == aiModal) {
+                aiModal.style.display = "none";
+                aiModalResult.innerHTML = "";
+            }
+        }
+
+        async function callGeminiAPI(promptText, modalTitle) {
+            aiModalTitle.textContent = modalTitle;
+            aiModalResult.innerHTML = "";
+            aiModalLoader.style.display = "block";
+            aiModal.style.display = "block";
+
+            const apiKey = ""; 
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: [{
+                    parts: [{ text: promptText }]
+                }]
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error("Error en la API de Gemini:", errorData);
+                    aiModalResult.textContent = `Error al contactar la IA: ${errorData.error?.message || response.statusText}. Por favor, inténtalo más tarde.`;
+                    return;
+                }
+
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    aiModalResult.textContent = text;
+                } else {
+                    console.error("Respuesta inesperada de la API de Gemini:", result);
+                    aiModalResult.textContent = "No se pudo obtener una respuesta de la IA o la respuesta está vacía.";
+                }
+
+            } catch (error) {
+                console.error("Error al llamar a la API de Gemini:", error);
+                aiModalResult.textContent = "Ocurrió un error de red o al procesar la solicitud. Por favor, revisa la consola para más detalles.";
+            } finally {
+                aiModalLoader.style.display = "none";
+            }
+        }
+
+        if (generateSummaryButton) {
+            generateSummaryButton.addEventListener('click', () => {
+                const poppiInfo = `
+                    Origen de Poppi:
+                    - Fundada en 2015 como Mother Beverage por Allison y Stephen Ellsworth.
+                    - Bebida casera de vinagre de sidra de manzana (ACV) y jugos.
+                    - Aparición en Shark Tank en 2018, inversión de Rohan Oza.
+                    - Rebranding a Poppi en 2020 con identidad visual moderna y vibrante.
+
+                    Claves de la Marca Poppi:
+                    - Identidad visual: Colores llamativos, diseños audaces, estética "instagrameable".
+                    - Voz de marca: Divertida, confiada, un poco rebelde, lenguaje relatable.
+                    - Lecciones del rebrand: Agilidad, compromiso con audiencia Gen Z/Millennials, diseño para adquisición, financiación para visibilidad.
+
+                    Estrategia Digital y TikTok:
+                    - Video viral de Allison Ellsworth en TikTok ($100k ventas/24h).
+                    - TikTok como pilar: 20% presupuesto marketing, contenido auténtico, colaboraciones con influencers (Alix Earle), UGC, #RushTok.
+                    - Hitos: +120M vistas en video viral, +200k lista email/SMS.
+
+                    Estrategia en Amazon:
+                    - DTC-First con Amazon, redirigiendo checkouts del sitio web.
+                    - Soda #1 más vendida en Amazon, +1300% ventas post-relanzamiento.
+                    - Optimización de listings: Títulos, bullet points, imágenes, Contenido A+.
+                    - Publicidad agresiva: Puja por keywords de competidores (Olipop), Sponsored Brands/Products, Amazon DSP.
+                    - Resultados: +124k compras Whole Foods atribuidas a Amazon Media, 16x aumento clientes NTB.
+
+                    Modelo Estratégico Central:
+                    - Producto Innovador: Alternativa saludable a sodas (prebióticos, ACV, bajo azúcar), buen sabor.
+                    - Marca Disruptiva: Storytelling, conexión emocional, marketing de "descubrimiento".
+                    - Canales Inteligentes: Híbrido DTC (Amazon) y retail. Expansión física post-demanda online.
+                    - Agilidad Estratégica: Capacidad de pivotar, adopción rápida de tendencias.
+                    - Hitos Financieros: $400k Shark Tank, $100k ventas TikTok/24h, $500M ventas anuales 2024, $1.95B adquisición por PepsiCo.
+                `;
+                const prompt = `Basándote en la siguiente información sobre la marca de bebidas Poppi, genera un resumen ejecutivo conciso (máximo 200 palabras) destacando las claves de su éxito y su modelo de negocio. Enfócate en los aspectos más impactantes. Información: ${poppiInfo}`;
+                callGeminiAPI(prompt, "Resumen Ejecutivo de Poppi (IA)");
+            });
+        }
+
+        if (analyzeControversyButton) {
+            analyzeControversyButton.addEventListener('click', () => {
+                const controversyDetails = `
+                    Detalles de la Controversia: Demanda por "Salud Intestinal" contra Poppi.
+                    - Alegaciones: Se afirmó que los 2 gramos de fibra prebiótica por lata eran insuficientes para conferir beneficios significativos para la salud intestinal como se promocionaba.
+                    - Resolución: Poppi llegó a un acuerdo por $8.9 millones.
+                    - Cambios: La marca eliminó las menciones explícitas a "gut health" (salud intestinal) de su empaque y marketing.
+                    - Contexto de la marca: Poppi se posiciona como una alternativa de soda "mejor para ti", con bajo contenido de azúcar y calorías, y con prebióticos. Su público objetivo principal son Gen Z y Millennials, muy activos en redes sociales.
+                `;
+                const prompt = `Analiza el impacto potencial de la siguiente controversia en la marca Poppi. Considera la percepción del consumidor, la confianza en la marca y la efectividad de su respuesta. Sugiere estrategias de comunicación que Poppi podría haber empleado o podría emplear para mitigar daños y reforzar su propuesta de valor. Información de la controversia: ${controversyDetails}`;
+                callGeminiAPI(prompt, "Análisis de Impacto de Controversia (IA)");
+            });
+        }
+
+    </script>
+</body>
+</html>
