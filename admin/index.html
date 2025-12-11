@@ -398,6 +398,21 @@
             color: #1e3a8a;
         }
 
+        .badge-capacitacion {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-herramientas {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .badge-otras {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
         .success-message {
             background: #d1fae5;
             color: #065f46;
@@ -406,6 +421,51 @@
             margin-bottom: 20px;
             font-weight: 600;
             display: none;
+        }
+
+        /* Category Filters */
+        .category-filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 18px;
+            border: 2px solid #e5e7eb;
+            background: white;
+            color: #374151;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-btn:hover {
+            border-color: #28529a;
+            color: #28529a;
+        }
+
+        .filter-btn.active {
+            background: #28529a;
+            color: white;
+            border-color: #28529a;
+        }
+
+        .filter-count {
+            background: rgba(0, 0, 0, 0.1);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+        }
+
+        .filter-btn.active .filter-count {
+            background: rgba(255, 255, 255, 0.2);
         }
 
         @media (max-width: 768px) {
@@ -478,6 +538,32 @@
                 <!-- Articles List Panel -->
                 <div class="panel-section active" id="articlesPanel">
                     <h2 class="section-title">Artículos Publicados</h2>
+
+                    <!-- Category Filters -->
+                    <div class="category-filters" id="categoryFilters">
+                        <button class="filter-btn active" data-category="all">
+                            📚 Todos <span class="filter-count" id="count-all">0</span>
+                        </button>
+                        <button class="filter-btn" data-category="Análisis">
+                            📊 Análisis <span class="filter-count" id="count-analisis">0</span>
+                        </button>
+                        <button class="filter-btn" data-category="Informe Mensual">
+                            💎 Informes <span class="filter-count" id="count-informe">0</span>
+                        </button>
+                        <button class="filter-btn" data-category="Estrategia">
+                            🍽️ Estrategia <span class="filter-count" id="count-estrategia">0</span>
+                        </button>
+                        <button class="filter-btn" data-category="Capacitación">
+                            🎓 Capacitación <span class="filter-count" id="count-capacitacion">0</span>
+                        </button>
+                        <button class="filter-btn" data-category="Herramientas">
+                            🛠️ Herramientas <span class="filter-count" id="count-herramientas">0</span>
+                        </button>
+                        <button class="filter-btn" data-category="Otras">
+                            📁 Otras <span class="filter-count" id="count-otras">0</span>
+                        </button>
+                    </div>
+
                     <div class="articles-list" id="articlesList">
                         <!-- Articles will be loaded here -->
                     </div>
@@ -625,6 +711,9 @@
         }
 
         // Article Management with API
+        let allArticles = [];
+        let currentFilter = 'all';
+
         async function loadArticles() {
             const container = document.getElementById('articlesList');
             container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">Cargando artículos...</p>';
@@ -634,38 +723,109 @@
                 const data = await response.json();
                 const articles = data.articles || [];
 
+                allArticles = articles;
+
                 if (articles.length === 0) {
                     container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">No hay artículos publicados aún. ¡Crea tu primer artículo!</p>';
+                    updateCategoryCounts([]);
                     return;
                 }
 
-                container.innerHTML = articles.map((article, index) => `
-                    <div class="article-card">
-                        <div class="article-card-header">
-                            <div>
-                                <span class="category-badge badge-${getCategorySlug(article.category)}">${article.category}</span>
-                                <h3 class="article-card-title">${article.icon} ${article.title}</h3>
-                                <p class="article-card-meta">📅 ${article.date} • 🔗 ${article.slug}.html</p>
-                            </div>
-                        </div>
-                        <p class="article-card-excerpt">${article.excerpt}</p>
-                        <div class="article-actions">
-                            <button class="btn-edit" onclick="editArticle('${article.slug}')">✏️ Editar</button>
-                            <button class="btn-delete" onclick="deleteArticle('${article.slug}')">🗑️ Eliminar</button>
-                        </div>
-                    </div>
-                `).join('');
+                updateCategoryCounts(articles);
+                setupFilters();
+                renderArticles(currentFilter === 'all' ? articles : articles.filter(a => a.category === currentFilter));
             } catch (error) {
                 console.error('Error loading articles:', error);
                 container.innerHTML = '<p style="color: #ef4444; text-align: center; padding: 40px;">⚠️ Error al cargar artículos. Verifica que el servidor esté corriendo.</p>';
             }
         }
 
+        function renderArticles(articles) {
+            const container = document.getElementById('articlesList');
+
+            if (articles.length === 0) {
+                container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">No hay artículos en esta categoría.</p>';
+                return;
+            }
+
+            container.innerHTML = articles.map((article, index) => `
+                <div class="article-card" data-category="${article.category}">
+                    <div class="article-card-header">
+                        <div>
+                            <span class="category-badge badge-${getCategorySlug(article.category)}">${article.category}</span>
+                            <h3 class="article-card-title">${article.icon} ${article.title}</h3>
+                            <p class="article-card-meta">📅 ${article.date} • 🔗 ${article.slug}.html</p>
+                        </div>
+                    </div>
+                    <p class="article-card-excerpt">${article.excerpt}</p>
+                    <div class="article-actions">
+                        <button class="btn-edit" onclick="editArticle('${article.slug}')">✏️ Editar</button>
+                        <button class="btn-delete" onclick="deleteArticle('${article.slug}')">🗑️ Eliminar</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateCategoryCounts(articles) {
+            const counts = {
+                'all': articles.length,
+                'Análisis': 0,
+                'Informe Mensual': 0,
+                'Estrategia': 0,
+                'Capacitación': 0,
+                'Herramientas': 0,
+                'Otras': 0
+            };
+
+            articles.forEach(article => {
+                if (counts.hasOwnProperty(article.category)) {
+                    counts[article.category]++;
+                } else {
+                    counts['Otras']++;
+                }
+            });
+
+            // Update count badges
+            document.getElementById('count-all').textContent = counts['all'];
+            document.getElementById('count-analisis').textContent = counts['Análisis'];
+            document.getElementById('count-informe').textContent = counts['Informe Mensual'];
+            document.getElementById('count-estrategia').textContent = counts['Estrategia'];
+            document.getElementById('count-capacitacion').textContent = counts['Capacitación'];
+            document.getElementById('count-herramientas').textContent = counts['Herramientas'];
+            document.getElementById('count-otras').textContent = counts['Otras'];
+        }
+
+        function setupFilters() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    // Remove active from all
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    // Add active to clicked
+                    this.classList.add('active');
+
+                    const category = this.getAttribute('data-category');
+                    currentFilter = category;
+
+                    if (category === 'all') {
+                        renderArticles(allArticles);
+                    } else {
+                        const filtered = allArticles.filter(a => a.category === category);
+                        renderArticles(filtered);
+                    }
+                });
+            });
+        }
+
         function getCategorySlug(category) {
             const slugs = {
                 'Análisis': 'analisis',
                 'Informe Mensual': 'informe',
-                'Estrategia': 'estrategia'
+                'Estrategia': 'estrategia',
+                'Capacitación': 'capacitacion',
+                'Herramientas': 'herramientas',
+                'Otras': 'otras'
             };
             return slugs[category] || 'analisis';
         }

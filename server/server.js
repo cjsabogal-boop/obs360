@@ -15,7 +15,7 @@ app.use(cors());
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 
-// Autenticación simple
+// Autenticación simple para middleware
 const authenticate = (req, res, next) => {
     const { username, password } = req.body;
     if (username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD) {
@@ -24,6 +24,51 @@ const authenticate = (req, res, next) => {
         res.status(401).json({ error: 'Credenciales inválidas' });
     }
 };
+
+// ==================== AUTENTICACIÓN SEGURA ====================
+
+// Endpoint de autenticación para ADMIN (CMS)
+app.post('/api/auth/admin', (req, res) => {
+    const { username, password } = req.body;
+
+    const validUsername = process.env.ADMIN_USERNAME || 'obs360admin';
+    const validPassword = process.env.ADMIN_PASSWORD || 'OBS2025Blog!';
+
+    if (username === validUsername && password === validPassword) {
+        res.json({
+            success: true,
+            message: 'Login exitoso',
+            type: 'admin'
+        });
+    } else {
+        res.status(401).json({
+            success: false,
+            error: 'Credenciales inválidas'
+        });
+    }
+});
+
+// Endpoint de autenticación para BLOG (Clientes)
+app.post('/api/auth/blog', (req, res) => {
+    const { username, password } = req.body;
+
+    // Credenciales del blog desde variables de entorno
+    const validUsername = process.env.BLOG_USERNAME || 'obs360client';
+    const validPassword = process.env.BLOG_PASSWORD || 'Resources2025!';
+
+    if (username === validUsername && password === validPassword) {
+        res.json({
+            success: true,
+            message: 'Acceso autorizado',
+            type: 'blog'
+        });
+    } else {
+        res.status(401).json({
+            success: false,
+            error: 'Credenciales inválidas'
+        });
+    }
+});
 
 // ==================== TEMPLATES OBS360 ====================
 
