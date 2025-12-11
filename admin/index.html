@@ -826,7 +826,11 @@
         }
 
         function updateCategoryCounts(articles) {
-            loadCategoriesFromStorage();
+            // Use categories array (already loaded from API)
+            if (categories.length === 0) {
+                // If no categories loaded yet, wait for them
+                return;
+            }
 
             // Initialize counts
             const counts = { 'all': articles.length };
@@ -994,35 +998,30 @@
             }
         }
 
-        // ==================== CATEGORY MANAGEMENT ====================
+        // ==================== CATEGORY MANAGEMENT (API) ====================
 
-        // Default categories
-        let categories = [
-            { id: 'analisis', name: 'Análisis', icon: '📊', color: '#d1fae5', textColor: '#065f46', isDefault: false },
-            { id: 'informe', name: 'Informe Mensual', icon: '💎', color: '#fce7f3', textColor: '#9f1239', isDefault: false },
-            { id: 'estrategia', name: 'Estrategia', icon: '🍽️', color: '#dbeafe', textColor: '#1e3a8a', isDefault: false },
-            { id: 'capacitacion', name: 'Capacitación', icon: '🎓', color: '#fef3c7', textColor: '#92400e', isDefault: false },
-            { id: 'herramientas', name: 'Herramientas', icon: '🛠️', color: '#e0e7ff', textColor: '#3730a3', isDefault: false },
-            { id: 'otras', name: 'Otras', icon: '📁', color: '#f3f4f6', textColor: '#374151', isDefault: true }
-        ];
+        // Categories array (loaded from server)
+        let categories = [];
 
-        // Load categories from localStorage
-        function loadCategoriesFromStorage() {
-            const stored = localStorage.getItem('obs360_categories');
-            if (stored) {
-                categories = JSON.parse(stored);
+        // Load categories from API
+        async function loadCategoriesFromAPI() {
+            try {
+                const response = await fetch(`${API_URL}/categories`);
+                const data = await response.json();
+                categories = data.categories || [];
+                return categories;
+            } catch (error) {
+                console.error('Error loading categories:', error);
+                return [];
             }
         }
 
-        // Save categories to localStorage
-        function saveCategoriesToStorage() {
-            localStorage.setItem('obs360_categories', JSON.stringify(categories));
-        }
-
         // Load and display categories
-        function loadCategories() {
-            loadCategoriesFromStorage();
+        async function loadCategories() {
             const container = document.getElementById('categoriesList');
+            container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">Cargando categorías...</p>';
+
+            await loadCategoriesFromAPI();
 
             if (categories.length === 0) {
                 container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">No hay categorías. Crea tu primera categoría.</p>';
@@ -1057,8 +1056,8 @@
             `).join('');
         }
 
-        // Save category (create or update)
-        function saveCategory() {
+        // Save category (create or update) via API
+        async function saveCategory() {
             const name = document.getElementById('categoryName').value.trim();
             const icon = document.getElementById('categoryIcon').value.trim();
             const color = document.getElementById('categoryColor').value;
@@ -1070,57 +1069,43 @@
                 return;
             }
 
-            loadCategoriesFromStorage();
-
-            if (editingId) {
-                // Update existing
-                const index = categories.findIndex(c => c.id === editingId);
-                if (index !== -1) {
-                    const oldName = categories[index].name;
-                    categories[index].name = name;
-                    categories[index].icon = icon;
-                    categories[index].color = color;
-                    categories[index].textColor = textColor;
-
-                    // Update article category names if changed
-                    if (oldName !== name) {
-                        updateArticleCategories(oldName, name);
-                    }
-                }
-            } else {
-                // Create new
-                const id = name.toLowerCase()
-                    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-                    .replace(/[^a-z0-9]+/g, '-')
-                    .replace(/^-+|-+$/g, '');
-
-                // Check if already exists
-                if (categories.find(c => c.id === id)) {
-                    alert('Ya existe una categoría con este nombre.');
-                    return;
+            try {
+                let response;
+                if (editingId) {
+                    // Update existing
+                    response = await fetch(`${API_URL}/categories/${editingId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, icon, color, textColor })
+                    });
+                } else {
+                    // Create new
+                    response = await fetch(`${API_URL}/categories`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, icon, color, textColor })
+                    });
                 }
 
-                categories.push({
-                    id,
-                    name,
-                    icon,
-                    color,
-                    textColor,
-                    isDefault: false
-                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    cancelEditCategory();
+                    await loadCategories();
+                    await updateCategorySelect();
+                    await updateFilterButtons();
+                    alert(editingId ? 'Categoría actualizada exitosamente.' : 'Categoría creada exitosamente.');
+                } else {
+                    alert('Error: ' + (result.error || 'Error desconocido'));
+                }
+            } catch (error) {
+                console.error('Error saving category:', error);
+                alert('Error al conectar con el servidor.');
             }
-
-            saveCategoriesToStorage();
-            cancelEditCategory();
-            loadCategories();
-            updateCategorySelect();
-            updateFilterButtons();
-            alert(editingId ? 'Categoría actualizada exitosamente.' : 'Categoría creada exitosamente.');
         }
 
         // Edit category
         function editCategory(id) {
-            loadCategoriesFromStorage();
             const cat = categories.find(c => c.id === id);
             if (!cat) return;
 
@@ -1142,9 +1127,8 @@
             document.getElementById('cancelEditBtn').style.display = 'none';
         }
 
-        // Delete category
-        function deleteCategory(id) {
-            loadCategoriesFromStorage();
+        // Delete category via API
+        async function deleteCategory(id) {
             const cat = categories.find(c => c.id === id);
             if (!cat) return;
 
@@ -1162,40 +1146,44 @@
             }
 
             if (confirm(message)) {
-                // Move articles to "Otras"
-                if (articleCount > 0) {
-                    updateArticleCategories(cat.name, 'Otras');
-                }
+                try {
+                    const response = await fetch(`${API_URL}/categories/${id}`, {
+                        method: 'DELETE'
+                    });
 
-                // Remove category
-                categories = categories.filter(c => c.id !== id);
-                saveCategoriesToStorage();
-                loadCategories();
-                updateCategorySelect();
-                updateFilterButtons();
-                alert('Categoría eliminada. Los artículos han sido movidos a "Otras".');
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        await loadCategories();
+                        await updateCategorySelect();
+                        await updateFilterButtons();
+                        await loadArticles(); // Reload articles to reflect category changes
+                        alert(result.message || 'Categoría eliminada exitosamente.');
+                    } else {
+                        alert('Error: ' + (result.error || 'Error desconocido'));
+                    }
+                } catch (error) {
+                    console.error('Error deleting category:', error);
+                    alert('Error al conectar con el servidor.');
+                }
             }
         }
 
-        // Update articles when category name changes
-        function updateArticleCategories(oldName, newName) {
-            // This would need backend support to actually update the articles
-            // For now, we'll just log it
-            console.log(`Would update articles from "${oldName}" to "${newName}"`);
-            // TODO: Implement API call to update articles
-        }
-
         // Update the category select in the article form
-        function updateCategorySelect() {
-            loadCategoriesFromStorage();
+        async function updateCategorySelect() {
+            if (categories.length === 0) {
+                await loadCategoriesFromAPI();
+            }
             const select = document.getElementById('articleCategory');
             select.innerHTML = '<option value="">Seleccionar categoría</option>' +
                 categories.map(cat => `<option value="${cat.name}">${cat.icon} ${cat.name}</option>`).join('');
         }
 
         // Update filter buttons
-        function updateFilterButtons() {
-            loadCategoriesFromStorage();
+        async function updateFilterButtons() {
+            if (categories.length === 0) {
+                await loadCategoriesFromAPI();
+            }
             const container = document.getElementById('categoryFilters');
             container.innerHTML = `
                 <button class="filter-btn active" data-category="all">
@@ -1210,7 +1198,7 @@
         }
 
         // Initialize categories on load
-        loadCategoriesFromStorage();
+        loadCategoriesFromAPI();
     </script>
 </body>
 

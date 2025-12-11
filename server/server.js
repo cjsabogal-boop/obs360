@@ -180,6 +180,197 @@ app.post('/api/login', authenticate, (req, res) => {
     res.json({ success: true, message: 'Login exitoso' });
 });
 
+// ==================== CATEGORÍAS ====================
+
+const CATEGORIES_FILE = path.join(BLOG_DIR, 'categories.json');
+
+// Categorías por defecto
+const DEFAULT_CATEGORIES = [
+    { id: 'analisis', name: 'Análisis', icon: '📊', color: '#d1fae5', textColor: '#065f46', isDefault: false },
+    { id: 'informe', name: 'Informe Mensual', icon: '💎', color: '#fce7f3', textColor: '#9f1239', isDefault: false },
+    { id: 'estrategia', name: 'Estrategia', icon: '🍽️', color: '#dbeafe', textColor: '#1e3a8a', isDefault: false },
+    { id: 'capacitacion', name: 'Capacitación', icon: '🎓', color: '#fef3c7', textColor: '#92400e', isDefault: false },
+    { id: 'herramientas', name: 'Herramientas', icon: '🛠️', color: '#e0e7ff', textColor: '#3730a3', isDefault: false },
+    { id: 'otras', name: 'Otras', icon: '📁', color: '#f3f4f6', textColor: '#374151', isDefault: true }
+];
+
+// Cargar categorías
+async function loadCategories() {
+    try {
+        if (await fs.pathExists(CATEGORIES_FILE)) {
+            const content = await fs.readFile(CATEGORIES_FILE, 'utf-8');
+            const data = JSON.parse(content);
+            return data.categories || DEFAULT_CATEGORIES;
+        }
+    } catch (error) {
+        console.error('Error loading categories:', error);
+    }
+    return DEFAULT_CATEGORIES;
+}
+
+// Guardar categorías
+async function saveCategories(categories) {
+    try {
+        await fs.writeFile(CATEGORIES_FILE, JSON.stringify({ categories }, null, 2), 'utf-8');
+        return true;
+    } catch (error) {
+        console.error('Error saving categories:', error);
+        return false;
+    }
+}
+
+// GET - Obtener todas las categorías
+app.get('/api/categories', async (req, res) => {
+    try {
+        const categories = await loadCategories();
+        res.json({ categories });
+    } catch (error) {
+        console.error('Error getting categories:', error);
+        res.status(500).json({ error: 'Error al obtener categorías' });
+    }
+});
+
+// POST - Crear nueva categoría
+app.post('/api/categories', async (req, res) => {
+    try {
+        const { name, icon, color, textColor } = req.body;
+
+        if (!name || !icon) {
+            return res.status(400).json({ error: 'Nombre e icono son requeridos' });
+        }
+
+        const categories = await loadCategories();
+
+        // Generar ID
+        const id = name.toLowerCase()
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+
+        // Verificar si ya existe
+        if (categories.find(c => c.id === id)) {
+            return res.status(400).json({ error: 'Ya existe una categoría con este nombre' });
+        }
+
+        const newCategory = {
+            id,
+            name,
+            icon,
+            color: color || '#e0e7ff',
+            textColor: textColor || '#3730a3',
+            isDefault: false
+        };
+
+        categories.push(newCategory);
+        await saveCategories(categories);
+
+        res.json({ success: true, category: newCategory });
+    } catch (error) {
+        console.error('Error creating category:', error);
+        res.status(500).json({ error: 'Error al crear categoría' });
+    }
+});
+
+// PUT - Actualizar categoría
+app.put('/api/categories/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, icon, color, textColor } = req.body;
+
+        const categories = await loadCategories();
+        const index = categories.findIndex(c => c.id === id);
+
+        if (index === -1) {
+            return res.status(404).json({ error: 'Categoría no encontrada' });
+        }
+
+        const oldName = categories[index].name;
+
+        categories[index] = {
+            ...categories[index],
+            name: name || categories[index].name,
+            icon: icon || categories[index].icon,
+            color: color || categories[index].color,
+            textColor: textColor || categories[index].textColor
+        };
+
+        await saveCategories(categories);
+
+        // Si cambió el nombre, actualizar artículos
+        if (oldName !== name && name) {
+            await updateArticleCategoriesInFiles(oldName, name);
+        }
+
+        res.json({ success: true, category: categories[index] });
+    } catch (error) {
+        console.error('Error updating category:', error);
+        res.status(500).json({ error: 'Error al actualizar categoría' });
+    }
+});
+
+// DELETE - Eliminar categoría
+app.delete('/api/categories/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const categories = await loadCategories();
+        const category = categories.find(c => c.id === id);
+
+        if (!category) {
+            return res.status(404).json({ error: 'Categoría no encontrada' });
+        }
+
+        if (category.isDefault) {
+            return res.status(400).json({ error: 'No puedes eliminar la categoría por defecto' });
+        }
+
+        // Mover artículos a "Otras"
+        const movedCount = await updateArticleCategoriesInFiles(category.name, 'Otras');
+
+        // Eliminar categoría
+        const newCategories = categories.filter(c => c.id !== id);
+        await saveCategories(newCategories);
+
+        res.json({
+            success: true,
+            message: `Categoría eliminada. ${movedCount} artículo(s) movidos a "Otras".`
+        });
+    } catch (error) {
+        console.error('Error deleting category:', error);
+        res.status(500).json({ error: 'Error al eliminar categoría' });
+    }
+});
+
+// Función para actualizar categorías en los archivos de artículos
+async function updateArticleCategoriesInFiles(oldCategory, newCategory) {
+    let updatedCount = 0;
+    try {
+        const files = await fs.readdir(BLOG_DIR);
+        const htmlFiles = files.filter(file =>
+            file.endsWith('.html') &&
+            file !== 'index.html' &&
+            !file.includes('v1')
+        );
+
+        for (const file of htmlFiles) {
+            const filePath = path.join(BLOG_DIR, file);
+            let content = await fs.readFile(filePath, 'utf-8');
+
+            // Simple check if the file mentions the old category
+            if (content.includes(oldCategory)) {
+                content = content.replace(new RegExp(oldCategory, 'g'), newCategory);
+                await fs.writeFile(filePath, content, 'utf-8');
+                updatedCount++;
+            }
+        }
+
+        console.log(`✅ Actualizados ${updatedCount} artículos de "${oldCategory}" a "${newCategory}"`);
+    } catch (error) {
+        console.error('Error updating article categories:', error);
+    }
+    return updatedCount;
+}
+
 // Obtener todos los artículos
 app.get('/api/articles', async (req, res) => {
     try {
