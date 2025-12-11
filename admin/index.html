@@ -529,6 +529,9 @@
                 <button class="sidebar-btn" onclick="showPanel('new')">
                     ✏️ Nuevo Artículo
                 </button>
+                <button class="sidebar-btn" onclick="showPanel('categories')">
+                    🏷️ Categorías
+                </button>
                 <button class="sidebar-btn" onclick="showPanel('settings')">
                     ⚙️ Configuración
                 </button>
@@ -593,9 +596,12 @@
                                 <label for="articleCategory">Categoría *</label>
                                 <select id="articleCategory" required>
                                     <option value="">Seleccionar categoría</option>
-                                    <option value="analisis">Análisis</option>
-                                    <option value="informe">Informe Mensual</option>
-                                    <option value="estrategia">Estrategia</option>
+                                    <option value="Análisis">📊 Análisis</option>
+                                    <option value="Informe Mensual">💎 Informe Mensual</option>
+                                    <option value="Estrategia">🍽️ Estrategia</option>
+                                    <option value="Capacitación">🎓 Capacitación</option>
+                                    <option value="Herramientas">🛠️ Herramientas</option>
+                                    <option value="Otras">📁 Otras</option>
                                 </select>
                             </div>
                             <div class="form-field">
@@ -620,6 +626,54 @@
                     </form>
                 </div>
 
+                <!-- Categories Panel -->
+                <div class="panel-section" id="categoriesPanel">
+                    <h2 class="section-title">Gestión de Categorías</h2>
+
+                    <!-- Create/Edit Category Form -->
+                    <div class="article-form" style="margin-bottom: 30px;">
+                        <h3 style="margin-bottom: 20px; color: #374151;">➕ Nueva Categoría</h3>
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="categoryName">Nombre de la Categoría *</label>
+                                <input type="text" id="categoryName" required placeholder="Ej: Marketing">
+                            </div>
+                            <div class="form-field">
+                                <label for="categoryIcon">Emoji/Icono *</label>
+                                <input type="text" id="categoryIcon" required placeholder="Ej: 📈" maxlength="4">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="categoryColor">Color de Fondo</label>
+                                <input type="color" id="categoryColor" value="#e0e7ff"
+                                    style="height: 45px; padding: 5px;">
+                            </div>
+                            <div class="form-field">
+                                <label for="categoryTextColor">Color de Texto</label>
+                                <input type="color" id="categoryTextColor" value="#3730a3"
+                                    style="height: 45px; padding: 5px;">
+                            </div>
+                        </div>
+                        <input type="hidden" id="editingCategoryId" value="">
+                        <button type="button" class="btn-primary" onclick="saveCategory()">💾 Guardar Categoría</button>
+                        <button type="button" class="btn-edit" onclick="cancelEditCategory()" style="display: none;"
+                            id="cancelEditBtn">Cancelar</button>
+                    </div>
+
+                    <!-- Categories List -->
+                    <h3 style="margin-bottom: 20px; color: #374151;">📋 Categorías Existentes</h3>
+                    <div class="articles-list" id="categoriesList">
+                        <!-- Categories will be loaded here -->
+                    </div>
+
+                    <div
+                        style="margin-top: 20px; padding: 15px; background: #fef3c7; border-radius: 10px; font-size: 14px;">
+                        <strong>⚠️ Nota:</strong> Si eliminas una categoría que tiene artículos, estos se moverán
+                        automáticamente a la categoría "Otras".
+                    </div>
+                </div>
+
                 <!-- Settings Panel -->
                 <div class="panel-section" id="settingsPanel">
                     <h2 class="section-title">Configuración del Blog</h2>
@@ -635,6 +689,7 @@
                             <p style="color: #6b7280; font-size: 14px; margin-top: 10px;">
                                 <strong>Versión:</strong> 1.0.0<br>
                                 <strong>Artículos totales:</strong> <span id="totalArticles">0</span><br>
+                                <strong>Categorías:</strong> <span id="totalCategories">0</span><br>
                                 <strong>Última actualización:</strong> <span id="lastUpdate">-</span>
                             </p>
                         </div>
@@ -703,9 +758,13 @@
             } else if (panelName === 'new') {
                 document.getElementById('newPanel').classList.add('active');
                 document.querySelectorAll('.sidebar-btn')[1].classList.add('active');
+            } else if (panelName === 'categories') {
+                document.getElementById('categoriesPanel').classList.add('active');
+                document.querySelectorAll('.sidebar-btn')[2].classList.add('active');
+                loadCategories();
             } else if (panelName === 'settings') {
                 document.getElementById('settingsPanel').classList.add('active');
-                document.querySelectorAll('.sidebar-btn')[2].classList.add('active');
+                document.querySelectorAll('.sidebar-btn')[3].classList.add('active');
                 updateStats();
             }
         }
@@ -767,32 +826,31 @@
         }
 
         function updateCategoryCounts(articles) {
-            const counts = {
-                'all': articles.length,
-                'Análisis': 0,
-                'Informe Mensual': 0,
-                'Estrategia': 0,
-                'Capacitación': 0,
-                'Herramientas': 0,
-                'Otras': 0
-            };
+            loadCategoriesFromStorage();
 
+            // Initialize counts
+            const counts = { 'all': articles.length };
+            categories.forEach(cat => {
+                counts[cat.name] = 0;
+            });
+
+            // Count articles per category
             articles.forEach(article => {
                 if (counts.hasOwnProperty(article.category)) {
                     counts[article.category]++;
                 } else {
-                    counts['Otras']++;
+                    counts['Otras'] = (counts['Otras'] || 0) + 1;
                 }
             });
 
             // Update count badges
-            document.getElementById('count-all').textContent = counts['all'];
-            document.getElementById('count-analisis').textContent = counts['Análisis'];
-            document.getElementById('count-informe').textContent = counts['Informe Mensual'];
-            document.getElementById('count-estrategia').textContent = counts['Estrategia'];
-            document.getElementById('count-capacitacion').textContent = counts['Capacitación'];
-            document.getElementById('count-herramientas').textContent = counts['Herramientas'];
-            document.getElementById('count-otras').textContent = counts['Otras'];
+            const allCount = document.getElementById('count-all');
+            if (allCount) allCount.textContent = counts['all'];
+
+            categories.forEach(cat => {
+                const countEl = document.getElementById(`count-${cat.id}`);
+                if (countEl) countEl.textContent = counts[cat.name] || 0;
+            });
         }
 
         function setupFilters() {
@@ -927,6 +985,7 @@
                 const articles = data.articles || [];
 
                 document.getElementById('totalArticles').textContent = articles.length;
+                document.getElementById('totalCategories').textContent = categories.length;
                 document.getElementById('lastUpdate').textContent = new Date().toLocaleString('es-ES');
             } catch (error) {
                 console.error('Error updating stats:', error);
@@ -934,6 +993,224 @@
                 document.getElementById('lastUpdate').textContent = 'Error';
             }
         }
+
+        // ==================== CATEGORY MANAGEMENT ====================
+
+        // Default categories
+        let categories = [
+            { id: 'analisis', name: 'Análisis', icon: '📊', color: '#d1fae5', textColor: '#065f46', isDefault: false },
+            { id: 'informe', name: 'Informe Mensual', icon: '💎', color: '#fce7f3', textColor: '#9f1239', isDefault: false },
+            { id: 'estrategia', name: 'Estrategia', icon: '🍽️', color: '#dbeafe', textColor: '#1e3a8a', isDefault: false },
+            { id: 'capacitacion', name: 'Capacitación', icon: '🎓', color: '#fef3c7', textColor: '#92400e', isDefault: false },
+            { id: 'herramientas', name: 'Herramientas', icon: '🛠️', color: '#e0e7ff', textColor: '#3730a3', isDefault: false },
+            { id: 'otras', name: 'Otras', icon: '📁', color: '#f3f4f6', textColor: '#374151', isDefault: true }
+        ];
+
+        // Load categories from localStorage
+        function loadCategoriesFromStorage() {
+            const stored = localStorage.getItem('obs360_categories');
+            if (stored) {
+                categories = JSON.parse(stored);
+            }
+        }
+
+        // Save categories to localStorage
+        function saveCategoriesToStorage() {
+            localStorage.setItem('obs360_categories', JSON.stringify(categories));
+        }
+
+        // Load and display categories
+        function loadCategories() {
+            loadCategoriesFromStorage();
+            const container = document.getElementById('categoriesList');
+
+            if (categories.length === 0) {
+                container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">No hay categorías. Crea tu primera categoría.</p>';
+                return;
+            }
+
+            // Count articles per category
+            const articleCounts = {};
+            allArticles.forEach(article => {
+                const cat = article.category || 'Otras';
+                articleCounts[cat] = (articleCounts[cat] || 0) + 1;
+            });
+
+            container.innerHTML = categories.map(cat => `
+                <div class="article-card" style="border-left: 4px solid ${cat.color};">
+                    <div class="article-card-header">
+                        <div>
+                            <span class="category-badge" style="background: ${cat.color}; color: ${cat.textColor};">
+                                ${cat.icon} ${cat.name}
+                            </span>
+                            <p class="article-card-meta" style="margin-top: 10px;">
+                                📝 ${articleCounts[cat.name] || 0} artículos
+                                ${cat.isDefault ? ' • 🔒 Categoría por defecto' : ''}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="article-actions">
+                        <button class="btn-edit" onclick="editCategory('${cat.id}')">✏️ Editar</button>
+                        ${!cat.isDefault ? `<button class="btn-delete" onclick="deleteCategory('${cat.id}')">🗑️ Eliminar</button>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Save category (create or update)
+        function saveCategory() {
+            const name = document.getElementById('categoryName').value.trim();
+            const icon = document.getElementById('categoryIcon').value.trim();
+            const color = document.getElementById('categoryColor').value;
+            const textColor = document.getElementById('categoryTextColor').value;
+            const editingId = document.getElementById('editingCategoryId').value;
+
+            if (!name || !icon) {
+                alert('Por favor completa el nombre y el icono de la categoría.');
+                return;
+            }
+
+            loadCategoriesFromStorage();
+
+            if (editingId) {
+                // Update existing
+                const index = categories.findIndex(c => c.id === editingId);
+                if (index !== -1) {
+                    const oldName = categories[index].name;
+                    categories[index].name = name;
+                    categories[index].icon = icon;
+                    categories[index].color = color;
+                    categories[index].textColor = textColor;
+
+                    // Update article category names if changed
+                    if (oldName !== name) {
+                        updateArticleCategories(oldName, name);
+                    }
+                }
+            } else {
+                // Create new
+                const id = name.toLowerCase()
+                    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-+|-+$/g, '');
+
+                // Check if already exists
+                if (categories.find(c => c.id === id)) {
+                    alert('Ya existe una categoría con este nombre.');
+                    return;
+                }
+
+                categories.push({
+                    id,
+                    name,
+                    icon,
+                    color,
+                    textColor,
+                    isDefault: false
+                });
+            }
+
+            saveCategoriesToStorage();
+            cancelEditCategory();
+            loadCategories();
+            updateCategorySelect();
+            updateFilterButtons();
+            alert(editingId ? 'Categoría actualizada exitosamente.' : 'Categoría creada exitosamente.');
+        }
+
+        // Edit category
+        function editCategory(id) {
+            loadCategoriesFromStorage();
+            const cat = categories.find(c => c.id === id);
+            if (!cat) return;
+
+            document.getElementById('categoryName').value = cat.name;
+            document.getElementById('categoryIcon').value = cat.icon;
+            document.getElementById('categoryColor').value = cat.color;
+            document.getElementById('categoryTextColor').value = cat.textColor;
+            document.getElementById('editingCategoryId').value = id;
+            document.getElementById('cancelEditBtn').style.display = 'inline-block';
+        }
+
+        // Cancel edit
+        function cancelEditCategory() {
+            document.getElementById('categoryName').value = '';
+            document.getElementById('categoryIcon').value = '';
+            document.getElementById('categoryColor').value = '#e0e7ff';
+            document.getElementById('categoryTextColor').value = '#3730a3';
+            document.getElementById('editingCategoryId').value = '';
+            document.getElementById('cancelEditBtn').style.display = 'none';
+        }
+
+        // Delete category
+        function deleteCategory(id) {
+            loadCategoriesFromStorage();
+            const cat = categories.find(c => c.id === id);
+            if (!cat) return;
+
+            if (cat.isDefault) {
+                alert('No puedes eliminar la categoría por defecto.');
+                return;
+            }
+
+            // Count articles in this category
+            const articleCount = allArticles.filter(a => a.category === cat.name).length;
+
+            let message = `¿Estás seguro de que deseas eliminar la categoría "${cat.name}"?`;
+            if (articleCount > 0) {
+                message += `\n\n⚠️ ${articleCount} artículo(s) serán movidos a la categoría "Otras".`;
+            }
+
+            if (confirm(message)) {
+                // Move articles to "Otras"
+                if (articleCount > 0) {
+                    updateArticleCategories(cat.name, 'Otras');
+                }
+
+                // Remove category
+                categories = categories.filter(c => c.id !== id);
+                saveCategoriesToStorage();
+                loadCategories();
+                updateCategorySelect();
+                updateFilterButtons();
+                alert('Categoría eliminada. Los artículos han sido movidos a "Otras".');
+            }
+        }
+
+        // Update articles when category name changes
+        function updateArticleCategories(oldName, newName) {
+            // This would need backend support to actually update the articles
+            // For now, we'll just log it
+            console.log(`Would update articles from "${oldName}" to "${newName}"`);
+            // TODO: Implement API call to update articles
+        }
+
+        // Update the category select in the article form
+        function updateCategorySelect() {
+            loadCategoriesFromStorage();
+            const select = document.getElementById('articleCategory');
+            select.innerHTML = '<option value="">Seleccionar categoría</option>' +
+                categories.map(cat => `<option value="${cat.name}">${cat.icon} ${cat.name}</option>`).join('');
+        }
+
+        // Update filter buttons
+        function updateFilterButtons() {
+            loadCategoriesFromStorage();
+            const container = document.getElementById('categoryFilters');
+            container.innerHTML = `
+                <button class="filter-btn active" data-category="all">
+                    📚 Todos <span class="filter-count" id="count-all">0</span>
+                </button>
+            ` + categories.map(cat => `
+                <button class="filter-btn" data-category="${cat.name}">
+                    ${cat.icon} ${cat.name.split(' ')[0]} <span class="filter-count" id="count-${cat.id}">0</span>
+                </button>
+            `).join('');
+            setupFilters();
+        }
+
+        // Initialize categories on load
+        loadCategoriesFromStorage();
     </script>
 </body>
 
