@@ -165,11 +165,44 @@ function cleanAndApplyOBS360Template(htmlContent, filename) {
         $('head').append('<style>' + OBS360_CSS + '</style>');
     }
 
-    // 8. Agregar header al INICIO del body
-    $('body').prepend(OBS360_HEADER);
+    // 8. ARREGLAR BODY: Eliminar clases y estilos que rompen el layout
+    const $body = $('body');
 
-    // 9. Agregar footer al FINAL del body
-    $('body').append(OBS360_FOOTER);
+    // Eliminar clases problemáticas de Tailwind que rompen el layout
+    const bodyClasses = $body.attr('class') || '';
+    const cleanedClasses = bodyClasses
+        .split(' ')
+        .filter(cls => !['flex', 'flex-col', 'items-center', 'justify-center', 'min-h-screen', 'h-screen'].includes(cls))
+        .join(' ');
+    $body.attr('class', cleanedClasses);
+
+    // Eliminar overflow:hidden del style inline del body
+    const bodyStyle = $body.attr('style') || '';
+    const cleanedStyle = bodyStyle.replace(/overflow\s*:\s*hidden\s*;?/gi, '');
+    if (cleanedStyle) {
+        $body.attr('style', cleanedStyle);
+    } else {
+        $body.removeAttr('style');
+    }
+
+    // Agregar CSS inline para arreglar layout del body
+    $('head').append(`
+    <style>
+    body {
+        display: block !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        min-height: auto !important;
+        height: auto !important;
+    }
+    </style>
+    `);
+
+    // 9. Agregar header al INICIO del body
+    $body.prepend(OBS360_HEADER);
+
+    // 10. Agregar footer al FINAL del body
+    $body.append(OBS360_FOOTER);
 
     return $.html();
 }
