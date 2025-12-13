@@ -72,90 +72,103 @@ app.post('/api/auth/blog', (req, res) => {
 
 // ==================== TEMPLATES OBS360 ====================
 
-// CSS para header (solo logo) y footer - MEJORADO
+// CSS para header (solo logo) y footer - MEJORADO V2
 const OBS360_CSS = `
-    /* OBS360 Header - Estándar */
-    .obs-header {
-        background: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        padding: 15px 0;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-    }
-    .obs-header-content {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    .obs-logo img {
-        height: 45px;
-        width: auto;
-    }
-    .obs-header-badge {
-        background: linear-gradient(135deg, #28529a, #84cc16);
-        color: white;
-        padding: 6px 16px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-    }
-    /* OBS360 Footer - Estándar */
-    .obs-footer {
-        background: linear-gradient(135deg, #1f2937 0%, #28529a 100%);
-        padding: 40px 0;
-        text-align: center;
-        margin-top: 60px;
-    }
-    .obs-footer img { height: 50px; margin-bottom: 15px; filter: brightness(0) invert(1); }
-    .obs-footer p { color: rgba(255, 255, 255, 0.7); font-size: 14px; margin-bottom: 10px; }
-    .obs-footer-btn {
-        display: inline-block;
-        background: #84cc16;
-        color: white;
-        padding: 12px 30px;
-        border-radius: 25px;
-        text-decoration: none;
-        font-weight: 600;
-        margin-top: 15px;
-        transition: all 0.3s ease;
-    }
-    .obs-footer-btn:hover { background: #65a30d; transform: translateY(-2px); }
+/* ========== OBS360 Branding Estándar ========== */
+.obs-header {
+    background: white !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+.obs-header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.obs-logo img {
+    height: 45px;
+    width: auto;
+}
+.obs-header-badge {
+    background: linear-gradient(135deg, #28529a, #84cc16);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+.obs-footer {
+    background: linear-gradient(135deg, #1f2937 0%, #28529a 100%) !important;
+    padding: 40px 0;
+    text-align: center;
+    margin-top: 60px;
+}
+.obs-footer img { 
+    height: 50px; 
+    margin-bottom: 15px; 
+    filter: brightness(0) invert(1); 
+}
+.obs-footer p { 
+    color: rgba(255, 255, 255, 0.7); 
+    font-size: 14px; 
+    margin-bottom: 10px; 
+}
+.obs-footer-btn {
+    display: inline-block;
+    background: #84cc16;
+    color: white !important;
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+}
+.obs-footer-btn:hover { 
+    background: #65a30d; 
+    transform: translateY(-2px); 
+}
+/* ========== Fin OBS360 Branding ========== */
 `;
 
-// Header con logo y badge
+// Header con logo y badge - MEJORADO V2
 const OBS360_HEADER = `
-    <!-- OBS360 Header -->
-    <header class="obs-header">
-        <div class="obs-header-content">
-            <div class="obs-logo">
+<!-- OBS360 Header Estándar -->
+<header class="obs-header">
+    <div class="obs-header-content">
+        <div class="obs-logo">
+            <a href="../index.html">
                 <img src="../Logo-Obs360.co_.webp" alt="OBS360" />
-            </div>
-            <span class="obs-header-badge">RECURSO PRIVADO</span>
+            </a>
         </div>
-    </header>
+        <span class="obs-header-badge">RECURSO PRIVADO</span>
+    </div>
+</header>
 `;
 
-// Footer estándar
+// Footer estándar - MEJORADO V2
 const OBS360_FOOTER = `
-    <!-- OBS360 Footer -->
-    <footer class="obs-footer">
-        <div class="max-w-7xl mx-auto px-4">
-            <img src="../Logo-Obs360.co_.webp" alt="OBS360" />
-            <p>Recurso exclusivo para clientes de OBS360</p>
-            <p style="font-size: 12px; opacity: 0.6;">© 2025 OBS360 - Todos los derechos reservados</p>
-            <a href="https://wa.me/19803370518" target="_blank" class="obs-footer-btn">Contactar a OBS360</a>
-        </div>
-    </footer>
+<!-- OBS360 Footer Estándar -->
+<footer class="obs-footer">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <img src="../Logo-Obs360.co_.webp" alt="OBS360" />
+        <p>Recurso exclusivo para clientes de OBS360</p>
+        <p style="font-size: 12px; opacity: 0.6;">© 2025 OBS360 - Todos los derechos reservados</p>
+        <a href="https://wa.me/19803370518" target="_blank" class="obs-footer-btn">Contactar a OBS360</a>
+    </div>
+</footer>
 `;
 
-// Función FORZADA para aplicar template OBS360 (siempre re-aplica)
+// Función FORZADA para aplicar template OBS360 (siempre re-aplica) - V2
 function forceOBS360Template(htmlContent) {
-    const $ = cheerio.load(htmlContent);
+    const $ = cheerio.load(htmlContent, { decodeEntities: false });
 
     // 1. SIEMPRE asegurar meta noindex, nofollow
     $('meta[name="robots"]').remove();
@@ -165,28 +178,43 @@ function forceOBS360Template(htmlContent) {
     $('link[rel="icon"]').remove();
     $('head').append('<link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp" />');
 
-    // 3. Remover header/footer existentes para evitar duplicados
+    // 3. Remover TODOS los header/footer OBS360 existentes
     $('.obs-header').remove();
+    $('header.obs-header').remove();
     $('.obs-footer').remove();
+    $('footer.obs-footer').remove();
 
-    // 4. Agregar CSS (evitar duplicados)
-    const existingStyles = $('style').text();
-    if (!existingStyles.includes('.obs-header') || !existingStyles.includes('.obs-footer')) {
-        if ($('style').length) {
-            // Limpiar CSS OBS360 existente si hay
-            let styleContent = $('style').first().html() || '';
-            // Remover CSS de OBS360 existente
-            styleContent = styleContent.replace(/\/\* OBS360 Header[\s\S]*?\.obs-footer-btn:hover[^}]*\}/g, '');
-            $('style').first().html(styleContent + OBS360_CSS);
-        } else {
-            $('head').append('<style>' + OBS360_CSS + '</style>');
-        }
+    // 4. Limpiar CSS duplicado de OBS360 en todos los <style>
+    $('style').each(function () {
+        let css = $(this).html() || '';
+        // Eliminar todos los bloques CSS de OBS360
+        css = css.replace(/\/\*\s*=+\s*OBS360[\s\S]*?=+\s*\*\//g, '');
+        css = css.replace(/\/\*\s*OBS360[\s\S]*?\*\//g, '');
+        css = css.replace(/\.obs-header\s*\{[^}]*\}/g, '');
+        css = css.replace(/\.obs-header-content\s*\{[^}]*\}/g, '');
+        css = css.replace(/\.obs-header-badge\s*\{[^}]*\}/g, '');
+        css = css.replace(/\.obs-logo\s*img\s*\{[^}]*\}/g, '');
+        css = css.replace(/\.obs-footer\s*\{[^}]*\}/g, '');
+        css = css.replace(/\.obs-footer\s*img\s*\{[^}]*\}/g, '');
+        css = css.replace(/\.obs-footer\s*p\s*\{[^}]*\}/g, '');
+        css = css.replace(/\.obs-footer-btn\s*\{[^}]*\}/g, '');
+        css = css.replace(/\.obs-footer-btn:hover\s*\{[^}]*\}/g, '');
+        // Limpiar líneas vacías múltiples
+        css = css.replace(/\n\s*\n\s*\n/g, '\n\n');
+        $(this).html(css.trim());
+    });
+
+    // 5. Agregar CSS de OBS360 al primer <style> o crear uno nuevo
+    if ($('style').length > 0) {
+        $('style').first().append('\n' + OBS360_CSS);
+    } else {
+        $('head').append('<style>' + OBS360_CSS + '</style>');
     }
 
-    // 5. SIEMPRE agregar header al inicio del body
+    // 6. SIEMPRE agregar header al inicio del body
     $('body').prepend(OBS360_HEADER);
 
-    // 6. SIEMPRE agregar footer al final del body
+    // 7. SIEMPRE agregar footer al final del body
     $('body').append(OBS360_FOOTER);
 
     return $.html();

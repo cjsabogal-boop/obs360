@@ -6,8 +6,7 @@
     <title>Amazon PPC Playbook Mentor</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-    <style>
-        body {
+    <style>body {
             font-family: 'Inter', sans-serif;
             background-color: #111827; /* bg-gray-900 */
             color: #d1d5db; /* text-gray-300 */
@@ -100,122 +99,88 @@
             margin-right: 0.75rem;
             flex-shrink: 0;
         }
-    
-    
-    .obs-footer {
-        background: linear-gradient(135deg, #1f2937 0%, #28529a 100%);
-        padding: 40px 0;
-        text-align: center;
-        margin-top: 60px;
-    }
-    .obs-footer img {
-        height: 50px;
-        margin-bottom: 15px;
-        filter: brightness(0) invert(1);
-    }
-    .obs-footer p {
-        color: rgba(255, 255, 255, 0.7);
-        font-size: 14px;
-    }
-    .obs-footer-btn {
-        display: inline-block;
-        background: #84cc16;
-        color: white;
-        padding: 12px 30px;
-        border-radius: 25px;
-        text-decoration: none;
-        font-weight: 600;
-        margin-top: 20px;
-        transition: all 0.3s ease;
-    }
-    .obs-footer-btn:hover {
-        background: #65a30d;
-        transform: translateY(-2px);
-    }
 
-    
-    /* OBS360 Header */
-    .obs-header {
-        background: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        padding: 15px 0;
-    }
-    .obs-header-content {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-    }
-    .obs-logo img {
-        height: 45px;
-        width: auto;
-    }
-
-    
-    /* OBS360 Header - Estándar */
-    .obs-header {
-        background: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        padding: 15px 0;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-    }
-    .obs-header-content {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-    .obs-logo img {
-        height: 45px;
-        width: auto;
-    }
-    .obs-header-badge {
-        background: linear-gradient(135deg, #28529a, #84cc16);
-        color: white;
-        padding: 6px 16px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-    }
-    /* OBS360 Footer - Estándar */
-    .obs-footer {
-        background: linear-gradient(135deg, #1f2937 0%, #28529a 100%);
-        padding: 40px 0;
-        text-align: center;
-        margin-top: 60px;
-    }
-    .obs-footer img { height: 50px; margin-bottom: 15px; filter: brightness(0) invert(1); }
-    .obs-footer p { color: rgba(255, 255, 255, 0.7); font-size: 14px; margin-bottom: 10px; }
-    .obs-footer-btn {
-        display: inline-block;
-        background: #84cc16;
-        color: white;
-        padding: 12px 30px;
-        border-radius: 25px;
-        text-decoration: none;
-        font-weight: 600;
-        margin-top: 15px;
-        transition: all 0.3s ease;
-    }
-    .obs-footer-btn:hover { background: #65a30d; transform: translateY(-2px); }
+/* ========== OBS360 Branding Estándar ========== */
+.obs-header {
+    background: white !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+.obs-header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.obs-logo img {
+    height: 45px;
+    width: auto;
+}
+.obs-header-badge {
+    background: linear-gradient(135deg, #28529a, #84cc16);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+.obs-footer {
+    background: linear-gradient(135deg, #1f2937 0%, #28529a 100%) !important;
+    padding: 40px 0;
+    text-align: center;
+    margin-top: 60px;
+}
+.obs-footer img { 
+    height: 50px; 
+    margin-bottom: 15px; 
+    filter: brightness(0) invert(1); 
+}
+.obs-footer p { 
+    color: rgba(255, 255, 255, 0.7); 
+    font-size: 14px; 
+    margin-bottom: 10px; 
+}
+.obs-footer-btn {
+    display: inline-block;
+    background: #84cc16;
+    color: white !important;
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+}
+.obs-footer-btn:hover { 
+    background: #65a30d; 
+    transform: translateY(-2px); 
+}
+/* ========== Fin OBS360 Branding ========== */
 </style>
 <meta name="robots" content="noindex, nofollow"><link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp"></head>
 <body class="antialiased">
-    <!-- OBS360 Header -->
-    <header class="obs-header">
-        <div class="obs-header-content">
-            <div class="obs-logo">
+<!-- OBS360 Header Estándar -->
+<header class="obs-header">
+    <div class="obs-header-content">
+        <div class="obs-logo">
+            <a href="../index.html">
                 <img src="../Logo-Obs360.co_.webp" alt="OBS360">
-            </div>
-            <span class="obs-header-badge">RECURSO PRIVADO</span>
+            </a>
         </div>
-    </header>
+        <span class="obs-header-badge">RECURSO PRIVADO</span>
+    </div>
+</header>
 
-    <!-- OBS360 Header -->
+    
+    
+
+    
     
 
 
@@ -588,7 +553,7 @@
 
     </script>
 
-    <!-- OBS360 Footer -->
+    
     
 
 
@@ -597,13 +562,16 @@
 
 
 
-    <!-- OBS360 Footer -->
-    <footer class="obs-footer">
-        <div class="max-w-7xl mx-auto px-4">
-            <img src="../Logo-Obs360.co_.webp" alt="OBS360">
-            <p>Recurso exclusivo para clientes de OBS360</p>
-            <p style="font-size: 12px; opacity: 0.6;">© 2025 OBS360 - Todos los derechos reservados</p>
-            <a href="https://wa.me/19803370518" target="_blank" class="obs-footer-btn">Contactar a OBS360</a>
-        </div>
-    </footer>
+    
+    
+
+<!-- OBS360 Footer Estándar -->
+<footer class="obs-footer">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <img src="../Logo-Obs360.co_.webp" alt="OBS360">
+        <p>Recurso exclusivo para clientes de OBS360</p>
+        <p style="font-size: 12px; opacity: 0.6;">© 2025 OBS360 - Todos los derechos reservados</p>
+        <a href="https://wa.me/19803370518" target="_blank" class="obs-footer-btn">Contactar a OBS360</a>
+    </div>
+</footer>
 </body></html>
