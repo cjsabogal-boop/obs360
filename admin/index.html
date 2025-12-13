@@ -962,24 +962,33 @@
         }
 
         function updateCategoryCounts(articles) {
-            // Use categories array (already loaded from API)
-            if (categories.length === 0) {
-                // If no categories loaded yet, wait for them
-                return;
-            }
+            // Map category names to their HTML element IDs
+            const categoryMap = {
+                'Análisis': 'analisis',
+                'Informe Mensual': 'informe',
+                'Estrategia': 'estrategia',
+                'Capacitación': 'capacitacion',
+                'Herramientas': 'herramientas',
+                'Otras': 'otras'
+            };
 
             // Initialize counts
-            const counts = { 'all': articles.length };
-            categories.forEach(cat => {
-                counts[cat.name] = 0;
-            });
+            const counts = {
+                'all': articles.length,
+                'Análisis': 0,
+                'Informe Mensual': 0,
+                'Estrategia': 0,
+                'Capacitación': 0,
+                'Herramientas': 0,
+                'Otras': 0
+            };
 
             // Count articles per category
             articles.forEach(article => {
                 if (counts.hasOwnProperty(article.category)) {
                     counts[article.category]++;
                 } else {
-                    counts['Otras'] = (counts['Otras'] || 0) + 1;
+                    counts['Otras']++;
                 }
             });
 
@@ -987,9 +996,10 @@
             const allCount = document.getElementById('count-all');
             if (allCount) allCount.textContent = counts['all'];
 
-            categories.forEach(cat => {
-                const countEl = document.getElementById(`count-${cat.id}`);
-                if (countEl) countEl.textContent = counts[cat.name] || 0;
+            // Update each category count
+            Object.entries(categoryMap).forEach(([categoryName, elementId]) => {
+                const countEl = document.getElementById(`count-${elementId}`);
+                if (countEl) countEl.textContent = counts[categoryName] || 0;
             });
         }
 
