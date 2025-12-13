@@ -694,89 +694,42 @@
             ? 'http://localhost:3000/api'
             : 'https://obs360.co/api';
 
-        // Credenciales de respaldo (sincronizadas con server.js defaults)
-        const FALLBACK_CREDENTIALS = {
-            username: 'obs360admin',
-            password: 'Obs.2025$$'
-        };
+        // CREDENCIALES FIJAS - SISTEMA SIMPLE
+        const BLOG_USER = 'obs360admin';
+        const BLOG_PASS = 'Obs.2025$$';
 
         let allArticles = [];
         let currentFilter = 'all';
-        let articlesLoaded = false; // Prevent double loading
+        let articlesLoaded = false;
 
-        // Initialize page after DOM is ready
+        // Initialize page
         function initPage() {
             if (sessionStorage.getItem('blog_logged_in') === 'true') {
                 showArticles();
             } else {
-                // Show login screen and hide hero
                 document.getElementById('loginScreen').style.display = 'block';
                 document.querySelector('.blog-hero').classList.add('hidden');
             }
         }
 
-        // Login form handler - hybrid validation (server + fallback)
-        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+        // LOGIN SIMPLE - SIN SERVIDOR
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
             e.preventDefault();
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             const loginError = document.getElementById('loginError');
-            const submitBtn = this.querySelector('button[type="submit"]');
 
-            // Hide previous error
             loginError.style.display = 'none';
 
-            // Show loading state
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Verificando...';
-
-            let serverValidated = false;
-            let serverError = false;
-
-            try {
-                // Intentar validar con el servidor
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 segundos timeout
-
-                const response = await fetch(`${API_URL}/auth/blog`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password }),
-                    signal: controller.signal
-                });
-
-                clearTimeout(timeoutId);
-
-                const data = await response.json();
-
-                if (response.ok && data.success) {
-                    serverValidated = true;
-                }
-            } catch (error) {
-                console.warn('Server validation failed, using fallback:', error.message);
-                serverError = true;
-            }
-
-            // Validación de respaldo si el servidor falló/no respondió
-            const fallbackValid = (username === FALLBACK_CREDENTIALS.username &&
-                password === FALLBACK_CREDENTIALS.password);
-
-            if (serverValidated || (serverError && fallbackValid)) {
+            // VALIDACIÓN DIRECTA LOCAL
+            if (username === BLOG_USER && password === BLOG_PASS) {
                 sessionStorage.setItem('blog_logged_in', 'true');
                 document.getElementById('loginScreen').style.display = 'none';
                 showArticles();
-            } else if (!serverError && !serverValidated) {
-                // Servidor respondió pero credenciales inválidas
-                loginError.textContent = 'Credenciales incorrectas';
-                loginError.style.display = 'block';
-            } else if (serverError && !fallbackValid) {
-                // Servidor no respondió Y credenciales no coinciden con fallback
+            } else {
                 loginError.textContent = 'Credenciales incorrectas';
                 loginError.style.display = 'block';
             }
-
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Acceder';
         });
 
         function showArticles() {
