@@ -764,7 +764,13 @@
             ? 'http://localhost:3000/api'
             : 'https://obs360.co/api';
 
-        // Check if already logged in (with session validation)
+        // Credenciales de respaldo (sincronizadas con server.js defaults)
+        const FALLBACK_CREDENTIALS = {
+            username: 'obs360admin',
+            password: 'Obs.2025$$'
+        };
+
+        // Check if already logged in
         if (localStorage.getItem('obs360_logged_in') === 'true') {
             showDashboard();
         }
@@ -783,36 +789,54 @@
             submitBtn.disabled = true;
             submitBtn.textContent = 'Verificando...';
 
+            let serverValidated = false;
+            let serverError = false;
+
             try {
-                // Always validate against server to ensure consistency
+                // Intentar validar con el servidor
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 segundos timeout
+
                 const response = await fetch(`${API_URL}/auth/admin`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username, password })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password }),
+                    signal: controller.signal
                 });
+
+                clearTimeout(timeoutId);
 
                 const data = await response.json();
 
                 if (response.ok && data.success) {
-                    // Store credentials for subsequent API calls
-                    localStorage.setItem('obs360_logged_in', 'true');
-                    localStorage.setItem('obs360_username', username);
-                    localStorage.setItem('obs360_password', password);
-                    showDashboard();
-                } else {
-                    errorMessage.textContent = data.error || 'Usuario o contraseña incorrectos';
-                    errorMessage.style.display = 'block';
+                    serverValidated = true;
                 }
             } catch (error) {
-                console.error('Login error:', error);
-                errorMessage.textContent = 'Error de conexión. Verifica que el servidor esté activo.';
-                errorMessage.style.display = 'block';
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Iniciar Sesión';
+                console.warn('Server validation failed, using fallback:', error.message);
+                serverError = true;
             }
+
+            // Validación de respaldo si el servidor falló/no respondió
+            const fallbackValid = (username === FALLBACK_CREDENTIALS.username &&
+                password === FALLBACK_CREDENTIALS.password);
+
+            if (serverValidated || (serverError && fallbackValid)) {
+                localStorage.setItem('obs360_logged_in', 'true');
+                localStorage.setItem('obs360_username', username);
+                localStorage.setItem('obs360_password', password);
+                showDashboard();
+            } else if (!serverError && !serverValidated) {
+                // Servidor respondió pero credenciales inválidas
+                errorMessage.textContent = 'Usuario o contraseña incorrectos';
+                errorMessage.style.display = 'block';
+            } else if (serverError && !fallbackValid) {
+                // Servidor no respondió Y credenciales no coinciden con fallback
+                errorMessage.textContent = 'Usuario o contraseña incorrectos';
+                errorMessage.style.display = 'block';
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Iniciar Sesión';
         });
 
         function showDashboard() {

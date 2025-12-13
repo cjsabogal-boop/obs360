@@ -694,6 +694,12 @@
             ? 'http://localhost:3000/api'
             : 'https://obs360.co/api';
 
+        // Credenciales de respaldo (sincronizadas con server.js defaults)
+        const FALLBACK_CREDENTIALS = {
+            username: 'obs360admin',
+            password: 'Obs.2025$$'
+        };
+
         let allArticles = [];
         let currentFilter = 'all';
         let articlesLoaded = false; // Prevent double loading
@@ -709,7 +715,7 @@
             }
         }
 
-        // Login form handler - validates against server
+        // Login form handler - hybrid validation (server + fallback)
         document.getElementById('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             const username = document.getElementById('username').value.trim();
@@ -724,34 +730,53 @@
             submitBtn.disabled = true;
             submitBtn.textContent = 'Verificando...';
 
+            let serverValidated = false;
+            let serverError = false;
+
             try {
-                // Validate against server
+                // Intentar validar con el servidor
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 segundos timeout
+
                 const response = await fetch(`${API_URL}/auth/blog`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username, password })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password }),
+                    signal: controller.signal
                 });
+
+                clearTimeout(timeoutId);
 
                 const data = await response.json();
 
                 if (response.ok && data.success) {
-                    sessionStorage.setItem('blog_logged_in', 'true');
-                    document.getElementById('loginScreen').style.display = 'none';
-                    showArticles();
-                } else {
-                    loginError.textContent = data.error || 'Credenciales incorrectas';
-                    loginError.style.display = 'block';
+                    serverValidated = true;
                 }
             } catch (error) {
-                console.error('Login error:', error);
-                loginError.textContent = 'Error de conexión. Intenta de nuevo.';
-                loginError.style.display = 'block';
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Acceder';
+                console.warn('Server validation failed, using fallback:', error.message);
+                serverError = true;
             }
+
+            // Validación de respaldo si el servidor falló/no respondió
+            const fallbackValid = (username === FALLBACK_CREDENTIALS.username &&
+                password === FALLBACK_CREDENTIALS.password);
+
+            if (serverValidated || (serverError && fallbackValid)) {
+                sessionStorage.setItem('blog_logged_in', 'true');
+                document.getElementById('loginScreen').style.display = 'none';
+                showArticles();
+            } else if (!serverError && !serverValidated) {
+                // Servidor respondió pero credenciales inválidas
+                loginError.textContent = 'Credenciales incorrectas';
+                loginError.style.display = 'block';
+            } else if (serverError && !fallbackValid) {
+                // Servidor no respondió Y credenciales no coinciden con fallback
+                loginError.textContent = 'Credenciales incorrectas';
+                loginError.style.display = 'block';
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Acceder';
         });
 
         function showArticles() {
