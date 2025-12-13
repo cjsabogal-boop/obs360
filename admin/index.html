@@ -764,27 +764,54 @@
             ? 'http://localhost:3000/api'
             : 'https://obs360.co/api';
 
-        // Authentication
-        const ADMIN_CREDENTIALS = {
-            username: 'obs360admin',
-            password: 'Obs.2025$$'
-        };
-
-        // Check if already logged in
+        // Check if already logged in (with session validation)
         if (localStorage.getItem('obs360_logged_in') === 'true') {
             showDashboard();
         }
 
-        document.getElementById('loginForm').addEventListener('submit', function (e) {
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            const username = document.getElementById('username').value;
+            const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            const submitBtn = this.querySelector('button[type="submit"]');
 
-            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
-                localStorage.setItem('obs360_logged_in', 'true');
-                showDashboard();
-            } else {
-                document.getElementById('errorMessage').style.display = 'block';
+            // Hide previous error
+            errorMessage.style.display = 'none';
+
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Verificando...';
+
+            try {
+                // Always validate against server to ensure consistency
+                const response = await fetch(`${API_URL}/auth/admin`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    // Store credentials for subsequent API calls
+                    localStorage.setItem('obs360_logged_in', 'true');
+                    localStorage.setItem('obs360_username', username);
+                    localStorage.setItem('obs360_password', password);
+                    showDashboard();
+                } else {
+                    errorMessage.textContent = data.error || 'Usuario o contraseña incorrectos';
+                    errorMessage.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                errorMessage.textContent = 'Error de conexión. Verifica que el servidor esté activo.';
+                errorMessage.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Iniciar Sesión';
             }
         });
 
@@ -797,6 +824,8 @@
 
         function logout() {
             localStorage.removeItem('obs360_logged_in');
+            localStorage.removeItem('obs360_username');
+            localStorage.removeItem('obs360_password');
             location.reload();
         }
 
