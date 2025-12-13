@@ -32,7 +32,7 @@ app.post('/api/auth/admin', (req, res) => {
     const { username, password } = req.body;
 
     const validUsername = process.env.ADMIN_USERNAME || 'obs360admin';
-    const validPassword = process.env.ADMIN_PASSWORD || 'OBS2025Blog!';
+    const validPassword = process.env.ADMIN_PASSWORD || 'Obs.2025$$';
 
     if (username === validUsername && password === validPassword) {
         res.json({
@@ -53,8 +53,8 @@ app.post('/api/auth/blog', (req, res) => {
     const { username, password } = req.body;
 
     // Credenciales del blog desde variables de entorno
-    const validUsername = process.env.BLOG_USERNAME || 'obs360client';
-    const validPassword = process.env.BLOG_PASSWORD || 'Resources2025!';
+    const validUsername = process.env.BLOG_USERNAME || 'obs360admin';
+    const validPassword = process.env.BLOG_PASSWORD || 'Obs.2025$$';
 
     if (username === validUsername && password === validPassword) {
         res.json({
@@ -374,6 +374,15 @@ async function updateArticleCategoriesInFiles(oldCategory, newCategory) {
 // Obtener todos los artículos
 app.get('/api/articles', async (req, res) => {
     try {
+        // Cargar metadatos de artículos (con tags)
+        const articlesMetaPath = path.join(BLOG_DIR, 'articles-meta.json');
+        let articlesMeta = {};
+        try {
+            if (await fs.pathExists(articlesMetaPath)) {
+                articlesMeta = JSON.parse(await fs.readFile(articlesMetaPath, 'utf-8'));
+            }
+        } catch (e) { }
+
         const files = await fs.readdir(BLOG_DIR);
         const htmlFiles = files.filter(file =>
             file.endsWith('.html') &&
@@ -388,68 +397,80 @@ app.get('/api/articles', async (req, res) => {
             const content = await fs.readFile(filePath, 'utf-8');
             const $ = cheerio.load(content);
 
+            // Obtener fecha de modificación del archivo
+            const stats = await fs.stat(filePath);
+            const modifiedTime = stats.mtime.getTime();
+
             // Extraer metadatos del HTML
             const title = $('title').text().split('|')[0].trim() || file.replace('.html', '');
             const slug = file.replace('.html', '');
 
+            // Obtener metadatos guardados si existen
+            const meta = articlesMeta[slug] || {};
+
             // Intentar extraer fecha y categoría del contenido
-            let date = 'Sin fecha';
-            let category = 'Sin categoría';
-            let excerpt = '';
+            let date = meta.date || 'Sin fecha';
+            let category = meta.category || 'Sin categoría';
+            let excerpt = meta.excerpt || '';
             let icon = '📄';
+            let tags = meta.tags || [];
 
             // Buscar en diferentes posibles ubicaciones
             const headerText = $('header').first().text();
             const h1Text = $('h1').first().text();
 
-            // Detectar categoría por el contenido y título
-            const titleLower = title.toLowerCase();
+            // Detectar categoría por el contenido y título (si no hay meta)
+            if (!meta.category) {
+                const titleLower = title.toLowerCase();
 
-            // Herramientas (primero porque es específico)
-            if (titleLower.includes('simulator') || titleLower.includes('simulador') ||
-                titleLower.includes('calculator') || titleLower.includes('calculador') ||
-                titleLower.includes('kdp') || titleLower.includes('tool') ||
-                titleLower.includes('herramienta') || titleLower.includes('budget')) {
-                category = 'Herramientas';
-                icon = '🛠️';
-            }
-            // Capacitación
-            else if (titleLower.includes('guide') || titleLower.includes('guía') ||
-                titleLower.includes('playbook') || titleLower.includes('mentor') ||
-                titleLower.includes('principios') || content.includes('adb')) {
-                category = 'Capacitación';
-                icon = '🎓';
-            }
-            // Análisis
-            else if (content.includes('CPC') || content.includes('Amazon Ads') ||
-                titleLower.includes('analysis') || titleLower.includes('análisis') ||
-                titleLower.includes('metrics') || titleLower.includes('opportunity')) {
-                category = 'Análisis';
-                icon = '📊';
-            }
-            // Informe Mensual
-            else if (content.includes('Informe') || content.includes('Gestión') ||
-                titleLower.includes('report') || titleLower.includes('cristal') ||
-                titleLower.includes('summary')) {
-                category = 'Informe Mensual';
-                icon = '💎';
-            }
-            // Estrategia
-            else if (content.includes('Estrategia') || content.includes('Higiene') ||
-                titleLower.includes('strategy') || titleLower.includes('market') ||
-                titleLower.includes('vajillas')) {
-                category = 'Estrategia';
-                icon = '🍽️';
-            }
-            // Otras (fallback)
-            else {
-                category = 'Otras';
-                icon = '📁';
+                // Herramientas (primero porque es específico)
+                if (titleLower.includes('simulator') || titleLower.includes('simulador') ||
+                    titleLower.includes('calculator') || titleLower.includes('calculador') ||
+                    titleLower.includes('kdp') || titleLower.includes('tool') ||
+                    titleLower.includes('herramienta') || titleLower.includes('budget')) {
+                    category = 'Herramientas';
+                    icon = '🛠️';
+                }
+                // Capacitación
+                else if (titleLower.includes('guide') || titleLower.includes('guía') ||
+                    titleLower.includes('playbook') || titleLower.includes('mentor') ||
+                    titleLower.includes('principios') || content.includes('adb')) {
+                    category = 'Capacitación';
+                    icon = '🎓';
+                }
+                // Análisis
+                else if (content.includes('CPC') || content.includes('Amazon Ads') ||
+                    titleLower.includes('analysis') || titleLower.includes('análisis') ||
+                    titleLower.includes('metrics') || titleLower.includes('opportunity')) {
+                    category = 'Análisis';
+                    icon = '📊';
+                }
+                // Informe Mensual
+                else if (content.includes('Informe') || content.includes('Gestión') ||
+                    titleLower.includes('report') || titleLower.includes('cristal') ||
+                    titleLower.includes('summary')) {
+                    category = 'Informe Mensual';
+                    icon = '💎';
+                }
+                // Estrategia
+                else if (content.includes('Estrategia') || content.includes('Higiene') ||
+                    titleLower.includes('strategy') || titleLower.includes('market') ||
+                    titleLower.includes('vajillas')) {
+                    category = 'Estrategia';
+                    icon = '🍽️';
+                }
+                // Otras (fallback)
+                else {
+                    category = 'Otras';
+                    icon = '📁';
+                }
             }
 
-            // Extraer excerpt del primer párrafo
-            const firstP = $('p').first().text();
-            excerpt = firstP.substring(0, 200) + (firstP.length > 200 ? '...' : '');
+            // Extraer excerpt del primer párrafo si no hay meta
+            if (!excerpt) {
+                const firstP = $('p').first().text();
+                excerpt = firstP.substring(0, 200) + (firstP.length > 200 ? '...' : '');
+            }
 
             articles.push({
                 id: slug,
@@ -459,10 +480,15 @@ app.get('/api/articles', async (req, res) => {
                 category,
                 icon,
                 excerpt,
+                tags,
                 filename: file,
-                content: content
+                content: content,
+                modifiedTime // Para ordenar
             });
         }
+
+        // Ordenar artículos: más reciente primero
+        articles.sort((a, b) => b.modifiedTime - a.modifiedTime);
 
         res.json({ articles });
     } catch (error) {
@@ -534,7 +560,7 @@ async function saveUrlMapping(mapping) {
 // Crear nuevo artículo
 app.post('/api/articles', async (req, res) => {
     try {
-        const { title, content, date, category, icon, excerpt } = req.body;
+        const { title, content, date, category, icon, excerpt, tags } = req.body;
 
         if (!title || !content) {
             return res.status(400).json({ error: 'Título y contenido son requeridos' });
@@ -566,6 +592,26 @@ app.post('/api/articles', async (req, res) => {
 
         mapping[`${originalSlug}.html`] = filename;
         await saveUrlMapping(mapping);
+
+        // Guardar metadatos del artículo (incluyendo tags)
+        const articlesMetaPath = path.join(BLOG_DIR, 'articles-meta.json');
+        let articlesMeta = {};
+        try {
+            if (await fs.pathExists(articlesMetaPath)) {
+                articlesMeta = JSON.parse(await fs.readFile(articlesMetaPath, 'utf-8'));
+            }
+        } catch (e) { }
+
+        articlesMeta[obfuscatedId] = {
+            title,
+            date,
+            category,
+            excerpt,
+            tags: tags || [],
+            createdAt: new Date().toISOString()
+        };
+
+        await fs.writeFile(articlesMetaPath, JSON.stringify(articlesMeta, null, 2), 'utf-8');
 
         // Actualizar índice del blog
         await updateBlogIndex();

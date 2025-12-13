@@ -14,6 +14,9 @@
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap"
         rel="stylesheet">
 
+    <!-- Font Awesome for Professional Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
     <style>
         * {
             margin: 0;
@@ -487,6 +490,18 @@
                 padding: 30px;
             }
         }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
     </style>
 </head>
 
@@ -518,7 +533,12 @@
     <div class="admin-container" id="adminDashboard">
         <div class="admin-header">
             <h1>📝 Administrador de Contenido - OBS360</h1>
-            <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+            <div style="display: flex; gap: 10px;">
+                <a href="../blog/" target="_blank"
+                    style="padding: 10px 20px; background: linear-gradient(135deg, #28529a, #84cc16); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; display: flex; align-items: center; gap: 6px;">📚
+                    Ver Blog</a>
+                <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+            </div>
         </div>
 
         <div class="admin-content">
@@ -542,28 +562,48 @@
                 <div class="panel-section active" id="articlesPanel">
                     <h2 class="section-title">Artículos Publicados</h2>
 
+                    <!-- Search Bar -->
+                    <div style="margin-bottom: 20px; position: relative;">
+                        <input type="text" id="adminSearchInput" placeholder="Buscar por título, contenido o tags..."
+                            style="width: 100%; padding: 14px 20px 14px 50px; border: 2px solid #e5e7eb; border-radius: 12px; font-size: 14px; transition: all 0.3s ease; outline: none;"
+                            oninput="handleAdminSearch(this.value)">
+                        <i class="fa-solid fa-search"
+                            style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #9ca3af;"></i>
+                        <button id="adminClearSearch" onclick="clearAdminSearch()"
+                            style="display: none; position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: #ef4444; color: white; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; font-size: 11px;">
+                            <i class="fa-solid fa-times"></i>
+                        </button>
+                    </div>
+
                     <!-- Category Filters -->
                     <div class="category-filters" id="categoryFilters">
                         <button class="filter-btn active" data-category="all">
-                            📚 Todos <span class="filter-count" id="count-all">0</span>
+                            <i class="fa-solid fa-layer-group"></i> Todos <span class="filter-count"
+                                id="count-all">0</span>
                         </button>
                         <button class="filter-btn" data-category="Análisis">
-                            📊 Análisis <span class="filter-count" id="count-analisis">0</span>
+                            <i class="fa-solid fa-chart-line"></i> Análisis <span class="filter-count"
+                                id="count-analisis">0</span>
                         </button>
                         <button class="filter-btn" data-category="Informe Mensual">
-                            💎 Informes <span class="filter-count" id="count-informe">0</span>
+                            <i class="fa-solid fa-gem"></i> Informes <span class="filter-count"
+                                id="count-informe">0</span>
                         </button>
                         <button class="filter-btn" data-category="Estrategia">
-                            🍽️ Estrategia <span class="filter-count" id="count-estrategia">0</span>
+                            <i class="fa-solid fa-chess"></i> Estrategia <span class="filter-count"
+                                id="count-estrategia">0</span>
                         </button>
                         <button class="filter-btn" data-category="Capacitación">
-                            🎓 Capacitación <span class="filter-count" id="count-capacitacion">0</span>
+                            <i class="fa-solid fa-graduation-cap"></i> Capacitación <span class="filter-count"
+                                id="count-capacitacion">0</span>
                         </button>
                         <button class="filter-btn" data-category="Herramientas">
-                            🛠️ Herramientas <span class="filter-count" id="count-herramientas">0</span>
+                            <i class="fa-solid fa-wrench"></i> Herramientas <span class="filter-count"
+                                id="count-herramientas">0</span>
                         </button>
                         <button class="filter-btn" data-category="Otras">
-                            📁 Otras <span class="filter-count" id="count-otras">0</span>
+                            <i class="fa-solid fa-folder-open"></i> Otras <span class="filter-count"
+                                id="count-otras">0</span>
                         </button>
                     </div>
 
@@ -596,17 +636,19 @@
                                 <label for="articleCategory">Categoría *</label>
                                 <select id="articleCategory" required>
                                     <option value="">Seleccionar categoría</option>
-                                    <option value="Análisis">📊 Análisis</option>
-                                    <option value="Informe Mensual">💎 Informe Mensual</option>
-                                    <option value="Estrategia">🍽️ Estrategia</option>
-                                    <option value="Capacitación">🎓 Capacitación</option>
-                                    <option value="Herramientas">🛠️ Herramientas</option>
-                                    <option value="Otras">📁 Otras</option>
+                                    <option value="Análisis"><i class="fa-solid fa-chart-line"></i> Análisis</option>
+                                    <option value="Informe Mensual"><i class="fa-solid fa-gem"></i> Informe Mensual
+                                    </option>
+                                    <option value="Estrategia"><i class="fa-solid fa-chess"></i> Estrategia</option>
+                                    <option value="Capacitación"><i class="fa-solid fa-graduation-cap"></i> Capacitación
+                                    </option>
+                                    <option value="Herramientas"><i class="fa-solid fa-wrench"></i> Herramientas
+                                    </option>
+                                    <option value="Otras"><i class="fa-solid fa-folder-open"></i> Otras</option>
                                 </select>
-                            </div>
-                            <div class="form-field">
-                                <label for="articleIcon">Emoji/Icono</label>
-                                <input type="text" id="articleIcon" placeholder="Ej: 📊" maxlength="2">
+                                <p style="font-size: 12px; color: #6b7280; margin-top: 6px;"><i
+                                        class="fa-solid fa-info-circle"></i> El icono se asigna automáticamente según la
+                                    categoría</p>
                             </div>
                         </div>
 
@@ -617,12 +659,21 @@
                         </div>
 
                         <div class="form-field">
+                            <label for="articleTags"><i class="fa-solid fa-tags"></i> Tags (separados por coma)</label>
+                            <input type="text" id="articleTags" placeholder="Ej: amazon, ppc, estrategia, q4">
+                            <p style="font-size: 12px; color: #6b7280; margin-top: 6px;"><i
+                                    class="fa-solid fa-info-circle"></i> Los tags facilitan la búsqueda de artículos.
+                                Ejemplo: amazon, advertising, seller</p>
+                        </div>
+
+                        <div class="form-field">
                             <label for="articleContent">Contenido del Artículo (HTML) *</label>
                             <textarea id="articleContent" required placeholder="Pega aquí el HTML completo del artículo"
                                 style="min-height: 300px; font-family: monospace;"></textarea>
                         </div>
 
-                        <button type="submit" class="btn-primary">💾 Guardar Artículo</button>
+                        <button type="submit" class="btn-primary"><i class="fa-solid fa-save"></i> Guardar
+                            Artículo</button>
                     </form>
                 </div>
 
@@ -715,7 +766,7 @@
         // Authentication
         const ADMIN_CREDENTIALS = {
             username: 'obs360admin',
-            password: 'OBS2025Blog!'
+            password: 'Obs.2025$$'
         };
 
         // Check if already logged in
@@ -814,22 +865,99 @@
                 return;
             }
 
-            container.innerHTML = articles.map((article, index) => `
+            // Map categories to Font Awesome icons
+            const categoryIcons = {
+                'Análisis': 'fa-chart-line',
+                'Informe Mensual': 'fa-gem',
+                'Estrategia': 'fa-chess',
+                'Capacitación': 'fa-graduation-cap',
+                'Herramientas': 'fa-wrench',
+                'Otras': 'fa-folder-open'
+            };
+
+            container.innerHTML = articles.map((article, index) => {
+                const iconClass = categoryIcons[article.category] || 'fa-file-alt';
+                const tags = article.tags || [];
+                const tagsHtml = tags.length > 0 ? `
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px;">
+                        ${tags.map(tag => `<span style="background: #e0e7ff; color: #3730a3; padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 600;"><i class="fa-solid fa-tag" style="font-size: 9px; margin-right: 4px;"></i>${tag}</span>`).join('')}
+                    </div>
+                ` : '';
+
+                return `
                 <div class="article-card" data-category="${article.category}">
                     <div class="article-card-header">
                         <div>
                             <span class="category-badge badge-${getCategorySlug(article.category)}">${article.category}</span>
-                            <h3 class="article-card-title">${article.icon} ${article.title}</h3>
-                            <p class="article-card-meta">📅 ${article.date} • 🔗 ${article.slug}.html</p>
+                            <h3 class="article-card-title"><i class="fa-solid ${iconClass}"></i> ${article.title}</h3>
+                            <p class="article-card-meta"><i class="fa-regular fa-calendar"></i> ${article.date} • <i class="fa-solid fa-link"></i> ${article.slug}.html</p>
                         </div>
                     </div>
                     <p class="article-card-excerpt">${article.excerpt}</p>
+                    ${tagsHtml}
+                    
+                    <!-- URL para clientes -->
+                    <div style="margin: 12px 0; padding: 12px; background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0;">
+                        <label style="font-size: 11px; color: #64748b; font-weight: 600; display: block; margin-bottom: 6px;"><i class="fa-solid fa-share-nodes"></i> URL para clientes:</label>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <input type="text" readonly value="https://obs360.co/blog/${article.filename}" 
+                                id="url-${article.slug}"
+                                style="flex: 1; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; background: white; color: #334155;">
+                            <button onclick="copyUrl('${article.slug}', '${article.filename}')" 
+                                style="padding: 10px 16px; background: linear-gradient(135deg, #28529a, #1e3a6e); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 6px; transition: all 0.3s ease;"
+                                onmouseover="this.style.transform='translateY(-2px)'"
+                                onmouseout="this.style.transform='translateY(0)'">
+                                <i class="fa-solid fa-copy"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    
                     <div class="article-actions">
-                        <button class="btn-edit" onclick="editArticle('${article.slug}')">✏️ Editar</button>
-                        <button class="btn-delete" onclick="deleteArticle('${article.slug}')">🗑️ Eliminar</button>
+                        <button class="btn-edit" onclick="editArticle('${article.slug}')"><i class="fa-solid fa-pen"></i> Editar</button>
+                        <button class="btn-delete" onclick="deleteArticle('${article.slug}')"><i class="fa-solid fa-trash"></i> Eliminar</button>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
+        }
+
+        // Copy URL function
+        function copyUrl(slug, filename) {
+            const url = `https://obs360.co/blog/${filename}`;
+            navigator.clipboard.writeText(url).then(() => {
+                // Visual feedback
+                const input = document.getElementById(`url-${slug}`);
+                const originalBg = input.style.background;
+                input.style.background = '#d1fae5';
+                input.style.borderColor = '#10b981';
+
+                // Show toast notification
+                showToast('✓ URL copiada al portapapeles');
+
+                setTimeout(() => {
+                    input.style.background = originalBg;
+                    input.style.borderColor = '#cbd5e1';
+                }, 1500);
+            }).catch(err => {
+                // Fallback for older browsers
+                const input = document.getElementById(`url-${slug}`);
+                input.select();
+                document.execCommand('copy');
+                showToast('✓ URL copiada');
+            });
+        }
+
+        function showToast(message) {
+            // Remove existing toast
+            const existing = document.querySelector('.copy-toast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.className = 'copy-toast';
+            toast.innerHTML = message;
+            toast.style.cssText = 'position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #10b981; color: white; padding: 12px 24px; border-radius: 10px; font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 9999; animation: slideUp 0.3s ease;';
+            document.body.appendChild(toast);
+
+            setTimeout(() => toast.remove(), 2500);
         }
 
         function updateCategoryCounts(articles) {
@@ -906,19 +1034,100 @@
                 .replace(/^-+|-+$/g, '');
         }
 
+        // Admin Search functionality
+        let adminSearchTimeout;
+        function handleAdminSearch(query) {
+            clearTimeout(adminSearchTimeout);
+            query = query.trim().toLowerCase();
+
+            // Show/hide clear button
+            document.getElementById('adminClearSearch').style.display = query ? 'block' : 'none';
+
+            adminSearchTimeout = setTimeout(() => {
+                if (query.length === 0) {
+                    renderArticles(currentFilter === 'all' ? allArticles : allArticles.filter(a => a.category === currentFilter));
+                } else {
+                    const filtered = allArticles.filter(article => {
+                        const inTitle = article.title.toLowerCase().includes(query);
+                        const inExcerpt = article.excerpt.toLowerCase().includes(query);
+                        const inTags = (article.tags || []).some(tag => tag.toLowerCase().includes(query));
+                        const inCategory = article.category.toLowerCase().includes(query);
+                        const inSlug = article.slug.toLowerCase().includes(query);
+                        return inTitle || inExcerpt || inTags || inCategory || inSlug;
+                    });
+                    renderArticles(filtered);
+                }
+            }, 300);
+        }
+
+        function clearAdminSearch() {
+            document.getElementById('adminSearchInput').value = '';
+            document.getElementById('adminClearSearch').style.display = 'none';
+            renderArticles(currentFilter === 'all' ? allArticles : allArticles.filter(a => a.category === currentFilter));
+        }
+
         // Form Submission with API
         document.getElementById('articleForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
+            // Get form values with validation
+            const titleInput = document.getElementById('articleTitle');
+            const dateInput = document.getElementById('articleDate');
+            const categoryInput = document.getElementById('articleCategory');
+            const excerptInput = document.getElementById('articleExcerpt');
+            const contentInput = document.getElementById('articleContent');
+            const tagsInput = document.getElementById('articleTags');
+
+            // Validate required fields
+            if (!titleInput.value.trim()) {
+                alert('Por favor, ingresa un título para el artículo.');
+                titleInput.focus();
+                return;
+            }
+
+            if (!dateInput.value.trim()) {
+                alert('Por favor, ingresa una fecha de publicación.');
+                dateInput.focus();
+                return;
+            }
+
+            if (!categoryInput.value) {
+                alert('Por favor, selecciona una categoría.');
+                categoryInput.focus();
+                return;
+            }
+
+            if (!excerptInput.value.trim()) {
+                alert('Por favor, ingresa una descripción breve.');
+                excerptInput.focus();
+                return;
+            }
+
+            if (!contentInput.value.trim()) {
+                alert('Por favor, ingresa el contenido del artículo.');
+                contentInput.focus();
+                return;
+            }
+
+            // Parse tags from comma-separated input
+            const tags = tagsInput.value ?
+                tagsInput.value.split(',').map(t => t.trim().toLowerCase()).filter(t => t.length > 0) : [];
+
             const article = {
-                title: document.getElementById('articleTitle').value,
-                date: document.getElementById('articleDate').value,
-                category: document.getElementById('articleCategory').value,
-                icon: document.getElementById('articleIcon').value || '📄',
-                excerpt: document.getElementById('articleExcerpt').value,
-                content: document.getElementById('articleContent').value,
-                slug: generateSlug(document.getElementById('articleTitle').value)
+                title: titleInput.value.trim(),
+                date: dateInput.value.trim(),
+                category: categoryInput.value,
+                excerpt: excerptInput.value.trim(),
+                content: contentInput.value,
+                tags: tags,
+                slug: generateSlug(titleInput.value.trim())
             };
+
+            // Disable submit button while saving
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
 
             try {
                 const response = await fetch(`${API_URL}/articles`, {
@@ -930,6 +1139,10 @@
                 });
 
                 const result = await response.json();
+
+                // Re-enable button
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
 
                 if (response.ok) {
                     document.getElementById('successMessage').style.display = 'block';
@@ -945,6 +1158,9 @@
                 }
             } catch (error) {
                 console.error('Error saving article:', error);
+                // Re-enable button on error
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
                 alert('Error al conectar con el servidor. Verifica que esté corriendo.');
             }
         });
@@ -952,19 +1168,22 @@
         async function editArticle(slug) {
             try {
                 const response = await fetch(`${API_URL}/articles/${slug}`);
+                if (!response.ok) {
+                    throw new Error('Artículo no encontrado');
+                }
                 const article = await response.json();
 
-                document.getElementById('articleTitle').value = article.title;
+                document.getElementById('articleTitle').value = article.title || '';
                 document.getElementById('articleDate').value = article.date || 'Diciembre 2025';
-                document.getElementById('articleCategory').value = getCategorySlug(article.category);
-                document.getElementById('articleIcon').value = article.icon;
-                document.getElementById('articleExcerpt').value = article.excerpt;
-                document.getElementById('articleContent').value = article.content;
+                document.getElementById('articleCategory').value = article.category || 'Otras';
+                document.getElementById('articleExcerpt').value = article.excerpt || '';
+                document.getElementById('articleContent').value = article.content || '';
+                document.getElementById('articleTags').value = (article.tags || []).join(', ');
 
                 showPanel('new');
             } catch (error) {
                 console.error('Error loading article:', error);
-                alert('Error al cargar el artículo');
+                alert('Error al cargar el artículo: ' + error.message);
             }
         }
 

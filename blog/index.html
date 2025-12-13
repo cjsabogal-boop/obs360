@@ -14,6 +14,9 @@
     <!-- Favicon -->
     <link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp" />
 
+    <!-- Font Awesome for Professional Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -376,7 +379,7 @@
         }
 
         .article-thumbnail {
-            height: 180px;
+            height: 160px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -384,21 +387,60 @@
             overflow: hidden;
         }
 
-        .article-thumbnail.cpc {
-            background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+        .article-thumbnail::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.1;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }
 
-        .article-thumbnail.cristal {
-            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+        /* Professional gradient backgrounds for each category */
+        .article-thumbnail.analisis {
+            background: linear-gradient(135deg, #059669 0%, #047857 50%, #065f46 100%);
         }
 
-        .article-thumbnail.porcelana {
-            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        .article-thumbnail.informe {
+            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #5b21b6 100%);
+        }
+
+        .article-thumbnail.estrategia {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #1e40af 100%);
+        }
+
+        .article-thumbnail.capacitacion {
+            background: linear-gradient(135deg, #d97706 0%, #b45309 50%, #92400e 100%);
+        }
+
+        .article-thumbnail.herramientas {
+            background: linear-gradient(135deg, #0891b2 0%, #0e7490 50%, #155e75 100%);
+        }
+
+        .article-thumbnail.otras {
+            background: linear-gradient(135deg, #4b5563 0%, #374151 50%, #1f2937 100%);
         }
 
         .article-icon {
-            font-size: 4rem;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+            font-size: 3rem;
+            color: white;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+            z-index: 1;
+        }
+
+        .article-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 1;
         }
 
         .article-category {
@@ -406,13 +448,16 @@
             top: 15px;
             left: 15px;
             background: rgba(255, 255, 255, 0.95);
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #28529a;
+            backdrop-filter: blur(10px);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #1f2937;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            z-index: 2;
         }
 
         .article-content {
@@ -519,9 +564,15 @@
                     </div>
                     <span class="blog-badge">RECURSOS</span>
                 </div>
-                <a href="../index.html" class="back-link">
-                    ← Volver a OBS360
-                </a>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <a href="../admin/" id="adminLink"
+                        style="display: none; padding: 10px 18px; background: linear-gradient(135deg, #7c3aed, #6d28d9); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; font-size: 14px; transition: all 0.3s ease;">
+                        <i class="fa-solid fa-cog"></i> Admin
+                    </a>
+                    <a href="../index.html" class="back-link">
+                        ← Volver a OBS360
+                    </a>
+                </div>
             </div>
         </div>
     </header>
@@ -570,36 +621,62 @@
         <div class="container">
             <h2 class="section-title">Recursos Disponibles</h2>
 
+            <!-- Search Bar -->
+            <div style="max-width: 500px; margin: 0 auto 30px; position: relative;">
+                <input type="text" id="searchInput" placeholder="Buscar artículos por título, contenido o tags..."
+                    style="width: 100%; padding: 15px 20px 15px 50px; border: 2px solid #e5e7eb; border-radius: 30px; font-size: 15px; transition: all 0.3s ease; outline: none;"
+                    onfocus="this.style.borderColor='#28529a'; this.style.boxShadow='0 0 0 4px rgba(40, 82, 154, 0.1)';"
+                    onblur="this.style.borderColor='#e5e7eb'; this.style.boxShadow='none';">
+                <i class="fa-solid fa-search"
+                    style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: #9ca3af; font-size: 18px;"></i>
+                <button id="clearSearch" onclick="clearSearch()"
+                    style="display: none; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: #ef4444; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 12px;">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Active Tags -->
+            <div id="activeTags"
+                style="display: none; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
+                <!-- Active tags will appear here -->
+            </div>
+
             <!-- Category Filters -->
             <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 40px; flex-wrap: wrap;">
                 <button class="category-filter active" data-category="all"
                     style="padding: 10px 20px; border: 2px solid #28529a; background: #28529a; color: white; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
-                    Todos
+                    <i class="fa-solid fa-layer-group"></i> Todos
                 </button>
                 <button class="category-filter" data-category="Análisis"
                     style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
-                    📊 Análisis
+                    <i class="fa-solid fa-chart-line"></i> Análisis
                 </button>
                 <button class="category-filter" data-category="Informe Mensual"
                     style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
-                    💎 Informes
+                    <i class="fa-solid fa-gem"></i> Informes
                 </button>
                 <button class="category-filter" data-category="Estrategia"
                     style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
-                    🍽️ Estrategia
+                    <i class="fa-solid fa-chess"></i> Estrategia
                 </button>
                 <button class="category-filter" data-category="Capacitación"
                     style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
-                    🎓 Capacitación
-                </button>
-                <button class="category-filter" data-category="Otras"
-                    style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
-                    📁 Otras
+                    <i class="fa-solid fa-graduation-cap"></i> Capacitación
                 </button>
                 <button class="category-filter" data-category="Herramientas"
                     style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
-                    🛠️ Herramientas
+                    <i class="fa-solid fa-wrench"></i> Herramientas
                 </button>
+                <button class="category-filter" data-category="Otras"
+                    style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                    <i class="fa-solid fa-folder-open"></i> Otras
+                </button>
+            </div>
+
+            <!-- Results Counter -->
+            <div id="resultsInfo"
+                style="text-align: center; margin-bottom: 20px; color: #6b7280; font-size: 14px; display: none;">
+                <span id="resultsCount">0</span> artículos encontrados
             </div>
 
             <div class="articles-grid" id="articlesGrid">
@@ -614,20 +691,23 @@
     <script>
         // Authentication
         const BLOG_CREDENTIALS = {
-            username: 'obs360client',
-            password: 'Resources2025!'
+            username: 'obs360admin',
+            password: 'Obs.2025$$'
         };
 
         let allArticles = [];
         let currentFilter = 'all';
+        let articlesLoaded = false; // Prevent double loading
 
-        // Check if already logged in
-        if (sessionStorage.getItem('blog_logged_in') === 'true') {
-            showArticles();
-        } else {
-            // Show login screen and hide hero
-            document.getElementById('loginScreen').style.display = 'block';
-            document.querySelector('.blog-hero').classList.add('hidden');
+        // Initialize page after DOM is ready
+        function initPage() {
+            if (sessionStorage.getItem('blog_logged_in') === 'true') {
+                showArticles();
+            } else {
+                // Show login screen and hide hero
+                document.getElementById('loginScreen').style.display = 'block';
+                document.querySelector('.blog-hero').classList.add('hidden');
+            }
         }
 
         // Login form handler
@@ -649,7 +729,15 @@
             document.getElementById('loginScreen').style.display = 'none';
             document.querySelector('.blog-hero').classList.remove('hidden');
             document.getElementById('articlesSection').style.display = 'block';
-            loadArticles();
+            // Show admin link when logged in
+            const adminLink = document.getElementById('adminLink');
+            if (adminLink) adminLink.style.display = 'inline-flex';
+
+            // Prevent double loading
+            if (!articlesLoaded) {
+                articlesLoaded = true;
+                loadArticles();
+            }
         }
 
         // Categorize articles automatically
@@ -695,19 +783,6 @@
             return 'Otras';
         }
 
-        // Get icon for category
-        function getCategoryIcon(category) {
-            const icons = {
-                'Análisis': '📊',
-                'Informe Mensual': '💎',
-                'Estrategia': '🍽️',
-                'Capacitación': '🎓',
-                'Herramientas': '🛠️',
-                'Otras': '📁'
-            };
-            return icons[category] || '📄';
-        }
-
         // Load articles from API
         async function loadArticles() {
             const grid = document.getElementById('articlesGrid');
@@ -739,11 +814,6 @@
                         article.category = categorizeArticle(article.title, article.filename);
                     }
 
-                    // Set icon based on category
-                    if (!article.icon || article.icon === '📄') {
-                        article.icon = getCategoryIcon(article.category);
-                    }
-
                     // Set today's date if no date
                     if (!article.date || article.date === 'Sin fecha') {
                         article.date = today;
@@ -765,35 +835,129 @@
         function renderArticles(articles) {
             const grid = document.getElementById('articlesGrid');
 
-            // Map categories to colors
-            const categoryColors = {
-                'Análisis': 'cpc',
-                'Informe Mensual': 'cristal',
-                'Estrategia': 'porcelana',
-                'Capacitación': 'cpc',
-                'Herramientas': 'porcelana',
-                'Otras': 'cristal'
+            // Update results counter
+            const resultsInfo = document.getElementById('resultsInfo');
+            const resultsCount = document.getElementById('resultsCount');
+            if (document.getElementById('searchInput').value.trim()) {
+                resultsInfo.style.display = 'block';
+                resultsCount.textContent = articles.length;
+            } else {
+                resultsInfo.style.display = 'none';
+            }
+
+            // Handle empty results
+            if (articles.length === 0) {
+                grid.innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px; color: #6b7280;">
+                        <i class="fa-solid fa-search" style="font-size: 48px; margin-bottom: 20px; opacity: 0.3;"></i>
+                        <p style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">No se encontraron artículos</p>
+                        <p style="font-size: 14px;">Intenta con otros términos de búsqueda</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Map categories to CSS classes and Font Awesome icons
+            const categoryConfig = {
+                'Análisis': { class: 'analisis', icon: 'fa-chart-line' },
+                'Informe Mensual': { class: 'informe', icon: 'fa-gem' },
+                'Estrategia': { class: 'estrategia', icon: 'fa-chess' },
+                'Capacitación': { class: 'capacitacion', icon: 'fa-graduation-cap' },
+                'Herramientas': { class: 'herramientas', icon: 'fa-wrench' },
+                'Otras': { class: 'otras', icon: 'fa-folder-open' }
             };
 
             grid.innerHTML = articles.map(article => {
-                const colorClass = categoryColors[article.category] || 'cpc';
+                const config = categoryConfig[article.category] || categoryConfig['Otras'];
+                const tags = article.tags || [];
+                const tagsHtml = tags.length > 0 ? `
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px;">
+                        ${tags.map(tag => `<span onclick="event.preventDefault(); filterByTag('${tag}')" style="background: #e0e7ff; color: #3730a3; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">#${tag}</span>`).join('')}
+                    </div>
+                ` : '';
+
                 return `
                     <a href="${article.filename}" class="article-card">
-                        <div class="article-thumbnail ${colorClass}">
+                        <div class="article-thumbnail ${config.class}">
                             <span class="article-category">${article.category}</span>
-                            <span class="article-icon">${article.icon}</span>
+                            <div class="article-icon-wrapper">
+                                <i class="fa-solid ${config.icon} article-icon"></i>
+                            </div>
                         </div>
                         <div class="article-content">
-                            <span class="article-date">${article.date}</span>
+                            <span class="article-date"><i class="fa-regular fa-calendar"></i> ${article.date}</span>
                             <h3 class="article-title">${article.title}</h3>
                             <p class="article-excerpt">${article.excerpt}</p>
+                            ${tagsHtml}
                             <span class="article-read-more">
-                                Ver completo →
+                                Ver completo <i class="fa-solid fa-arrow-right"></i>
                             </span>
                         </div>
                     </a>
                 `;
             }).join('');
+        }
+
+        // Search functionality
+        let searchTimeout;
+        document.getElementById('searchInput').addEventListener('input', function (e) {
+            clearTimeout(searchTimeout);
+            const query = e.target.value.trim().toLowerCase();
+
+            // Show/hide clear button
+            document.getElementById('clearSearch').style.display = query ? 'block' : 'none';
+
+            searchTimeout = setTimeout(() => {
+                if (query.length === 0) {
+                    applyFilters();
+                } else {
+                    const filtered = allArticles.filter(article => {
+                        const inTitle = article.title.toLowerCase().includes(query);
+                        const inExcerpt = article.excerpt.toLowerCase().includes(query);
+                        const inTags = (article.tags || []).some(tag => tag.toLowerCase().includes(query));
+                        const inCategory = article.category.toLowerCase().includes(query);
+                        return inTitle || inExcerpt || inTags || inCategory;
+                    });
+                    renderArticles(filtered);
+                }
+            }, 300);
+        });
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('clearSearch').style.display = 'none';
+            document.getElementById('activeTags').style.display = 'none';
+            document.getElementById('activeTags').innerHTML = '';
+            applyFilters();
+        }
+
+        function filterByTag(tag) {
+            document.getElementById('searchInput').value = tag;
+            document.getElementById('clearSearch').style.display = 'block';
+
+            // Show active tag
+            const activeTagsDiv = document.getElementById('activeTags');
+            activeTagsDiv.style.display = 'flex';
+            activeTagsDiv.innerHTML = `
+                <span style="background: #7c3aed; color: white; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-tag"></i> #${tag}
+                    <span onclick="clearSearch()" style="cursor: pointer; opacity: 0.8;">&times;</span>
+                </span>
+            `;
+
+            const filtered = allArticles.filter(article =>
+                (article.tags || []).some(t => t.toLowerCase() === tag.toLowerCase())
+            );
+            renderArticles(filtered);
+        }
+
+        function applyFilters() {
+            if (currentFilter === 'all') {
+                renderArticles(allArticles);
+            } else {
+                const filtered = allArticles.filter(article => article.category === currentFilter);
+                renderArticles(filtered);
+            }
         }
 
         // Setup category filters
@@ -802,6 +966,11 @@
 
             filterButtons.forEach(button => {
                 button.addEventListener('click', function () {
+                    // Clear search when clicking category
+                    document.getElementById('searchInput').value = '';
+                    document.getElementById('clearSearch').style.display = 'none';
+                    document.getElementById('activeTags').style.display = 'none';
+
                     // Remove active class from all buttons
                     filterButtons.forEach(btn => {
                         btn.style.background = 'white';
@@ -830,10 +999,8 @@
             });
         }
 
-        // Load articles when page loads (if logged in)
-        if (sessionStorage.getItem('blog_logged_in') === 'true') {
-            document.addEventListener('DOMContentLoaded', loadArticles);
-        }
+        // Initialize page when DOM is ready
+        document.addEventListener('DOMContentLoaded', initPage);
     </script>
 
     <!-- Footer -->
