@@ -689,11 +689,10 @@
 
 
     <script>
-        // Authentication
-        const BLOG_CREDENTIALS = {
-            username: 'obs360admin',
-            password: 'Obs.2025$$'
-        };
+        // API Configuration
+        const API_URL = window.location.hostname === 'localhost'
+            ? 'http://localhost:3000/api'
+            : 'https://obs360.co/api';
 
         let allArticles = [];
         let currentFilter = 'all';
@@ -710,18 +709,48 @@
             }
         }
 
-        // Login form handler
-        document.getElementById('loginForm').addEventListener('submit', function (e) {
+        // Login form handler - validates against server
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            const username = document.getElementById('username').value;
+            const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
+            const loginError = document.getElementById('loginError');
+            const submitBtn = this.querySelector('button[type="submit"]');
 
-            if (username === BLOG_CREDENTIALS.username && password === BLOG_CREDENTIALS.password) {
-                sessionStorage.setItem('blog_logged_in', 'true');
-                document.getElementById('loginScreen').style.display = 'none';
-                showArticles();
-            } else {
-                document.getElementById('loginError').style.display = 'block';
+            // Hide previous error
+            loginError.style.display = 'none';
+
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Verificando...';
+
+            try {
+                // Validate against server
+                const response = await fetch(`${API_URL}/auth/blog`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    sessionStorage.setItem('blog_logged_in', 'true');
+                    document.getElementById('loginScreen').style.display = 'none';
+                    showArticles();
+                } else {
+                    loginError.textContent = data.error || 'Credenciales incorrectas';
+                    loginError.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                loginError.textContent = 'Error de conexión. Intenta de nuevo.';
+                loginError.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Acceder';
             }
         });
 
@@ -788,10 +817,6 @@
             const grid = document.getElementById('articlesGrid');
 
             try {
-                const API_URL = window.location.hostname === 'localhost'
-                    ? 'http://localhost:3000/api'
-                    : 'https://obs360.co/api';
-
                 const response = await fetch(`${API_URL}/articles`);
                 const data = await response.json();
                 let articles = data.articles || [];
