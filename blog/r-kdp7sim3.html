@@ -1,15 +1,12 @@
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
+<!DOCTYPE html><html lang="es"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KDP Simulator v9: ACOS Resultante | OBS360 Blog</title>
-    <meta name="robots" content="noindex, nofollow" />
-    <link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp" />
+    
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
         body {
@@ -139,18 +136,74 @@
         width: auto;
     }
 
-    </style>
-</head>
+    
+    /* OBS360 Header - Estándar */
+    .obs-header {
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 15px 0;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+    .obs-header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .obs-logo img {
+        height: 45px;
+        width: auto;
+    }
+    .obs-header-badge {
+        background: linear-gradient(135deg, #28529a, #84cc16);
+        color: white;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+    /* OBS360 Footer - Estándar */
+    .obs-footer {
+        background: linear-gradient(135deg, #1f2937 0%, #28529a 100%);
+        padding: 40px 0;
+        text-align: center;
+        margin-top: 60px;
+    }
+    .obs-footer img { height: 50px; margin-bottom: 15px; filter: brightness(0) invert(1); }
+    .obs-footer p { color: rgba(255, 255, 255, 0.7); font-size: 14px; margin-bottom: 10px; }
+    .obs-footer-btn {
+        display: inline-block;
+        background: #84cc16;
+        color: white;
+        padding: 12px 30px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        margin-top: 15px;
+        transition: all 0.3s ease;
+    }
+    .obs-footer-btn:hover { background: #65a30d; transform: translateY(-2px); }
+</style>
+<meta name="robots" content="noindex, nofollow"><link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp"></head>
 
 <body class="bg-stone-100 text-stone-800">
     <!-- OBS360 Header -->
     <header class="obs-header">
         <div class="obs-header-content">
             <div class="obs-logo">
-                <img src="../Logo-Obs360.co_.webp" alt="OBS360" />
+                <img src="../Logo-Obs360.co_.webp" alt="OBS360">
             </div>
+            <span class="obs-header-badge">RECURSO PRIVADO</span>
         </div>
     </header>
+
+    <!-- OBS360 Header -->
+    
 
 
     <div class="max-w-7xl mx-auto p-2 md:p-6 pb-20">
@@ -171,12 +224,10 @@
                     <span class="text-xs font-bold mr-3 ml-2 text-stone-600">CRECIMIENTO:</span>
                     <label class="flex items-center cursor-pointer">
                         <div class="relative">
-                            <input type="checkbox" id="continuous-mode" class="sr-only" checked onchange="toggleMode()">
-                            <div
-                                class="w-10 h-6 bg-stone-300 rounded-full shadow-inner transition duration-300 ease-in-out toggle-bg">
+                            <input type="checkbox" id="continuous-mode" class="sr-only" checked="" onchange="toggleMode()">
+                            <div class="w-10 h-6 bg-stone-300 rounded-full shadow-inner transition duration-300 ease-in-out toggle-bg">
                             </div>
-                            <div
-                                class="dot absolute w-4 h-4 bg-white rounded-full shadow left-1 top-1 transition duration-300 ease-in-out transform">
+                            <div class="dot absolute w-4 h-4 bg-white rounded-full shadow left-1 top-1 transition duration-300 ease-in-out transform">
                             </div>
                         </div>
                         <div class="ml-2 text-xs font-bold text-stone-700" id="mode-label">Continuo (Automático)</div>
@@ -184,12 +235,10 @@
                 </div>
 
                 <div class="flex items-center gap-3">
-                    <button onclick="saveHistory()"
-                        class="flex items-center gap-2 bg-stone-800 hover:bg-black text-white px-3 py-1.5 rounded text-xs font-bold transition shadow">
+                    <button onclick="saveHistory()" class="flex items-center gap-2 bg-stone-800 hover:bg-black text-white px-3 py-1.5 rounded text-xs font-bold transition shadow">
                         <i class="ph ph-floppy-disk"></i> Guardar
                     </button>
-                    <button onclick="document.getElementById('history-panel').scrollIntoView({behavior: 'smooth'})"
-                        class="flex items-center gap-2 bg-white border border-stone-300 hover:bg-stone-50 text-stone-700 px-3 py-1.5 rounded text-xs font-bold transition">
+                    <button onclick="document.getElementById('history-panel').scrollIntoView({behavior: 'smooth'})" class="flex items-center gap-2 bg-white border border-stone-300 hover:bg-stone-50 text-stone-700 px-3 py-1.5 rounded text-xs font-bold transition">
                         <i class="ph ph-clock-counter-clockwise"></i>
                         <span id="history-count" class="bg-teal-100 text-teal-800 px-1.5 rounded-full hidden">0</span>
                     </button>
@@ -197,8 +246,7 @@
             </div>
         </div>
 
-        <div
-            class="grid grid-cols-1 lg:grid-cols-12 gap-0 border border-stone-200 rounded-b-xl overflow-hidden shadow-sm mb-6 bg-stone-50">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-0 border border-stone-200 rounded-b-xl overflow-hidden shadow-sm mb-6 bg-stone-50">
 
             <!-- PANEL IZQUIERDO: PRODUCTO -->
             <div class="lg:col-span-3 bg-white p-5 border-r border-stone-200">
@@ -206,8 +254,7 @@
                 <div class="space-y-4">
                     <div>
                         <label class="input-label">Precio Venta ($)</label>
-                        <input type="number" id="price" value="14.99" step="0.01" class="input-field text-lg"
-                            oninput="calculate()">
+                        <input type="number" id="price" value="14.99" step="0.01" class="input-field text-lg" oninput="calculate()">
                     </div>
                     <div class="grid grid-cols-2 gap-2">
                         <div>
@@ -237,12 +284,9 @@
 
             <!-- PANEL DERECHO: FASES -->
             <div class="lg:col-span-9 p-5 bg-stone-50">
-                <h3
-                    class="text-xs font-bold text-stone-500 uppercase tracking-wider mb-4 flex justify-between items-center">
+                <h3 class="text-xs font-bold text-stone-500 uppercase tracking-wider mb-4 flex justify-between items-center">
                     <span>2. Estrategia por Fases (Presupuesto Definido)</span>
-                    <span
-                        class="text-[10px] bg-yellow-100 text-yellow-800 px-2 py-1 rounded border border-yellow-200 hidden"
-                        id="manual-warning">⚠️ Modo Manual</span>
+                    <span class="text-[10px] bg-yellow-100 text-yellow-800 px-2 py-1 rounded border border-yellow-200 hidden" id="manual-warning">⚠️ Modo Manual</span>
                 </h3>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -250,47 +294,37 @@
                     <!-- FASE 1 -->
                     <div class="phase-card bg-white border-red-400 p-3 rounded shadow-sm relative">
                         <div class="flex justify-between items-center mb-2">
-                            <h4 class="text-red-800 font-bold text-sm flex items-center gap-1"><i
-                                    class="ph ph-rocket-launch"></i> Lanzamiento</h4>
+                            <h4 class="text-red-800 font-bold text-sm flex items-center gap-1"><i class="ph ph-rocket-launch"></i> Lanzamiento</h4>
                             <div class="flex items-center gap-1">
                                 <label class="text-[9px] font-bold text-red-400 uppercase">Meses</label>
-                                <input type="number" id="phase1-end" value="4"
-                                    class="w-10 text-center text-xs border border-red-200 rounded font-bold text-red-700"
-                                    oninput="calculate()">
+                                <input type="number" id="phase1-end" value="4" class="w-10 text-center text-xs border border-red-200 rounded font-bold text-red-700" oninput="calculate()">
                             </div>
                         </div>
 
                         <div class="mb-2 bg-red-50 p-2 rounded border border-red-100">
                             <label class="input-label text-red-700 flex justify-between">Setup Inicial (Único)</label>
-                            <input type="number" id="initial-setup" value="500"
-                                class="input-field font-bold text-red-800 border-red-200 bg-white"
-                                oninput="calculate()">
+                            <input type="number" id="initial-setup" value="500" class="input-field font-bold text-red-800 border-red-200 bg-white" oninput="calculate()">
                         </div>
 
                         <div class="grid grid-cols-2 gap-2 mb-2">
                             <div>
                                 <label class="input-label text-red-500">Unid. Inicio</label>
-                                <input type="number" id="p1-start-units" value="100" class="input-field border-red-200"
-                                    oninput="calculate()">
+                                <input type="number" id="p1-start-units" value="100" class="input-field border-red-200" oninput="calculate()">
                             </div>
                             <div>
                                 <label class="input-label text-red-500">Crece %</label>
-                                <input type="number" id="p1-growth" value="20" class="input-field border-red-200"
-                                    oninput="calculate()">
+                                <input type="number" id="p1-growth" value="20" class="input-field border-red-200" oninput="calculate()">
                             </div>
                         </div>
 
                         <div class="mt-auto border-t border-red-100 pt-2 grid grid-cols-2 gap-2">
                             <div class="bg-red-50 p-1 rounded border border-red-200">
                                 <label class="input-label text-red-800">Presupuesto Ads ($)</label>
-                                <input type="number" id="p1-budget" value="400"
-                                    class="input-field font-bold text-red-700 border-red-200 bg-white"
-                                    oninput="calculate()">
+                                <input type="number" id="p1-budget" value="400" class="input-field font-bold text-red-700 border-red-200 bg-white" oninput="calculate()">
                             </div>
                             <div>
                                 <label class="input-label text-red-800">Fijos $</label>
-                                <input type="number" id="p1-fixed" value="150"
-                                    class="input-field text-red-700 border-red-200" oninput="calculate()">
+                                <input type="number" id="p1-fixed" value="150" class="input-field text-red-700 border-red-200" oninput="calculate()">
                             </div>
                         </div>
 
@@ -304,13 +338,10 @@
                     <!-- FASE 2 -->
                     <div class="phase-card bg-white border-orange-400 p-3 rounded shadow-sm relative">
                         <div class="flex justify-between items-center mb-2">
-                            <h4 class="text-orange-800 font-bold text-sm flex items-center gap-1"><i
-                                    class="ph ph-trend-up"></i> Crecimiento</h4>
+                            <h4 class="text-orange-800 font-bold text-sm flex items-center gap-1"><i class="ph ph-trend-up"></i> Crecimiento</h4>
                             <div class="flex items-center gap-1">
                                 <label class="text-[9px] font-bold text-orange-400 uppercase">Fin Mes</label>
-                                <input type="number" id="phase2-end" value="10"
-                                    class="w-10 text-center text-xs border border-orange-200 rounded font-bold text-orange-700"
-                                    oninput="calculate()">
+                                <input type="number" id="phase2-end" value="10" class="w-10 text-center text-xs border border-orange-200 rounded font-bold text-orange-700" oninput="calculate()">
                             </div>
                         </div>
 
@@ -321,14 +352,11 @@
                                         Unid. Base
                                         <i class="ph ph-link text-stone-400" id="p2-link-icon"></i>
                                     </label>
-                                    <input type="number" id="p2-start-units" value="0"
-                                        class="input-field border-orange-200 input-disabled" disabled
-                                        oninput="calculate()">
+                                    <input type="number" id="p2-start-units" value="0" class="input-field border-orange-200 input-disabled" disabled="" oninput="calculate()">
                                 </div>
                                 <div>
                                     <label class="input-label text-orange-500">Crece %</label>
-                                    <input type="number" id="p2-growth" value="10" class="input-field border-orange-200"
-                                        oninput="calculate()">
+                                    <input type="number" id="p2-growth" value="10" class="input-field border-orange-200" oninput="calculate()">
                                 </div>
                             </div>
                         </div>
@@ -336,14 +364,11 @@
                         <div class="mt-auto border-t border-orange-100 pt-2 grid grid-cols-2 gap-2">
                             <div class="bg-orange-50 p-1 rounded border border-orange-200">
                                 <label class="input-label text-orange-800">Presupuesto Ads ($)</label>
-                                <input type="number" id="p2-budget" value="300"
-                                    class="input-field font-bold text-orange-700 border-orange-200 bg-white"
-                                    oninput="calculate()">
+                                <input type="number" id="p2-budget" value="300" class="input-field font-bold text-orange-700 border-orange-200 bg-white" oninput="calculate()">
                             </div>
                             <div>
                                 <label class="input-label text-orange-800">Fijos $</label>
-                                <input type="number" id="p2-fixed" value="80"
-                                    class="input-field text-orange-700 border-orange-200" oninput="calculate()">
+                                <input type="number" id="p2-fixed" value="80" class="input-field text-orange-700 border-orange-200" oninput="calculate()">
                             </div>
                         </div>
 
@@ -357,8 +382,7 @@
                     <!-- FASE 3 -->
                     <div class="phase-card bg-white border-teal-500 p-3 rounded shadow-sm">
                         <div class="flex justify-between items-center mb-2">
-                            <h4 class="text-teal-800 font-bold text-sm flex items-center gap-1"><i
-                                    class="ph ph-coins"></i> Madurez</h4>
+                            <h4 class="text-teal-800 font-bold text-sm flex items-center gap-1"><i class="ph ph-coins"></i> Madurez</h4>
                             <span class="text-[10px] text-stone-400 italic">Indefinido</span>
                         </div>
 
@@ -369,14 +393,11 @@
                                         Unid. Base
                                         <i class="ph ph-link text-stone-400" id="p3-link-icon"></i>
                                     </label>
-                                    <input type="number" id="p3-start-units" value="0"
-                                        class="input-field border-teal-200 input-disabled" disabled
-                                        oninput="calculate()">
+                                    <input type="number" id="p3-start-units" value="0" class="input-field border-teal-200 input-disabled" disabled="" oninput="calculate()">
                                 </div>
                                 <div>
                                     <label class="input-label text-teal-600">Crece %</label>
-                                    <input type="number" id="p3-growth" value="2" class="input-field border-teal-200"
-                                        oninput="calculate()">
+                                    <input type="number" id="p3-growth" value="2" class="input-field border-teal-200" oninput="calculate()">
                                 </div>
                             </div>
                         </div>
@@ -384,14 +405,11 @@
                         <div class="mt-auto border-t border-teal-100 pt-2 grid grid-cols-2 gap-2">
                             <div class="bg-teal-50 p-1 rounded border border-teal-200">
                                 <label class="input-label text-teal-800">Presupuesto Ads ($)</label>
-                                <input type="number" id="p3-budget" value="200"
-                                    class="input-field font-bold text-teal-700 border-teal-200 bg-white"
-                                    oninput="calculate()">
+                                <input type="number" id="p3-budget" value="200" class="input-field font-bold text-teal-700 border-teal-200 bg-white" oninput="calculate()">
                             </div>
                             <div>
                                 <label class="input-label text-teal-800">Fijos $</label>
-                                <input type="number" id="p3-fixed" value="30"
-                                    class="input-field text-teal-700 border-teal-200" oninput="calculate()">
+                                <input type="number" id="p3-fixed" value="30" class="input-field text-teal-700 border-teal-200" oninput="calculate()">
                             </div>
                         </div>
 
@@ -428,7 +446,7 @@
                 <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 border-blue-500">
                     <p class="text-xs font-bold text-stone-400 uppercase">Recuperación (Break-Even)</p>
                     <p id="breakeven-month" class="text-2xl font-bold text-blue-700">-</p>
-                    <p class="text-[10px] text-stone-400 mt-1">Mes donde el saldo > 0.</p>
+                    <p class="text-[10px] text-stone-400 mt-1">Mes donde el saldo &gt; 0.</p>
                 </div>
 
                 <div class="bg-white p-5 rounded-xl shadow-sm border-l-4 border-teal-500">
@@ -443,10 +461,8 @@
         <!-- HISTORIAL -->
         <div id="history-panel" class="bg-stone-800 text-white rounded-xl shadow-lg p-6 mb-8 border border-stone-700">
             <div class="flex justify-between items-center mb-4 border-b border-stone-600 pb-2">
-                <h3 class="text-lg font-bold flex items-center gap-2"><i
-                        class="ph ph-clock-counter-clockwise text-teal-400"></i> Historial</h3>
-                <button onclick="clearHistory()"
-                    class="text-xs text-red-300 hover:text-red-100 underline">Borrar</button>
+                <h3 class="text-lg font-bold flex items-center gap-2"><i class="ph ph-clock-counter-clockwise text-teal-400"></i> Historial</h3>
+                <button onclick="clearHistory()" class="text-xs text-red-300 hover:text-red-100 underline">Borrar</button>
             </div>
             <div id="history-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </div>
@@ -829,14 +845,18 @@
 
 
     <!-- OBS360 Footer -->
+    
+
+
+
+
+    <!-- OBS360 Footer -->
     <footer class="obs-footer">
         <div class="max-w-7xl mx-auto px-4">
-            <img src="../Logo-Obs360.co_.webp" alt="OBS360" />
+            <img src="../Logo-Obs360.co_.webp" alt="OBS360">
             <p>Recurso exclusivo para clientes de OBS360</p>
+            <p style="font-size: 12px; opacity: 0.6;">© 2025 OBS360 - Todos los derechos reservados</p>
             <a href="https://wa.me/19803370518" target="_blank" class="obs-footer-btn">Contactar a OBS360</a>
         </div>
     </footer>
-
-</body>
-
-</html>
+</body></html>

@@ -72,24 +72,39 @@ app.post('/api/auth/blog', (req, res) => {
 
 // ==================== TEMPLATES OBS360 ====================
 
-// CSS para header (solo logo) y footer
+// CSS para header (solo logo) y footer - MEJORADO
 const OBS360_CSS = `
-    /* OBS360 Header - Solo logo */
+    /* OBS360 Header - Estándar */
     .obs-header {
         background: white;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         padding: 15px 0;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
     }
     .obs-header-content {
         max-width: 1200px;
         margin: 0 auto;
         padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
     .obs-logo img {
         height: 45px;
         width: auto;
     }
-    /* OBS360 Footer */
+    .obs-header-badge {
+        background: linear-gradient(135deg, #28529a, #84cc16);
+        color: white;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+    /* OBS360 Footer - Estándar */
     .obs-footer {
         background: linear-gradient(135deg, #1f2937 0%, #28529a 100%);
         padding: 40px 0;
@@ -97,7 +112,7 @@ const OBS360_CSS = `
         margin-top: 60px;
     }
     .obs-footer img { height: 50px; margin-bottom: 15px; filter: brightness(0) invert(1); }
-    .obs-footer p { color: rgba(255, 255, 255, 0.7); font-size: 14px; }
+    .obs-footer p { color: rgba(255, 255, 255, 0.7); font-size: 14px; margin-bottom: 10px; }
     .obs-footer-btn {
         display: inline-block;
         background: #84cc16;
@@ -106,13 +121,13 @@ const OBS360_CSS = `
         border-radius: 25px;
         text-decoration: none;
         font-weight: 600;
-        margin-top: 20px;
+        margin-top: 15px;
         transition: all 0.3s ease;
     }
     .obs-footer-btn:hover { background: #65a30d; transform: translateY(-2px); }
 `;
 
-// Header con solo el logo (sin botón de navegación)
+// Header con logo y badge
 const OBS360_HEADER = `
     <!-- OBS360 Header -->
     <header class="obs-header">
@@ -120,6 +135,7 @@ const OBS360_HEADER = `
             <div class="obs-logo">
                 <img src="../Logo-Obs360.co_.webp" alt="OBS360" />
             </div>
+            <span class="obs-header-badge">RECURSO PRIVADO</span>
         </div>
     </header>
 `;
@@ -131,46 +147,54 @@ const OBS360_FOOTER = `
         <div class="max-w-7xl mx-auto px-4">
             <img src="../Logo-Obs360.co_.webp" alt="OBS360" />
             <p>Recurso exclusivo para clientes de OBS360</p>
+            <p style="font-size: 12px; opacity: 0.6;">© 2025 OBS360 - Todos los derechos reservados</p>
             <a href="https://wa.me/19803370518" target="_blank" class="obs-footer-btn">Contactar a OBS360</a>
         </div>
     </footer>
 `;
 
-
-// Función para envolver HTML con template OBS360 (header con logo + footer)
-function wrapWithOBS360Template(htmlContent) {
+// Función FORZADA para aplicar template OBS360 (siempre re-aplica)
+function forceOBS360Template(htmlContent) {
     const $ = cheerio.load(htmlContent);
 
-    // 1. Agregar meta noindex, nofollow si no existe (privacidad)
-    if (!$('meta[name="robots"]').length) {
-        $('head').append('<meta name="robots" content="noindex, nofollow" />');
-    }
+    // 1. SIEMPRE asegurar meta noindex, nofollow
+    $('meta[name="robots"]').remove();
+    $('head').append('<meta name="robots" content="noindex, nofollow" />');
 
-    // 2. Agregar favicon si no existe
-    if (!$('link[rel="icon"]').length) {
-        $('head').append('<link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp" />');
-    }
+    // 2. SIEMPRE asegurar favicon
+    $('link[rel="icon"]').remove();
+    $('head').append('<link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp" />');
 
-    // 3. Agregar CSS si no existe
-    if (!$('.obs-header').length || !$('.obs-footer').length) {
+    // 3. Remover header/footer existentes para evitar duplicados
+    $('.obs-header').remove();
+    $('.obs-footer').remove();
+
+    // 4. Agregar CSS (evitar duplicados)
+    const existingStyles = $('style').text();
+    if (!existingStyles.includes('.obs-header') || !existingStyles.includes('.obs-footer')) {
         if ($('style').length) {
-            $('style').first().append(OBS360_CSS);
+            // Limpiar CSS OBS360 existente si hay
+            let styleContent = $('style').first().html() || '';
+            // Remover CSS de OBS360 existente
+            styleContent = styleContent.replace(/\/\* OBS360 Header[\s\S]*?\.obs-footer-btn:hover[^}]*\}/g, '');
+            $('style').first().html(styleContent + OBS360_CSS);
         } else {
             $('head').append('<style>' + OBS360_CSS + '</style>');
         }
     }
 
-    // 4. Agregar header con solo logo si no existe
-    if (!$('.obs-header').length) {
-        $('body').prepend(OBS360_HEADER);
-    }
+    // 5. SIEMPRE agregar header al inicio del body
+    $('body').prepend(OBS360_HEADER);
 
-    // 5. Agregar footer si no existe
-    if (!$('.obs-footer').length) {
-        $('body').append(OBS360_FOOTER);
-    }
+    // 6. SIEMPRE agregar footer al final del body
+    $('body').append(OBS360_FOOTER);
 
     return $.html();
+}
+
+// Función legacy para compatibilidad (ahora usa forceOBS360Template)
+function wrapWithOBS360Template(htmlContent) {
+    return forceOBS360Template(htmlContent);
 }
 
 // ==================== RUTAS ====================
@@ -681,6 +705,83 @@ app.delete('/api/articles/:slug', async (req, res) => {
     } catch (error) {
         console.error('Error al eliminar artículo:', error);
         res.status(500).json({ error: 'Error al eliminar artículo' });
+    }
+});
+
+// ==================== ESTANDARIZACIÓN DE ARTÍCULOS ====================
+
+// Endpoint para re-estandarizar TODOS los artículos con el template OBS360
+app.post('/api/standardize-all', async (req, res) => {
+    try {
+        console.log('🔄 Iniciando estandarización de todos los artículos...');
+
+        const files = await fs.readdir(BLOG_DIR);
+        const htmlFiles = files.filter(file =>
+            file.endsWith('.html') &&
+            file !== 'index.html' &&
+            !file.includes('v1')
+        );
+
+        let updatedCount = 0;
+        let errors = [];
+
+        for (const file of htmlFiles) {
+            try {
+                const filePath = path.join(BLOG_DIR, file);
+                const content = await fs.readFile(filePath, 'utf-8');
+
+                // Aplicar template forzadamente
+                const standardizedContent = forceOBS360Template(content);
+
+                // Guardar archivo actualizado
+                await fs.writeFile(filePath, standardizedContent, 'utf-8');
+                updatedCount++;
+                console.log(`✅ Estandarizado: ${file}`);
+            } catch (fileError) {
+                console.error(`❌ Error en ${file}:`, fileError.message);
+                errors.push({ file, error: fileError.message });
+            }
+        }
+
+        console.log(`🎉 Estandarización completada: ${updatedCount}/${htmlFiles.length} artículos`);
+
+        res.json({
+            success: true,
+            message: `Estandarización completada`,
+            totalFiles: htmlFiles.length,
+            updatedCount,
+            errors: errors.length > 0 ? errors : undefined
+        });
+    } catch (error) {
+        console.error('Error en estandarización:', error);
+        res.status(500).json({ error: 'Error al estandarizar artículos' });
+    }
+});
+
+// Endpoint para re-estandarizar UN artículo específico
+app.post('/api/standardize/:slug', async (req, res) => {
+    try {
+        const { slug } = req.params;
+        const filePath = path.join(BLOG_DIR, `${slug}.html`);
+
+        if (!await fs.pathExists(filePath)) {
+            return res.status(404).json({ error: 'Artículo no encontrado' });
+        }
+
+        const content = await fs.readFile(filePath, 'utf-8');
+        const standardizedContent = forceOBS360Template(content);
+        await fs.writeFile(filePath, standardizedContent, 'utf-8');
+
+        console.log(`✅ Artículo estandarizado: ${slug}`);
+
+        res.json({
+            success: true,
+            message: `Artículo ${slug} estandarizado exitosamente`,
+            slug
+        });
+    } catch (error) {
+        console.error('Error al estandarizar artículo:', error);
+        res.status(500).json({ error: 'Error al estandarizar artículo' });
     }
 });
 
