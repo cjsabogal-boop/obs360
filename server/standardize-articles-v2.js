@@ -126,24 +126,26 @@ function cleanAndApplyOBS360Template(htmlContent, filename) {
             (this.data.includes('OBS360') || this.data.includes('obs360'));
     }).remove();
 
-    // 4. Limpiar CSS duplicado de OBS360 en <style>
+    // 4. Limpiar TODO el CSS relacionado con OBS360
     $('style').each(function () {
         let css = $(this).html() || '';
-        // Eliminar todos los bloques CSS de OBS360
+
+        // Eliminar comentarios de OBS360
         css = css.replace(/\/\*\s*=+\s*OBS360[\s\S]*?=+\s*\*\//g, '');
+        css = css.replace(/\/\*\s*=+\s*Fin OBS360[\s\S]*?=+\s*\*\//g, '');
         css = css.replace(/\/\*\s*OBS360[\s\S]*?\*\//g, '');
-        css = css.replace(/\.obs-header\s*\{[^}]*\}/g, '');
-        css = css.replace(/\.obs-header-content\s*\{[^}]*\}/g, '');
-        css = css.replace(/\.obs-header-badge\s*\{[^}]*\}/g, '');
-        css = css.replace(/\.obs-logo\s*img\s*\{[^}]*\}/g, '');
-        css = css.replace(/\.obs-footer\s*\{[^}]*\}/g, '');
-        css = css.replace(/\.obs-footer\s*img\s*\{[^}]*\}/g, '');
-        css = css.replace(/\.obs-footer\s*p\s*\{[^}]*\}/g, '');
-        css = css.replace(/\.obs-footer-btn\s*\{[^}]*\}/g, '');
-        css = css.replace(/\.obs-footer-btn:hover\s*\{[^}]*\}/g, '');
-        // Limpiar líneas vacías múltiples
-        css = css.replace(/\n\s*\n\s*\n/g, '\n\n');
-        $(this).html(css.trim());
+
+        // Eliminar clases de OBS360 (con regex más amplio)
+        css = css.replace(/\.obs-[a-z-]+\s*\{[\s\S]*?\}/g, '');
+        css = css.replace(/\.obs-[a-z-]+:hover\s*\{[\s\S]*?\}/g, '');
+        css = css.replace(/\.obs-[a-z-]+\s+img\s*\{[\s\S]*?\}/g, '');
+        css = css.replace(/\.obs-[a-z-]+\s+p\s*\{[\s\S]*?\}/g, '');
+
+        // Limpiar líneas vacías múltiples y espacios
+        css = css.replace(/\n\s*\n\s*\n+/g, '\n\n');
+        css = css.trim();
+
+        $(this).html(css);
     });
 
     // ===== APLICAR TEMPLATE LIMPIO =====
