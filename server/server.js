@@ -189,18 +189,14 @@ function forceOBS360Template(htmlContent) {
         let css = $(this).html() || '';
         // Eliminar todos los bloques CSS de OBS360
         css = css.replace(/\/\*\s*=+\s*OBS360[\s\S]*?=+\s*\*\//g, '');
+        css = css.replace(/\/\*\s*=+\s*Fin OBS360[\s\S]*?=+\s*\*\//g, '');
         css = css.replace(/\/\*\s*OBS360[\s\S]*?\*\//g, '');
-        css = css.replace(/\.obs-header\s*\{[^}]*\}/g, '');
-        css = css.replace(/\.obs-header-content\s*\{[^}]*\}/g, '');
-        css = css.replace(/\.obs-header-badge\s*\{[^}]*\}/g, '');
-        css = css.replace(/\.obs-logo\s*img\s*\{[^}]*\}/g, '');
-        css = css.replace(/\.obs-footer\s*\{[^}]*\}/g, '');
-        css = css.replace(/\.obs-footer\s*img\s*\{[^}]*\}/g, '');
-        css = css.replace(/\.obs-footer\s*p\s*\{[^}]*\}/g, '');
-        css = css.replace(/\.obs-footer-btn\s*\{[^}]*\}/g, '');
-        css = css.replace(/\.obs-footer-btn:hover\s*\{[^}]*\}/g, '');
+        css = css.replace(/\.obs-[a-z-]+\s*\{[\s\S]*?\}/g, '');
+        css = css.replace(/\.obs-[a-z-]+:hover\s*\{[\s\S]*?\}/g, '');
+        css = css.replace(/\.obs-[a-z-]+\s+img\s*\{[\s\S]*?\}/g, '');
+        css = css.replace(/\.obs-[a-z-]+\s+p\s*\{[\s\S]*?\}/g, '');
         // Limpiar líneas vacías múltiples
-        css = css.replace(/\n\s*\n\s*\n/g, '\n\n');
+        css = css.replace(/\n\s*\n\s*\n+/g, '\n\n');
         $(this).html(css.trim());
     });
 
@@ -211,11 +207,44 @@ function forceOBS360Template(htmlContent) {
         $('head').append('<style>' + OBS360_CSS + '</style>');
     }
 
-    // 6. SIEMPRE agregar header al inicio del body
-    $('body').prepend(OBS360_HEADER);
+    // 6. ARREGLAR BODY: Eliminar clases y estilos que rompen el layout
+    const $body = $('body');
 
-    // 7. SIEMPRE agregar footer al final del body
-    $('body').append(OBS360_FOOTER);
+    // Eliminar clases problemáticas de Tailwind
+    const bodyClasses = $body.attr('class') || '';
+    const cleanedClasses = bodyClasses
+        .split(' ')
+        .filter(cls => !['flex', 'flex-col', 'items-center', 'justify-center', 'min-h-screen', 'h-screen'].includes(cls))
+        .join(' ');
+    $body.attr('class', cleanedClasses);
+
+    // Eliminar overflow:hidden del style inline
+    const bodyStyle = $body.attr('style') || '';
+    const cleanedStyle = bodyStyle.replace(/overflow\s*:\s*hidden\s*;?/gi, '');
+    if (cleanedStyle) {
+        $body.attr('style', cleanedStyle);
+    } else {
+        $body.removeAttr('style');
+    }
+
+    // Agregar CSS para arreglar layout del body
+    $('head').append(`
+    <style>
+    body {
+        display: block !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        min-height: auto !important;
+        height: auto !important;
+    }
+    </style>
+    `);
+
+    // 7. SIEMPRE agregar header al inicio del body
+    $body.prepend(OBS360_HEADER);
+
+    // 8. SIEMPRE agregar footer al final del body
+    $body.append(OBS360_FOOTER);
 
     return $.html();
 }
