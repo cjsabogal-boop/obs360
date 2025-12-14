@@ -1241,6 +1241,40 @@
             }
         });
 
+        // Rebuild Index Button
+        document.getElementById('rebuildIndexBtn').addEventListener('click', async function () {
+            if (!confirm('¿Regenerar el índice de artículos? Esto escaneará todos los archivos HTML y actualizará la lista.')) {
+                return;
+            }
+
+            const btn = this;
+            const originalHTML = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Regenerando...';
+
+            try {
+                const response = await fetch(`${API_URL}/rebuild-index`, {
+                    method: 'POST'
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert(`✅ Índice regenerado exitosamente!\n\n📊 Total artículos: ${result.totalArticles}`);
+                    // Recargar artículos para mostrar los nuevos
+                    await loadArticles();
+                } else {
+                    alert('❌ Error: ' + (result.error || 'Error desconocido'));
+                }
+            } catch (error) {
+                console.error('Error regenerando índice:', error);
+                alert('❌ Error al conectar con el servidor');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalHTML;
+            }
+        });
+
         async function editArticle(slug) {
             try {
                 const response = await fetch(`${API_URL}/articles/${slug}`);

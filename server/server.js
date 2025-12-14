@@ -578,6 +578,74 @@ app.get('/api/articles', async (req, res) => {
     }
 });
 
+// Regenerar índice de artículos
+app.post('/api/rebuild-index', async (req, res) => {
+    try {
+        console.log('🔄 Regenerando índice de artículos...');
+
+        const files = await fs.readdir(BLOG_DIR);
+        const htmlFiles = files.filter(file =>
+            file.startsWith('r-') &&
+            file.endsWith('.html')
+        );
+
+        const articles = [];
+
+        for (const file of htmlFiles) {
+            try {
+                const filePath = path.join(BLOG_DIR, file);
+                const content = await fs.readFile(filePath, 'utf-8');
+                const $ = cheerio.load(content);
+
+                const title = $('title').text() || 'Sin título';
+                const id = file.replace('.html', '');
+                const stats = await fs.stat(filePath);
+
+                // Detectar categoría del título
+                const titleLower = title.toLowerCase();
+                let category = 'Otras';
+
+                if (titleLower.includes('amazon') || titleLower.includes('ppc') ||
+                    titleLower.includes('ad') || titleLower.includes('market')) {
+                    category = 'Estrategia';
+                } else if (titleLower.includes('simulator') || titleLower.includes('simulador') ||
+                    titleLower.includes('calculator') || titleLower.includes('kdp') ||
+                    titleLower.includes('tool') || titleLower.includes('playbook')) {
+                    category = 'Herramientas';
+                }
+
+                articles.push({
+                    id,
+                    title,
+                    category,
+                    modifiedTime: stats.mtimeMs
+                });
+            } catch (err) {
+                console.error(`Error procesando ${file}:`, err.message);
+            }
+        }
+
+        // Ordenar por fecha de modificación (más reciente primero)
+        articles.sort((a, b) => b.modifiedTime - a.modifiedTime);
+
+        // Guardar el índice
+        const indexPath = path.join(BLOG_DIR, 'articles.json');
+        await fs.writeFile(indexPath, JSON.stringify({ articles }, null, 2));
+
+        console.log(`✅ Índice regenerado: ${articles.length} artículos`);
+
+        res.json({
+            success: true,
+            message: 'Índice regenerado exitosamente',
+            totalArticles: articles.length,
+            articles: articles.map(a => ({ id: a.id, title: a.title, category: a.category }))
+        });
+    } catch (error) {
+        console.error('Error regenerando índice:', error);
+        res.status(500).json({ error: 'Error al regenerar índice' });
+    }
+});
+
 // Obtener un artículo específico
 app.get('/api/articles/:slug', async (req, res) => {
     try {
