@@ -843,7 +843,11 @@
             container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">Cargando artículos...</p>';
 
             try {
-                const response = await fetch(`${API_URL}/articles`);
+                // Cache-busting: añadir timestamp para forzar refresh
+                const timestamp = new Date().getTime();
+                const response = await fetch(`${API_URL}/articles?_t=${timestamp}`, {
+                    cache: 'no-store' // Fuerza al navegador a NO usar caché
+                });
                 const data = await response.json();
                 const articles = data.articles || [];
 
