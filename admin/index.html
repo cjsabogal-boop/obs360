@@ -838,23 +838,45 @@
         let allArticles = [];
         let currentFilter = 'all';
 
-        async function loadArticles() {
+        async function loadArticles(retryCount = 0) {
             const container = document.getElementById('articlesList');
-            container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">Cargando artículos...</p>';
+            const maxRetries = 3;
+
+            // Mostrar estado de carga con reintento
+            if (retryCount === 0) {
+                container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">📡 Cargando artículos...</p>';
+            } else {
+                container.innerHTML = `<p style="color: #f59e0b; text-align: center; padding: 40px;">🔄 Reintentando... (${retryCount}/${maxRetries})</p>`;
+            }
 
             try {
-                // Cache-busting: añadir timestamp para forzar refresh
+                // Cache-busting + timeout
                 const timestamp = new Date().getTime();
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 segundos timeout
+
+                console.log(`[${new Date().toISOString()}] Cargando artículos desde: ${API_URL}/articles`);
+
                 const response = await fetch(`${API_URL}/articles?_t=${timestamp}`, {
-                    cache: 'no-store' // Fuerza al navegador a NO usar caché
+                    cache: 'no-store',
+                    signal: controller.signal
                 });
+
+                clearTimeout(timeoutId);
+
+                if (!response.ok) {
+                    throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
+                }
+
                 const data = await response.json();
                 const articles = data.articles || [];
+
+                console.log(`[${new Date().toISOString()}] Artículos cargados:`, articles.length);
 
                 allArticles = articles;
 
                 if (articles.length === 0) {
-                    container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">No hay artículos publicados aún. ¡Crea tu primer artículo!</p>';
+                    container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">📄 No hay artículos publicados aún. ¡Crea tu primer artículo!</p>';
                     updateCategoryCounts([]);
                     return;
                 }
@@ -862,9 +884,42 @@
                 updateCategoryCounts(articles);
                 setupFilters();
                 renderArticles(currentFilter === 'all' ? articles : articles.filter(a => a.category === currentFilter));
+
             } catch (error) {
-                console.error('Error loading articles:', error);
-                container.innerHTML = '<p style="color: #ef4444; text-align: center; padding: 40px;">⚠️ Error al cargar artículos. Verifica que el servidor esté corriendo.</p>';
+                console.error(`[${new Date().toISOString()}] Error cargando artículos:`, error);
+
+                // Reintentar si no se alcanzó el máximo
+                if (retryCount < maxRetries) {
+                    console.log(`Reintentando en 2 segundos... (${retryCount + 1}/${maxRetries})`);
+                    setTimeout(() => loadArticles(retryCount + 1), 2000);
+                } else {
+                    // Mostrar error con botón de recarga manual
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 40px;">
+                            <p style="color: #ef4444; margin-bottom: 20px;">⚠️ <strong>Error al cargar artículos</strong></p>
+                            <p style="color: #6b7280; font-size: 14px; margin-bottom: 20px;">
+                                ${error.name === 'AbortError' ?
+                            'El servidor no respondió a tiempo (timeout).' :
+                            `Error: ${error.message}`
+                        }
+                            </p>
+                            <button onclick="loadArticles(0)" style="
+                                background: #3b82f6;
+                                color: white;
+                                padding: 12px 24px;
+                                border: none;
+                                border-radius: 8px;
+                                cursor: pointer;
+                                font-weight: 600;
+                            ">
+                                🔄 Reintentar Ahora
+                            </button>
+                            <p style="color: #9ca3af; font-size: 12px; margin-top: 20px;">
+                                Si el problema persiste, verifica que el servidor Node.js esté corriendo.
+                            </p>
+                        </div>
+                    `;
+                }
             }
         }
 
