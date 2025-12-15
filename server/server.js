@@ -8,7 +8,7 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const BLOG_DIR = path.join(__dirname, process.env.BLOG_DIR || '../blog');
+const BLOG_DIR = process.env.BLOG_DIR || path.join(__dirname, '../blog');
 
 // Middleware
 app.use(cors());
