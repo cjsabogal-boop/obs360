@@ -8,7 +8,8 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const BLOG_DIR = process.env.BLOG_DIR || path.join(__dirname, '../blog');
+// Forzar ruta relativa al directorio padre (donde están los .html)
+const BLOG_DIR = path.join(__dirname, '../');
 
 // Middleware
 app.use(cors());
