@@ -591,524 +591,578 @@ app.get('/api/articles', async (req, res) => {
                 // Herramientas (primero porque es específico)
                 if (titleLower.includes('simulator') || titleLower.includes('simulador') ||
                     titleLower.includes('calculator') || titleLower.includes('calculador') ||
-                    titleLower.includes('kdp') || titleLower.includes('tool') ||
-                    titleLower.includes('herramienta') || titleLower.includes('budget')) {
-                    category = 'Herramientas';
-                    icon = '🛠️';
+                    // app.get('/api/articles', async (req, res) => {
+                    //     try {
+                    //         // Cargar metadatos de artículos (con tags)
+                    //         const articlesMetaPath = path.join(BLOG_DIR, 'articles-meta.json');
+                    //         let articlesMeta = {};
+                    //         try {
+                    //             if (await fs.pathExists(articlesMetaPath)) {
+                    //                 articlesMeta = JSON.parse(await fs.readFile(articlesMetaPath, 'utf-8'));
+                    //             }
+                    //         } catch (e) { }
+
+                    //         const files = await fs.readdir(BLOG_DIR);
+                    //         const htmlFiles = files.filter(file =>
+                    //             file.endsWith('.html') &&
+                    //             file !== 'index.html' &&
+                    //             !file.includes('v1') // Excluir archivos originales
+                    //         );
+
+                    //         const articles = [];
+
+                    //         for (const file of htmlFiles) {
+                    //             const filePath = path.join(BLOG_DIR, file);
+                    //             const content = await fs.readFile(filePath, 'utf-8');
+                    //             const $ = cheerio.load(content);
+
+                    //             // Obtener fecha de modificación del archivo
+                    //             const stats = await fs.stat(filePath);
+                    //             const modifiedTime = stats.mtime.getTime();
+
+                    //             // Extraer metadatos del HTML
+                    //             const title = $('title').text().split('|')[0].trim() || file.replace('.html', '');
+                    //             const slug = file.replace('.html', '');
+
+                    //             // Obtener metadatos guardados si existen
+                    //             const meta = articlesMeta[slug] || {};
+
+                    //             // Intentar extraer fecha y categoría del contenido
+                    //             let date = meta.date || 'Sin fecha';
+                    //             let category = meta.category || 'Sin categoría';
+                    //             let excerpt = meta.excerpt || '';
+                    //             let icon = '📄';
+                    //             let tags = meta.tags || [];
+
+                    //             // Buscar en diferentes posibles ubicaciones
+                    //             const headerText = $('header').first().text();
+                    //             const h1Text = $('h1').first().text();
+
+                    //             // Detectar categoría por el contenido y título (si no hay meta)
+                    //             if (!meta.category) {
+                    //                 const titleLower = title.toLowerCase();
+
+                    //                 // Herramientas (primero porque es específico)
+                    //                 if (titleLower.includes('simulator') || titleLower.includes('simulador') ||
+                    //                     titleLower.includes('calculator') || titleLower.includes('calculador') ||
+                    //                     titleLower.includes('kdp') || titleLower.includes('tool') ||
+                    //                     titleLower.includes('herramienta') || titleLower.includes('budget')) {
+                    //                     category = 'Herramientas';
+                    //                     icon = '🛠️';
+                    //                 }
+                    //                 // Capacitación
+                    //                 else if (titleLower.includes('guide') || titleLower.includes('guía') ||
+                    //                     titleLower.includes('playbook') || titleLower.includes('mentor') ||
+                    //                     titleLower.includes('principios') || content.includes('adb')) {
+                    //                     category = 'Capacitación';
+                    //                     icon = '🎓';
+                    //                 }
+                    //                 // Análisis
+                    //                 else if (content.includes('CPC') || content.includes('Amazon Ads') ||
+                    //                     titleLower.includes('analysis') || titleLower.includes('análisis') ||
+                    //                     titleLower.includes('metrics') || titleLower.includes('opportunity')) {
+                    //                     category = 'Análisis';
+                    //                     icon = '📊';
+                    //                 }
+                    //                 // Informe Mensual
+                    //                 else if (content.includes('Informe') || content.includes('Gestión') ||
+                    //                     titleLower.includes('report') || titleLower.includes('cristal') ||
+                    //                     titleLower.includes('summary')) {
+                    //                     category = 'Informe Mensual';
+                    //                     icon = '💎';
+                    //                 }
+                    //                 // Estrategia
+                    //                 else if (content.includes('Estrategia') || content.includes('Higiene') ||
+                    //                     titleLower.includes('strategy') || titleLower.includes('market') ||
+                    //                     titleLower.includes('vajillas')) {
+                    //                     category = 'Estrategia';
+                    //                     icon = '🍽️';
+                    //                 }
+                    //                 // Otras (fallback)
+                    //                 else {
+                    //                     category = 'Otras';
+                    //                     icon = '📁';
+                    //                 }
+                    //             }
+
+                    //             // Extraer excerpt del primer párrafo si no hay meta
+                    //             if (!excerpt) {
+                    //                 const firstP = $('p').first().text();
+                    //                 excerpt = firstP.substring(0, 200) + (firstP.length > 200 ? '...' : '');
+                    //             }
+
+                    //             articles.push({
+                    //                 id: slug,
+                    //                 slug,
+                    //                 title,
+                    //                 date,
+                    //                 category,
+                    //                 icon,
+                    //                 excerpt,
+                    //                 tags,
+                    //                 filename: file,
+                    //                 content: content,
+                    //                 modifiedTime // Para ordenar
+                    //             });
+                    //         }
+
+                    //         // Ordenar artículos: más reciente primero
+                    //         articles.sort((a, b) => b.modifiedTime - a.modifiedTime);
+
+                    //         res.json({ articles });
+                    //     } catch (error) {
+                    //         console.error('Error al leer artículos:', error);
+                    //         res.status(500).json({ error: 'Error al leer artículos' });
+                    //     }
+                    // });
+
+                    // Regenerar índice de artículos
+                    app.post('/api/rebuild-index', async (req, res) => {
+                        try {
+                            console.log('🔄 Regenerando índice de artículos...');
+
+                            const files = await fs.readdir(BLOG_DIR);
+                            const htmlFiles = files.filter(file =>
+                                file.startsWith('r-') &&
+                                file.endsWith('.html')
+                            );
+
+                            const articles = [];
+
+                            for (const file of htmlFiles) {
+                                try {
+                                    const filePath = path.join(BLOG_DIR, file);
+                                    const content = await fs.readFile(filePath, 'utf-8');
+                                    const $ = cheerio.load(content);
+
+                                    const title = $('title').text() || 'Sin título';
+                                    const id = file.replace('.html', '');
+                                    const stats = await fs.stat(filePath);
+
+                                    // Detectar categoría del título
+                                    const titleLower = title.toLowerCase();
+                                    let category = 'Otras';
+
+                                    if (titleLower.includes('amazon') || titleLower.includes('ppc') ||
+                                        titleLower.includes('ad') || titleLower.includes('market')) {
+                                        category = 'Estrategia';
+                                    } else if (titleLower.includes('simulator') || titleLower.includes('simulador') ||
+                                        titleLower.includes('calculator') || titleLower.includes('kdp') ||
+                                        titleLower.includes('tool') || titleLower.includes('playbook')) {
+                                        category = 'Herramientas';
+                                    }
+
+                                    articles.push({
+                                        id,
+                                        title,
+                                        category,
+                                        modifiedTime: stats.mtimeMs
+                                    });
+                                } catch (err) {
+                                    console.error(`Error procesando ${file}:`, err.message);
+                                }
+                            }
+
+                            // Ordenar por fecha de modificación (más reciente primero)
+                            articles.sort((a, b) => b.modifiedTime - a.modifiedTime);
+
+                            // Guardar el índice
+                            const indexPath = path.join(BLOG_DIR, 'articles.json');
+                            await fs.writeFile(indexPath, JSON.stringify({ articles }, null, 2));
+
+                            console.log(`✅ Índice regenerado: ${articles.length} artículos`);
+
+                            res.json({
+                                success: true,
+                                message: 'Índice regenerado exitosamente',
+                                totalArticles: articles.length,
+                                articles: articles.map(a => ({ id: a.id, title: a.title, category: a.category }))
+                            });
+                        } catch (error) {
+                            console.error('Error regenerando índice:', error);
+                            res.status(500).json({ error: 'Error al regenerar índice' });
+                        }
+                    });
+
+                // ==================== FUNCIÓN COMPARTIDA: REGENERAR ÍNDICE ====================
+
+                async function rebuildArticlesIndex() {
+                    try {
+                        const files = await fs.readdir(BLOG_DIR);
+                        const htmlFiles = files.filter(file =>
+                            file.startsWith('r-') &&
+                            file.endsWith('.html')
+                        );
+
+                        const articles = [];
+
+                        for (const file of htmlFiles) {
+                            try {
+                                const filePath = path.join(BLOG_DIR, file);
+                                const content = await fs.readFile(filePath, 'utf-8');
+                                const $ = cheerio.load(content);
+
+                                const title = $('title').text() || 'Sin título';
+                                const id = file.replace('.html', '');
+                                const stats = await fs.stat(filePath);
+
+                                // Detectar categoría del título
+                                const titleLower = title.toLowerCase();
+                                let category = 'Otras';
+
+                                if (titleLower.includes('amazon') || titleLower.includes('ppc') ||
+                                    titleLower.includes('ad') || titleLower.includes('market')) {
+                                    category = 'Estrategia';
+                                } else if (titleLower.includes('simulator') || titleLower.includes('simulador') ||
+                                    titleLower.includes('calculator') || titleLower.includes('kdp') ||
+                                    titleLower.includes('tool') || titleLower.includes('playbook')) {
+                                    category = 'Herramientas';
+                                }
+
+                                articles.push({
+                                    id,
+                                    title,
+                                    category,
+                                    modifiedTime: stats.mtimeMs
+                                });
+                            } catch (err) {
+                                console.error(`Error procesando ${file}:`, err.message);
+                            }
+                        }
+
+                        // Ordenar por fecha de modificación (más reciente primero)
+                        articles.sort((a, b) => b.modifiedTime - a.modifiedTime);
+
+                        // Guardar el índice
+                        const indexPath = path.join(BLOG_DIR, 'articles.json');
+                        await fs.writeFile(indexPath, JSON.stringify({ articles }, null, 2));
+
+                        console.log(`✅ Índice regenerado automáticamente: ${articles.length} artículos`);
+                        return articles;
+                    } catch (error) {
+                        console.error('Error regenerando índice:', error);
+                        return [];
+                    }
                 }
-                // Capacitación
-                else if (titleLower.includes('guide') || titleLower.includes('guía') ||
-                    titleLower.includes('playbook') || titleLower.includes('mentor') ||
-                    titleLower.includes('principios') || content.includes('adb')) {
-                    category = 'Capacitación';
-                    icon = '🎓';
-                }
-                // Análisis
-                else if (content.includes('CPC') || content.includes('Amazon Ads') ||
-                    titleLower.includes('analysis') || titleLower.includes('análisis') ||
-                    titleLower.includes('metrics') || titleLower.includes('opportunity')) {
-                    category = 'Análisis';
-                    icon = '📊';
-                }
-                // Informe Mensual
-                else if (content.includes('Informe') || content.includes('Gestión') ||
-                    titleLower.includes('report') || titleLower.includes('cristal') ||
-                    titleLower.includes('summary')) {
-                    category = 'Informe Mensual';
-                    icon = '💎';
-                }
-                // Estrategia
-                else if (content.includes('Estrategia') || content.includes('Higiene') ||
-                    titleLower.includes('strategy') || titleLower.includes('market') ||
-                    titleLower.includes('vajillas')) {
-                    category = 'Estrategia';
-                    icon = '🍽️';
-                }
-                // Otras (fallback)
-                else {
-                    category = 'Otras';
-                    icon = '📁';
-                }
-            }
 
-            // Extraer excerpt del primer párrafo si no hay meta
-            if (!excerpt) {
-                const firstP = $('p').first().text();
-                excerpt = firstP.substring(0, 200) + (firstP.length > 200 ? '...' : '');
-            }
+                // Obtener un artículo específico
+                app.get('/api/articles/:slug', async (req, res) => {
+                    try {
+                        const { slug } = req.params;
+                        const filePath = path.join(BLOG_DIR, `${slug}.html`);
 
-            articles.push({
-                id: slug,
-                slug,
-                title,
-                date,
-                category,
-                icon,
-                excerpt,
-                tags,
-                filename: file,
-                content: content,
-                modifiedTime // Para ordenar
-            });
-        }
+                        if (!await fs.pathExists(filePath)) {
+                            return res.status(404).json({ error: 'Artículo no encontrado' });
+                        }
 
-        // Ordenar artículos: más reciente primero
-        articles.sort((a, b) => b.modifiedTime - a.modifiedTime);
+                        const content = await fs.readFile(filePath, 'utf-8');
+                        const $ = cheerio.load(content);
 
-        res.json({ articles });
-    } catch (error) {
-        console.error('Error al leer artículos:', error);
-        res.status(500).json({ error: 'Error al leer artículos' });
-    }
-});
+                        const title = $('title').text().split('|')[0].trim();
 
-// Regenerar índice de artículos
-app.post('/api/rebuild-index', async (req, res) => {
-    try {
-        console.log('🔄 Regenerando índice de artículos...');
-
-        const files = await fs.readdir(BLOG_DIR);
-        const htmlFiles = files.filter(file =>
-            file.startsWith('r-') &&
-            file.endsWith('.html')
-        );
-
-        const articles = [];
-
-        for (const file of htmlFiles) {
-            try {
-                const filePath = path.join(BLOG_DIR, file);
-                const content = await fs.readFile(filePath, 'utf-8');
-                const $ = cheerio.load(content);
-
-                const title = $('title').text() || 'Sin título';
-                const id = file.replace('.html', '');
-                const stats = await fs.stat(filePath);
-
-                // Detectar categoría del título
-                const titleLower = title.toLowerCase();
-                let category = 'Otras';
-
-                if (titleLower.includes('amazon') || titleLower.includes('ppc') ||
-                    titleLower.includes('ad') || titleLower.includes('market')) {
-                    category = 'Estrategia';
-                } else if (titleLower.includes('simulator') || titleLower.includes('simulador') ||
-                    titleLower.includes('calculator') || titleLower.includes('kdp') ||
-                    titleLower.includes('tool') || titleLower.includes('playbook')) {
-                    category = 'Herramientas';
-                }
-
-                articles.push({
-                    id,
-                    title,
-                    category,
-                    modifiedTime: stats.mtimeMs
+                        res.json({
+                            slug,
+                            title,
+                            content,
+                            filename: `${slug}.html`
+                        });
+                    } catch (error) {
+                        console.error('Error al leer artículo:', error);
+                        res.status(500).json({ error: 'Error al leer artículo' });
+                    }
                 });
-            } catch (err) {
-                console.error(`Error procesando ${file}:`, err.message);
-            }
-        }
 
-        // Ordenar por fecha de modificación (más reciente primero)
-        articles.sort((a, b) => b.modifiedTime - a.modifiedTime);
-
-        // Guardar el índice
-        const indexPath = path.join(BLOG_DIR, 'articles.json');
-        await fs.writeFile(indexPath, JSON.stringify({ articles }, null, 2));
-
-        console.log(`✅ Índice regenerado: ${articles.length} artículos`);
-
-        res.json({
-            success: true,
-            message: 'Índice regenerado exitosamente',
-            totalArticles: articles.length,
-            articles: articles.map(a => ({ id: a.id, title: a.title, category: a.category }))
-        });
-    } catch (error) {
-        console.error('Error regenerando índice:', error);
-        res.status(500).json({ error: 'Error al regenerar índice' });
-    }
-});
-
-// ==================== FUNCIÓN COMPARTIDA: REGENERAR ÍNDICE ====================
-
-async function rebuildArticlesIndex() {
-    try {
-        const files = await fs.readdir(BLOG_DIR);
-        const htmlFiles = files.filter(file =>
-            file.startsWith('r-') &&
-            file.endsWith('.html')
-        );
-
-        const articles = [];
-
-        for (const file of htmlFiles) {
-            try {
-                const filePath = path.join(BLOG_DIR, file);
-                const content = await fs.readFile(filePath, 'utf-8');
-                const $ = cheerio.load(content);
-
-                const title = $('title').text() || 'Sin título';
-                const id = file.replace('.html', '');
-                const stats = await fs.stat(filePath);
-
-                // Detectar categoría del título
-                const titleLower = title.toLowerCase();
-                let category = 'Otras';
-
-                if (titleLower.includes('amazon') || titleLower.includes('ppc') ||
-                    titleLower.includes('ad') || titleLower.includes('market')) {
-                    category = 'Estrategia';
-                } else if (titleLower.includes('simulator') || titleLower.includes('simulador') ||
-                    titleLower.includes('calculator') || titleLower.includes('kdp') ||
-                    titleLower.includes('tool') || titleLower.includes('playbook')) {
-                    category = 'Herramientas';
+                // Función para generar ID aleatorio
+                function generateObfuscatedId() {
+                    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+                    let id = 'r-';
+                    for (let i = 0; i < 8; i++) {
+                        id += chars.charAt(Math.floor(Math.random() * chars.length));
+                    }
+                    return id;
                 }
 
-                articles.push({
-                    id,
-                    title,
-                    category,
-                    modifiedTime: stats.mtimeMs
+                // Función para cargar/guardar mapeo de URLs
+                async function loadUrlMapping() {
+                    const mappingPath = path.join(BLOG_DIR, 'url-mapping.json');
+                    try {
+                        if (await fs.pathExists(mappingPath)) {
+                            const content = await fs.readFile(mappingPath, 'utf-8');
+                            return JSON.parse(content);
+                        }
+                    } catch (error) {
+                        console.error('Error loading URL mapping:', error);
+                    }
+                    return {};
+                }
+
+                async function saveUrlMapping(mapping) {
+                    const mappingPath = path.join(BLOG_DIR, 'url-mapping.json');
+                    try {
+                        await fs.writeFile(mappingPath, JSON.stringify(mapping, null, 2), 'utf-8');
+                    } catch (error) {
+                        console.error('Error saving URL mapping:', error);
+                    }
+                }
+
+                // Crear nuevo artículo
+                app.post('/api/articles', async (req, res) => {
+                    try {
+                        const { title, content, date, category, icon, excerpt, tags } = req.body;
+
+                        if (!title || !content) {
+                            return res.status(400).json({ error: 'Título y contenido son requeridos' });
+                        }
+
+                        // Generar ID ofuscado
+                        const obfuscatedId = generateObfuscatedId();
+                        const filename = `${obfuscatedId}.html`;
+                        const filePath = path.join(BLOG_DIR, filename);
+
+                        // Verificar que el ID no exista (muy improbable, pero por seguridad)
+                        if (await fs.pathExists(filePath)) {
+                            // Generar otro ID
+                            return res.status(500).json({ error: 'Error generando ID único, intenta de nuevo' });
+                        }
+
+                        // Aplicar template OBS360 (header, footer, meta noindex)
+                        const wrappedContent = wrapWithOBS360Template(content);
+
+                        // Guardar archivo con template aplicado
+                        await fs.writeFile(filePath, wrappedContent, 'utf-8');
+
+                        // Actualizar mapeo de URLs
+                        const mapping = await loadUrlMapping();
+                        const originalSlug = title.toLowerCase()
+                            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                            .replace(/[^a-z0-9]+/g, '-')
+                            .replace(/^-+|-+$/g, '');
+
+                        mapping[`${originalSlug}.html`] = filename;
+                        await saveUrlMapping(mapping);
+
+                        // Guardar metadatos del artículo (incluyendo tags)
+                        const articlesMetaPath = path.join(BLOG_DIR, 'articles-meta.json');
+                        let articlesMeta = {};
+                        try {
+                            if (await fs.pathExists(articlesMetaPath)) {
+                                articlesMeta = JSON.parse(await fs.readFile(articlesMetaPath, 'utf-8'));
+                            }
+                        } catch (e) { }
+
+                        articlesMeta[obfuscatedId] = {
+                            title,
+                            date,
+                            category,
+                            excerpt,
+                            tags: tags || [],
+                            createdAt: new Date().toISOString()
+                        };
+
+                        await fs.writeFile(articlesMetaPath, JSON.stringify(articlesMeta, null, 2), 'utf-8');
+
+                        // Actualizar índice del blog
+                        await updateBlogIndex();
+                        // Regenerar índice de artículos
+                        await rebuildArticlesIndex();
+
+                        res.json({
+                            success: true,
+                            message: 'Artículo creado exitosamente',
+                            slug: obfuscatedId,
+                            filename,
+                            obfuscatedUrl: filename
+                        });
+                    } catch (error) {
+                        console.error('Error al crear artículo:', error);
+                        res.status(500).json({ error: 'Error al crear artículo' });
+                    }
                 });
-            } catch (err) {
-                console.error(`Error procesando ${file}:`, err.message);
-            }
-        }
 
-        // Ordenar por fecha de modificación (más reciente primero)
-        articles.sort((a, b) => b.modifiedTime - a.modifiedTime);
+                // Actualizar artículo existente
+                app.put('/api/articles/:slug', async (req, res) => {
+                    try {
+                        const { slug } = req.params;
+                        const { content, title } = req.body;
 
-        // Guardar el índice
-        const indexPath = path.join(BLOG_DIR, 'articles.json');
-        await fs.writeFile(indexPath, JSON.stringify({ articles }, null, 2));
+                        const filePath = path.join(BLOG_DIR, `${slug}.html`);
 
-        console.log(`✅ Índice regenerado automáticamente: ${articles.length} artículos`);
-        return articles;
-    } catch (error) {
-        console.error('Error regenerando índice:', error);
-        return [];
-    }
-}
+                        if (!await fs.pathExists(filePath)) {
+                            return res.status(404).json({ error: 'Artículo no encontrado' });
+                        }
 
-// Obtener un artículo específico
-app.get('/api/articles/:slug', async (req, res) => {
-    try {
-        const { slug } = req.params;
-        const filePath = path.join(BLOG_DIR, `${slug}.html`);
+                        // Guardar cambios
+                        await fs.writeFile(filePath, content, 'utf-8');
 
-        if (!await fs.pathExists(filePath)) {
-            return res.status(404).json({ error: 'Artículo no encontrado' });
-        }
+                        // Actualizar índice
+                        await updateBlogIndex();
+                        // Regenerar índice de artículos
+                        await rebuildArticlesIndex();
 
-        const content = await fs.readFile(filePath, 'utf-8');
-        const $ = cheerio.load(content);
+                        res.json({
+                            success: true,
+                            message: 'Artículo actualizado exitosamente',
+                            slug
+                        });
+                    } catch (error) {
+                        console.error('Error al actualizar artículo:', error);
+                        res.status(500).json({ error: 'Error al actualizar artículo' });
+                    }
+                });
 
-        const title = $('title').text().split('|')[0].trim();
+                // Eliminar artículo
+                app.delete('/api/articles/:slug', async (req, res) => {
+                    try {
+                        const { slug } = req.params;
+                        const filePath = path.join(BLOG_DIR, `${slug}.html`);
 
-        res.json({
-            slug,
-            title,
-            content,
-            filename: `${slug}.html`
-        });
-    } catch (error) {
-        console.error('Error al leer artículo:', error);
-        res.status(500).json({ error: 'Error al leer artículo' });
-    }
-});
+                        if (!await fs.pathExists(filePath)) {
+                            return res.status(404).json({ error: 'Artículo no encontrado' });
+                        }
 
-// Función para generar ID aleatorio
-function generateObfuscatedId() {
-    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-    let id = 'r-';
-    for (let i = 0; i < 8; i++) {
-        id += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return id;
-}
+                        // Eliminar archivo
+                        await fs.remove(filePath);
 
-// Función para cargar/guardar mapeo de URLs
-async function loadUrlMapping() {
-    const mappingPath = path.join(BLOG_DIR, 'url-mapping.json');
-    try {
-        if (await fs.pathExists(mappingPath)) {
-            const content = await fs.readFile(mappingPath, 'utf-8');
-            return JSON.parse(content);
-        }
-    } catch (error) {
-        console.error('Error loading URL mapping:', error);
-    }
-    return {};
-}
+                        // Actualizar índice
+                        await updateBlogIndex();
+                        // Regenerar índice de artículos
+                        await rebuildArticlesIndex();
 
-async function saveUrlMapping(mapping) {
-    const mappingPath = path.join(BLOG_DIR, 'url-mapping.json');
-    try {
-        await fs.writeFile(mappingPath, JSON.stringify(mapping, null, 2), 'utf-8');
-    } catch (error) {
-        console.error('Error saving URL mapping:', error);
-    }
-}
+                        res.json({
+                            success: true,
+                            message: 'Artículo eliminado exitosamente'
+                        });
+                    } catch (error) {
+                        console.error('Error al eliminar artículo:', error);
+                        res.status(500).json({ error: 'Error al eliminar artículo' });
+                    }
+                });
 
-// Crear nuevo artículo
-app.post('/api/articles', async (req, res) => {
-    try {
-        const { title, content, date, category, icon, excerpt, tags } = req.body;
+                // ==================== ESTANDARIZACIÓN DE ARTÍCULOS ====================
 
-        if (!title || !content) {
-            return res.status(400).json({ error: 'Título y contenido son requeridos' });
-        }
+                // Endpoint para re-estandarizar TODOS los artículos con el template OBS360
+                app.post('/api/standardize-all', async (req, res) => {
+                    try {
+                        console.log('🔄 Iniciando estandarización de todos los artículos...');
 
-        // Generar ID ofuscado
-        const obfuscatedId = generateObfuscatedId();
-        const filename = `${obfuscatedId}.html`;
-        const filePath = path.join(BLOG_DIR, filename);
+                        const files = await fs.readdir(BLOG_DIR);
+                        const htmlFiles = files.filter(file =>
+                            file.endsWith('.html') &&
+                            file !== 'index.html' &&
+                            !file.includes('v1')
+                        );
 
-        // Verificar que el ID no exista (muy improbable, pero por seguridad)
-        if (await fs.pathExists(filePath)) {
-            // Generar otro ID
-            return res.status(500).json({ error: 'Error generando ID único, intenta de nuevo' });
-        }
+                        let updatedCount = 0;
+                        let errors = [];
 
-        // Aplicar template OBS360 (header, footer, meta noindex)
-        const wrappedContent = wrapWithOBS360Template(content);
+                        for (const file of htmlFiles) {
+                            try {
+                                const filePath = path.join(BLOG_DIR, file);
+                                const content = await fs.readFile(filePath, 'utf-8');
 
-        // Guardar archivo con template aplicado
-        await fs.writeFile(filePath, wrappedContent, 'utf-8');
+                                // Aplicar template forzadamente
+                                const standardizedContent = forceOBS360Template(content);
 
-        // Actualizar mapeo de URLs
-        const mapping = await loadUrlMapping();
-        const originalSlug = title.toLowerCase()
-            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/^-+|-+$/g, '');
+                                // Guardar archivo actualizado
+                                await fs.writeFile(filePath, standardizedContent, 'utf-8');
+                                updatedCount++;
+                                console.log(`✅ Estandarizado: ${file}`);
+                            } catch (fileError) {
+                                console.error(`❌ Error en ${file}:`, fileError.message);
+                                errors.push({ file, error: fileError.message });
+                            }
+                        }
 
-        mapping[`${originalSlug}.html`] = filename;
-        await saveUrlMapping(mapping);
+                        console.log(`🎉 Estandarización completada: ${updatedCount}/${htmlFiles.length} artículos`);
 
-        // Guardar metadatos del artículo (incluyendo tags)
-        const articlesMetaPath = path.join(BLOG_DIR, 'articles-meta.json');
-        let articlesMeta = {};
-        try {
-            if (await fs.pathExists(articlesMetaPath)) {
-                articlesMeta = JSON.parse(await fs.readFile(articlesMetaPath, 'utf-8'));
-            }
-        } catch (e) { }
+                        res.json({
+                            success: true,
+                            message: `Estandarización completada`,
+                            totalFiles: htmlFiles.length,
+                            updatedCount,
+                            errors: errors.length > 0 ? errors : undefined
+                        });
+                    } catch (error) {
+                        console.error('Error en estandarización:', error);
+                        res.status(500).json({ error: 'Error al estandarizar artículos' });
+                    }
+                });
 
-        articlesMeta[obfuscatedId] = {
-            title,
-            date,
-            category,
-            excerpt,
-            tags: tags || [],
-            createdAt: new Date().toISOString()
-        };
+                // Endpoint para re-estandarizar UN artículo específico
+                app.post('/api/standardize/:slug', async (req, res) => {
+                    try {
+                        const { slug } = req.params;
+                        const filePath = path.join(BLOG_DIR, `${slug}.html`);
 
-        await fs.writeFile(articlesMetaPath, JSON.stringify(articlesMeta, null, 2), 'utf-8');
+                        if (!await fs.pathExists(filePath)) {
+                            return res.status(404).json({ error: 'Artículo no encontrado' });
+                        }
 
-        // Actualizar índice del blog
-        await updateBlogIndex();
-        // Regenerar índice de artículos
-        await rebuildArticlesIndex();
+                        const content = await fs.readFile(filePath, 'utf-8');
+                        const standardizedContent = forceOBS360Template(content);
+                        await fs.writeFile(filePath, standardizedContent, 'utf-8');
 
-        res.json({
-            success: true,
-            message: 'Artículo creado exitosamente',
-            slug: obfuscatedId,
-            filename,
-            obfuscatedUrl: filename
-        });
-    } catch (error) {
-        console.error('Error al crear artículo:', error);
-        res.status(500).json({ error: 'Error al crear artículo' });
-    }
-});
+                        console.log(`✅ Artículo estandarizado: ${slug}`);
 
-// Actualizar artículo existente
-app.put('/api/articles/:slug', async (req, res) => {
-    try {
-        const { slug } = req.params;
-        const { content, title } = req.body;
+                        res.json({
+                            success: true,
+                            message: `Artículo ${slug} estandarizado exitosamente`,
+                            slug
+                        });
+                    } catch (error) {
+                        console.error('Error al estandarizar artículo:', error);
+                        res.status(500).json({ error: 'Error al estandarizar artículo' });
+                    }
+                });
 
-        const filePath = path.join(BLOG_DIR, `${slug}.html`);
+                // ==================== FUNCIONES AUXILIARES ====================
 
-        if (!await fs.pathExists(filePath)) {
-            return res.status(404).json({ error: 'Artículo no encontrado' });
-        }
+                async function updateBlogIndex() {
+                    try {
+                        const indexPath = path.join(BLOG_DIR, 'index.html');
 
-        // Guardar cambios
-        await fs.writeFile(filePath, content, 'utf-8');
+                        // Leer el index actual
+                        let indexContent = await fs.readFile(indexPath, 'utf-8');
+                        const $ = cheerio.load(indexContent);
 
-        // Actualizar índice
-        await updateBlogIndex();
-        // Regenerar índice de artículos
-        await rebuildArticlesIndex();
+                        // Obtener todos los artículos
+                        const files = await fs.readdir(BLOG_DIR);
+                        const htmlFiles = files.filter(file =>
+                            file.endsWith('.html') &&
+                            file !== 'index.html' &&
+                            !file.includes('v1')
+                        );
 
-        res.json({
-            success: true,
-            message: 'Artículo actualizado exitosamente',
-            slug
-        });
-    } catch (error) {
-        console.error('Error al actualizar artículo:', error);
-        res.status(500).json({ error: 'Error al actualizar artículo' });
-    }
-});
+                        // Limpiar grid de artículos
+                        $('.articles-grid').empty();
 
-// Eliminar artículo
-app.delete('/api/articles/:slug', async (req, res) => {
-    try {
-        const { slug } = req.params;
-        const filePath = path.join(BLOG_DIR, `${slug}.html`);
+                        // Agregar cada artículo
+                        for (const file of htmlFiles) {
+                            const filePath = path.join(BLOG_DIR, file);
+                            const content = await fs.readFile(filePath, 'utf-8');
+                            const article$ = cheerio.load(content);
 
-        if (!await fs.pathExists(filePath)) {
-            return res.status(404).json({ error: 'Artículo no encontrado' });
-        }
+                            const title = article$('title').text().split('|')[0].trim();
+                            const slug = file.replace('.html', '');
 
-        // Eliminar archivo
-        await fs.remove(filePath);
+                            // Detectar categoría y color
+                            let category = 'Análisis';
+                            let categoryClass = 'cpc';
+                            let icon = '📊';
+                            let excerpt = article$('p').first().text().substring(0, 200) + '...';
 
-        // Actualizar índice
-        await updateBlogIndex();
-        // Regenerar índice de artículos
-        await rebuildArticlesIndex();
+                            if (content.includes('Informe') || content.includes('Cristal')) {
+                                category = 'Informe Mensual';
+                                categoryClass = 'cristal';
+                                icon = '💎';
+                            } else if (content.includes('Higiene') || content.includes('Vajillas')) {
+                                category = 'Estrategia';
+                                categoryClass = 'porcelana';
+                                icon = '🍽️';
+                            }
 
-        res.json({
-            success: true,
-            message: 'Artículo eliminado exitosamente'
-        });
-    } catch (error) {
-        console.error('Error al eliminar artículo:', error);
-        res.status(500).json({ error: 'Error al eliminar artículo' });
-    }
-});
-
-// ==================== ESTANDARIZACIÓN DE ARTÍCULOS ====================
-
-// Endpoint para re-estandarizar TODOS los artículos con el template OBS360
-app.post('/api/standardize-all', async (req, res) => {
-    try {
-        console.log('🔄 Iniciando estandarización de todos los artículos...');
-
-        const files = await fs.readdir(BLOG_DIR);
-        const htmlFiles = files.filter(file =>
-            file.endsWith('.html') &&
-            file !== 'index.html' &&
-            !file.includes('v1')
-        );
-
-        let updatedCount = 0;
-        let errors = [];
-
-        for (const file of htmlFiles) {
-            try {
-                const filePath = path.join(BLOG_DIR, file);
-                const content = await fs.readFile(filePath, 'utf-8');
-
-                // Aplicar template forzadamente
-                const standardizedContent = forceOBS360Template(content);
-
-                // Guardar archivo actualizado
-                await fs.writeFile(filePath, standardizedContent, 'utf-8');
-                updatedCount++;
-                console.log(`✅ Estandarizado: ${file}`);
-            } catch (fileError) {
-                console.error(`❌ Error en ${file}:`, fileError.message);
-                errors.push({ file, error: fileError.message });
-            }
-        }
-
-        console.log(`🎉 Estandarización completada: ${updatedCount}/${htmlFiles.length} artículos`);
-
-        res.json({
-            success: true,
-            message: `Estandarización completada`,
-            totalFiles: htmlFiles.length,
-            updatedCount,
-            errors: errors.length > 0 ? errors : undefined
-        });
-    } catch (error) {
-        console.error('Error en estandarización:', error);
-        res.status(500).json({ error: 'Error al estandarizar artículos' });
-    }
-});
-
-// Endpoint para re-estandarizar UN artículo específico
-app.post('/api/standardize/:slug', async (req, res) => {
-    try {
-        const { slug } = req.params;
-        const filePath = path.join(BLOG_DIR, `${slug}.html`);
-
-        if (!await fs.pathExists(filePath)) {
-            return res.status(404).json({ error: 'Artículo no encontrado' });
-        }
-
-        const content = await fs.readFile(filePath, 'utf-8');
-        const standardizedContent = forceOBS360Template(content);
-        await fs.writeFile(filePath, standardizedContent, 'utf-8');
-
-        console.log(`✅ Artículo estandarizado: ${slug}`);
-
-        res.json({
-            success: true,
-            message: `Artículo ${slug} estandarizado exitosamente`,
-            slug
-        });
-    } catch (error) {
-        console.error('Error al estandarizar artículo:', error);
-        res.status(500).json({ error: 'Error al estandarizar artículo' });
-    }
-});
-
-// ==================== FUNCIONES AUXILIARES ====================
-
-async function updateBlogIndex() {
-    try {
-        const indexPath = path.join(BLOG_DIR, 'index.html');
-
-        // Leer el index actual
-        let indexContent = await fs.readFile(indexPath, 'utf-8');
-        const $ = cheerio.load(indexContent);
-
-        // Obtener todos los artículos
-        const files = await fs.readdir(BLOG_DIR);
-        const htmlFiles = files.filter(file =>
-            file.endsWith('.html') &&
-            file !== 'index.html' &&
-            !file.includes('v1')
-        );
-
-        // Limpiar grid de artículos
-        $('.articles-grid').empty();
-
-        // Agregar cada artículo
-        for (const file of htmlFiles) {
-            const filePath = path.join(BLOG_DIR, file);
-            const content = await fs.readFile(filePath, 'utf-8');
-            const article$ = cheerio.load(content);
-
-            const title = article$('title').text().split('|')[0].trim();
-            const slug = file.replace('.html', '');
-
-            // Detectar categoría y color
-            let category = 'Análisis';
-            let categoryClass = 'cpc';
-            let icon = '📊';
-            let excerpt = article$('p').first().text().substring(0, 200) + '...';
-
-            if (content.includes('Informe') || content.includes('Cristal')) {
-                category = 'Informe Mensual';
-                categoryClass = 'cristal';
-                icon = '💎';
-            } else if (content.includes('Higiene') || content.includes('Vajillas')) {
-                category = 'Estrategia';
-                categoryClass = 'porcelana';
-                icon = '🍽️';
-            }
-
-            // Crear tarjeta de artículo
-            const articleCard = `
+                            // Crear tarjeta de artículo
+                            const articleCard = `
                 <a href="${slug}.html" class="article-card">
                     <div class="article-thumbnail ${categoryClass}">
                         <span class="article-category">${category}</span>
@@ -1123,24 +1177,24 @@ async function updateBlogIndex() {
                 </a>
             `;
 
-            $('.articles-grid').append(articleCard);
-        }
+                            $('.articles-grid').append(articleCard);
+                        }
 
-        // Guardar index actualizado
-        await fs.writeFile(indexPath, $.html(), 'utf-8');
+                        // Guardar index actualizado
+                        await fs.writeFile(indexPath, $.html(), 'utf-8');
 
-        console.log('✅ Índice del blog actualizado');
-    } catch (error) {
-        console.error('Error al actualizar índice:', error);
-    }
-}
+                        console.log('✅ Índice del blog actualizado');
+                    } catch (error) {
+                        console.error('Error al actualizar índice:', error);
+                    }
+                }
 
-// ==================== SERVIDOR ====================
+                // ==================== SERVIDOR ====================
 
-app.listen(PORT, () => {
-    console.log(`🚀 Servidor CMS corriendo en http://localhost:${PORT}`);
-    console.log(`📁 Directorio del blog: ${BLOG_DIR}`);
-    console.log(`👤 Usuario admin: ${process.env.ADMIN_USERNAME}`);
-});
+                app.listen(PORT, () => {
+                    console.log(`🚀 Servidor CMS corriendo en http://localhost:${PORT}`);
+                    console.log(`📁 Directorio del blog: ${BLOG_DIR}`);
+                    console.log(`👤 Usuario admin: ${process.env.ADMIN_USERNAME}`);
+                });
 
-module.exports = app;
+                module.exports = app;
