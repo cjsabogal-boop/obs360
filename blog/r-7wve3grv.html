@@ -138,8 +138,118 @@
     transform: translateY(-2px); 
 }
 /* ========== Fin OBS360 Branding ========== */
+
+    /* Reset body para centrado */
+    body {
+        margin: 0;
+        padding: 0;
+        background: #f9fafb;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    
+    /* OBS360 Header - Estándar */
+    .obs-header {
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 15px 0;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+    .obs-header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .obs-logo img {
+        height: 45px;
+        width: auto;
+    }
+    .obs-header-badge {
+        background: linear-gradient(135deg, #28529a, #84cc16);
+        color: white;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+    
+    /* Contenedor de contenido centrado */
+    .obs-article-content {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 40px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .obs-article-content * {
+        max-width: 100%;
+    }
+    
+    .obs-article-content img {
+        display: block;
+        margin: 20px auto;
+        border-radius: 8px;
+    }
+    
+    .obs-article-content h1,
+    .obs-article-content h2,
+    .obs-article-content h3,
+    .obs-article-content h4,
+    .obs-article-content h5,
+    .obs-article-content h6 {
+        color: #1f2937;
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        line-height: 1.3;
+    }
+    
+    .obs-article-content p {
+        line-height: 1.8;
+        color: #374151;
+        margin-bottom: 1.2em;
+    }
+    
+    .obs-article-content ul,
+    .obs-article-content ol {
+        padding-left: 2em;
+        margin-bottom: 1.2em;
+    }
+    
+    .obs-article-content li {
+        margin-bottom: 0.5em;
+        line-height: 1.6;
+    }
+    
+    /* OBS360 Footer - Estándar */
+    .obs-footer {
+        background: linear-gradient(135deg, #1f2937 0%, #28529a 100%);
+        padding: 40px 0;
+        text-align: center;
+        margin-top: 60px;
+    }
+    .obs-footer img { height: 50px; margin-bottom: 15px; filter: brightness(0) invert(1); }
+    .obs-footer p { color: rgba(255, 255, 255, 0.7); font-size: 14px; margin-bottom: 10px; }
+    .obs-footer-btn {
+        display: inline-block;
+        background: #84cc16;
+        color: white;
+        padding: 12px 30px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        margin-top: 15px;
+        transition: all 0.3s ease;
+    }
+    .obs-footer-btn:hover { background: #65a30d; transform: translateY(-2px); }
 </style>
-<meta name="robots" content="noindex, nofollow"><link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp">
+
     <style>
     body {
         display: block !important;
@@ -149,19 +259,20 @@
         height: auto !important;
     }
     </style>
-    </head>
+    <meta name="robots" content="noindex, nofollow"><link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp"></head>
 <body class="antialiased">
-<!-- OBS360 Header Estándar -->
-<header class="obs-header">
-    <div class="obs-header-content">
-        <div class="obs-logo">
-            <a href="../index.html">
+    <!-- OBS360 Header -->
+    <header class="obs-header">
+        <div class="obs-header-content">
+            <div class="obs-logo">
                 <img src="../Logo-Obs360.co_.webp" alt="OBS360">
-            </a>
+            </div>
+            <span class="obs-header-badge">RECURSO PRIVADO</span>
         </div>
-        <span class="obs-header-badge">RECURSO PRIVADO</span>
-    </div>
-</header>
+    </header>
+<div class="obs-article-content">
+<!-- OBS360 Header Estándar -->
+
 
 
 
@@ -687,12 +798,15 @@
 
 
 <!-- OBS360 Footer Estándar -->
-<footer class="obs-footer">
-    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
-        <img src="../Logo-Obs360.co_.webp" alt="OBS360">
-        <p>Recurso exclusivo para clientes de OBS360</p>
-        <p style="font-size: 12px; opacity: 0.6;">© 2025 OBS360 - Todos los derechos reservados</p>
-        <a href="https://wa.me/19803370518" target="_blank" class="obs-footer-btn">Contactar a OBS360</a>
-    </div>
-</footer>
+
+</div>
+    <!-- OBS360 Footer -->
+    <footer class="obs-footer">
+        <div class="max-w-7xl mx-auto px-4">
+            <img src="../Logo-Obs360.co_.webp" alt="OBS360">
+            <p>Recurso exclusivo para clientes de OBS360</p>
+            <p style="font-size: 12px; opacity: 0.6;">© 2025 OBS360 - Todos los derechos reservados</p>
+            <a href="https://wa.me/19803370518" target="_blank" class="obs-footer-btn">Contactar a OBS360</a>
+        </div>
+    </footer>
 </body></html>

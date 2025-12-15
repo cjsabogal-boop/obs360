@@ -9,8 +9,16 @@ const cheerio = require('cheerio');
 
 const BLOG_DIR = path.join(__dirname, '../blog');
 
-// CSS para header y footer - MEJORADO
+// CSS para header, footer y CONTENIDO CENTRADO - MEJORADO
 const OBS360_CSS = `
+    /* Reset body para centrado */
+    body {
+        margin: 0;
+        padding: 0;
+        background: #f9fafb;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    
     /* OBS360 Header - Estándar */
     .obs-header {
         background: white;
@@ -41,6 +49,56 @@ const OBS360_CSS = `
         font-weight: 600;
         letter-spacing: 0.5px;
     }
+    
+    /* Contenedor de contenido centrado */
+    .obs-article-content {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 40px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .obs-article-content * {
+        max-width: 100%;
+    }
+    
+    .obs-article-content img {
+        display: block;
+        margin: 20px auto;
+        border-radius: 8px;
+    }
+    
+    .obs-article-content h1,
+    .obs-article-content h2,
+    .obs-article-content h3,
+    .obs-article-content h4,
+    .obs-article-content h5,
+    .obs-article-content h6 {
+        color: #1f2937;
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        line-height: 1.3;
+    }
+    
+    .obs-article-content p {
+        line-height: 1.8;
+        color: #374151;
+        margin-bottom: 1.2em;
+    }
+    
+    .obs-article-content ul,
+    .obs-article-content ol {
+        padding-left: 2em;
+        margin-bottom: 1.2em;
+    }
+    
+    .obs-article-content li {
+        margin-bottom: 0.5em;
+        line-height: 1.6;
+    }
+    
     /* OBS360 Footer - Estándar */
     .obs-footer {
         background: linear-gradient(135deg, #1f2937 0%, #28529a 100%);
@@ -108,7 +166,7 @@ function forceOBS360Template(htmlContent) {
 
     // 4. Agregar CSS
     const existingStyles = $('style').text();
-    if (!existingStyles.includes('.obs-header-badge')) {
+    if (!existingStyles.includes('.obs-article-content')) {
         if ($('style').length) {
             let styleContent = $('style').first().html() || '';
             // Remover CSS OBS360 antiguo
@@ -119,10 +177,29 @@ function forceOBS360Template(htmlContent) {
         }
     }
 
-    // 5. SIEMPRE agregar header al inicio del body
-    $('body').prepend(OBS360_HEADER);
+    // 5. OBTENER TODO EL CONTENIDO ORIGINAL (sin header/footer)
+    let originalContent = $('body').html() || '';
 
-    // 6. SIEMPRE agregar footer al final del body
+    // Limpiar cualquier elemento de header/footer que pueda quedar
+    const tempDiv = cheerio.load('<div>' + originalContent + '</div>');
+    tempDiv('.obs-header').remove();
+    tempDiv('.obs-footer').remove();
+    tempDiv('.obs-article-content').remove(); // Por si ya existe
+    originalContent = tempDiv('div').html() || '';
+
+    // Limpiar estilos inline que puedan afectar el centrado
+    originalContent = originalContent.replace(/style\s*=\s*["'][^"']*text-align\s*:\s*left[^"']*["']/gi, '');
+
+    // 6. RECONSTRUIR BODY con estructura correcta
+    $('body').empty();
+
+    // Agregar header
+    $('body').append(OBS360_HEADER);
+
+    // Envolver contenido original en contenedor centrado
+    $('body').append(`<div class="obs-article-content">${originalContent}</div>`);
+
+    // Agregar footer
     $('body').append(OBS360_FOOTER);
 
     return $.html();
