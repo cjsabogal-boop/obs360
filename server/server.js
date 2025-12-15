@@ -8,8 +8,38 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-// Forzar ruta relativa al directorio padre (donde están los .html)
-const BLOG_DIR = path.join(__dirname, '../');
+// Función para encontrar automáticamente el directorio del blog
+const findBlogRoot = () => {
+    // Lista de posibles rutas candidatas
+    const candidates = [
+        process.env.BLOG_DIR, // Variable de entorno (si existe)
+        path.join(__dirname, '../'), // Un nivel arriba (estructura standard)
+        path.join(__dirname, '../../blog'), // Dos niveles arriba
+        '/home/vukcpszx/public_html/blog', // Ruta absoluta confirmada por PHP
+        '/home/vukcpszx/public_html/blog/blog', // Ruta antigua por si acaso
+        process.cwd() // Directorio actual de ejecución
+    ];
+
+    for (const dir of candidates) {
+        if (!dir) continue;
+        try {
+            // Buscamos un archivo clave que sabemos que existe en el blog
+            if (fs.existsSync(path.join(dir, 'index.html')) ||
+                fs.existsSync(path.join(dir, 'categories.json'))) {
+                console.log(`✅ [AUTO-DISCOVERY] Directorio del blog encontrado en: ${dir}`);
+                return dir;
+            }
+        } catch (e) {
+            // Ignorar errores de acceso en rutas inválidas
+        }
+    }
+
+    // Fallback: Retornar el padre relativo aunque no hayamos confirmado
+    console.warn('⚠️ [AUTO-DISCOVERY] No se pudo confirmar ruta, usando fallback relativo.');
+    return path.join(__dirname, '../');
+};
+
+const BLOG_DIR = findBlogRoot();
 
 // Middleware
 app.use(cors());
