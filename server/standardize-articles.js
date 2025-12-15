@@ -160,9 +160,26 @@ function forceOBS360Template(htmlContent) {
     $('link[rel="icon"]').remove();
     $('head').append('<link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp" />');
 
-    // 3. Remover header/footer existentes para evitar duplicados
-    $('.obs-header').remove();
-    $('.obs-footer').remove();
+    // 3. EXTRAER CONTENIDO ORIGINAL ANTES de remover nada
+    let originalContent = '';
+
+    // Si ya existe .obs-article-content, usar su contenido
+    if ($('.obs-article-content').length > 0) {
+        originalContent = $('.obs-article-content').html() || '';
+    } else {
+        // Si no existe, obtener todo el body y limpiar elementos OBS360
+        const bodyClone = $('body').clone();
+        bodyClone.find('.obs-header, header.obs-header').remove();
+        bodyClone.find('.obs-footer, footer.obs-footer').remove();
+        bodyClone.find('.obs-article-content').remove();
+        originalContent = bodyClone.html() || '';
+    }
+
+    // Verificar que tengamos contenido
+    if (!originalContent || originalContent.trim().length === 0) {
+        console.error('❌ ERROR: No se pudo extraer contenido del artículo');
+        return htmlContent; // Retornar sin cambios si no hay contenido
+    }
 
     // 4. Agregar CSS
     const existingStyles = $('style').text();
@@ -177,17 +194,7 @@ function forceOBS360Template(htmlContent) {
         }
     }
 
-    // 5. OBTENER TODO EL CONTENIDO ORIGINAL (sin header/footer)
-    let originalContent = $('body').html() || '';
-
-    // Limpiar cualquier elemento de header/footer que pueda quedar
-    const tempDiv = cheerio.load('<div>' + originalContent + '</div>');
-    tempDiv('.obs-header').remove();
-    tempDiv('.obs-footer').remove();
-    tempDiv('.obs-article-content').remove(); // Por si ya existe
-    originalContent = tempDiv('div').html() || '';
-
-    // Limpiar estilos inline que puedan afectar el centrado
+    // 5. Limpiar estilos inline que puedan afectar el centrado
     originalContent = originalContent.replace(/style\s*=\s*["'][^"']*text-align\s*:\s*left[^"']*["']/gi, '');
 
     // 6. RECONSTRUIR BODY con estructura correcta
