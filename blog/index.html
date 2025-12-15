@@ -1,28 +1,22 @@
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!DOCTYPE html><html lang="es"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OBS360 Blog - Insights de Amazon Marketing | Recursos y Estrategias</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description"
-        content="Blog privado de OBS360 con recursos, análisis de campañas y estrategias de Amazon Marketing para clientes." />
-    <meta name="robots" content="noindex, nofollow" />
+    <meta name="description" content="Blog privado de OBS360 con recursos, análisis de campañas y estrategias de Amazon Marketing para clientes.">
+    <meta name="robots" content="noindex, nofollow">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp" />
+    <link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp">
 
     <!-- Font Awesome for Professional Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap"
-        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
 
     <style>
         * {
@@ -559,14 +553,13 @@
                 <div class="logo-section">
                     <div class="logo">
                         <a href="../index.html" aria-label="OBS360 Home">
-                            <img src="../Logo-Obs360.co_.webp" alt="OBS360 Logo" />
+                            <img src="../Logo-Obs360.co_.webp" alt="OBS360 Logo">
                         </a>
                     </div>
                     <span class="blog-badge">RECURSOS</span>
                 </div>
                 <div style="display: flex; gap: 10px; align-items: center;">
-                    <a href="../admin/index.html" id="adminLink"
-                        style="display: none; padding: 10px 18px; background: linear-gradient(135deg, #7c3aed, #6d28d9); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; font-size: 14px; transition: all 0.3s ease;">
+                    <a href="../admin/index.html" id="adminLink" style="display: none; padding: 10px 18px; background: linear-gradient(135deg, #7c3aed, #6d28d9); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; font-size: 14px; transition: all 0.3s ease;">
                         <i class="fa-solid fa-cog"></i> Admin
                     </a>
                     <a href="../index.html" class="back-link">
@@ -601,11 +594,11 @@
                 <form id="loginForm" class="login-form">
                     <div class="form-group">
                         <label for="username">Usuario</label>
-                        <input type="text" id="username" required placeholder="Tu usuario">
+                        <input type="text" id="username" required="" placeholder="Tu usuario">
                     </div>
                     <div class="form-group">
                         <label for="password">Contraseña</label>
-                        <input type="password" id="password" required placeholder="Tu contraseña">
+                        <input type="password" id="password" required="" placeholder="Tu contraseña">
                     </div>
                     <button type="submit">Acceder</button>
                 </form>
@@ -623,65 +616,375 @@
 
             <!-- Search Bar -->
             <div style="max-width: 500px; margin: 0 auto 30px; position: relative;">
-                <input type="text" id="searchInput" placeholder="Buscar artículos por título, contenido o tags..."
-                    style="width: 100%; padding: 15px 20px 15px 50px; border: 2px solid #e5e7eb; border-radius: 30px; font-size: 15px; transition: all 0.3s ease; outline: none;"
-                    onfocus="this.style.borderColor='#28529a'; this.style.boxShadow='0 0 0 4px rgba(40, 82, 154, 0.1)';"
-                    onblur="this.style.borderColor='#e5e7eb'; this.style.boxShadow='none';">
-                <i class="fa-solid fa-search"
-                    style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: #9ca3af; font-size: 18px;"></i>
-                <button id="clearSearch" onclick="clearSearch()"
-                    style="display: none; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: #ef4444; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 12px;">
+                <input type="text" id="searchInput" placeholder="Buscar artículos por título, contenido o tags..." style="width: 100%; padding: 15px 20px 15px 50px; border: 2px solid #e5e7eb; border-radius: 30px; font-size: 15px; transition: all 0.3s ease; outline: none;" onfocus="this.style.borderColor='#28529a'; this.style.boxShadow='0 0 0 4px rgba(40, 82, 154, 0.1)';" onblur="this.style.borderColor='#e5e7eb'; this.style.boxShadow='none';">
+                <i class="fa-solid fa-search" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: #9ca3af; font-size: 18px;"></i>
+                <button id="clearSearch" onclick="clearSearch()" style="display: none; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: #ef4444; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 12px;">
                     <i class="fa-solid fa-times"></i>
                 </button>
             </div>
 
             <!-- Active Tags -->
-            <div id="activeTags"
-                style="display: none; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
+            <div id="activeTags" style="display: none; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
                 <!-- Active tags will appear here -->
             </div>
 
             <!-- Category Filters -->
             <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 40px; flex-wrap: wrap;">
-                <button class="category-filter active" data-category="all"
-                    style="padding: 10px 20px; border: 2px solid #28529a; background: #28529a; color: white; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                <button class="category-filter active" data-category="all" style="padding: 10px 20px; border: 2px solid #28529a; background: #28529a; color: white; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
                     <i class="fa-solid fa-layer-group"></i> Todos
                 </button>
-                <button class="category-filter" data-category="Análisis"
-                    style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                <button class="category-filter" data-category="Análisis" style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
                     <i class="fa-solid fa-chart-line"></i> Análisis
                 </button>
-                <button class="category-filter" data-category="Informe Mensual"
-                    style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                <button class="category-filter" data-category="Informe Mensual" style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
                     <i class="fa-solid fa-gem"></i> Informes
                 </button>
-                <button class="category-filter" data-category="Estrategia"
-                    style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                <button class="category-filter" data-category="Estrategia" style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
                     <i class="fa-solid fa-chess"></i> Estrategia
                 </button>
-                <button class="category-filter" data-category="Capacitación"
-                    style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                <button class="category-filter" data-category="Capacitación" style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
                     <i class="fa-solid fa-graduation-cap"></i> Capacitación
                 </button>
-                <button class="category-filter" data-category="Herramientas"
-                    style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                <button class="category-filter" data-category="Herramientas" style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
                     <i class="fa-solid fa-wrench"></i> Herramientas
                 </button>
-                <button class="category-filter" data-category="Otras"
-                    style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                <button class="category-filter" data-category="Otras" style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
                     <i class="fa-solid fa-folder-open"></i> Otras
                 </button>
             </div>
 
             <!-- Results Counter -->
-            <div id="resultsInfo"
-                style="text-align: center; margin-bottom: 20px; color: #6b7280; font-size: 14px; display: none;">
+            <div id="resultsInfo" style="text-align: center; margin-bottom: 20px; color: #6b7280; font-size: 14px; display: none;">
                 <span id="resultsCount">0</span> artículos encontrados
             </div>
 
             <div class="articles-grid" id="articlesGrid">
-                <!-- Articles will be loaded dynamically -->
-                <p style="text-align: center; color: #6b7280; padding: 40px;">Cargando artículos...</p>
+                <a href="r-0f5bmxjk.html" class="article-card">
+                    <div class="article-thumbnail cpc">
+                        <span class="article-category">Análisis</span>
+                        <span class="article-icon">📊</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">Nano Banana Pro Playbook</h3>
+                        <p class="article-excerpt">Amazon Seller Image Generator SOP...</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
+            
+                <a href="r-3n8mcrjz.html" class="article-card">
+                    <div class="article-thumbnail cristal">
+                        <span class="article-category">Informe Mensual</span>
+                        <span class="article-icon">💎</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">Informe de Gestión: Cristal Up - Agosto 2025</h3>
+                        <p class="article-excerpt">Informe de Gestión - Agosto 2025...</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
+            
+                <a href="r-3qoquyw0.html" class="article-card">
+                    <div class="article-thumbnail cpc">
+                        <span class="article-category">Análisis</span>
+                        <span class="article-icon">📊</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">Explicación de Pensamiento de Primeros Principios</h3>
+                        <p class="article-excerpt">Recurso exclusivo para clientes de OBS360...</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
+            
+                <a href="r-7wve3grv.html" class="article-card">
+                    <div class="article-thumbnail cpc">
+                        <span class="article-category">Análisis</span>
+                        <span class="article-icon">📊</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">Guía Interactiva de Amazon Logistics: AWD y AGL</h3>
+                        <p class="article-excerpt">Una guía interactiva de Amazon Warehousing &amp; Distribution (AWD) y Amazon Global Logistics (AGL)....</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
+            
+                <a href="r-8xo3bmtj.html" class="article-card">
+                    <div class="article-thumbnail cpc">
+                        <span class="article-category">Análisis</span>
+                        <span class="article-icon">📊</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">Explicación de Pensamiento de Primeros Principios</h3>
+                        <p class="article-excerpt">Recurso exclusivo para clientes de OBS360...</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
+            
+                <a href="r-9bmh2k5t.html" class="article-card">
+                    <div class="article-thumbnail cpc">
+                        <span class="article-category">Análisis</span>
+                        <span class="article-icon">📊</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">Reporte de Funnel de Conversión - VITASEI</h3>
+                        <p class="article-excerpt">Marca: VITASEI | Periodo: Semanas 38-41, 2025...</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
+            
+                <a href="r-9p5p4kez.html" class="article-card">
+                    <div class="article-thumbnail cpc">
+                        <span class="article-category">Análisis</span>
+                        <span class="article-icon">📊</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">Amazon PPC Playbook Mentor</h3>
+                        <p class="article-excerpt">Your interactive guide to mastering Amazon PPC structure....</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
+            
+                <a href="r-bozoi772.html" class="article-card">
+                    <div class="article-thumbnail cpc">
+                        <span class="article-category">Análisis</span>
+                        <span class="article-icon">📊</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">Economía del Crédito con Bitcoin: La Revolución del Colateral</h3>
+                        <p class="article-excerpt">Cómo BTC se está convirtiendo en el colateral ideal y universal....</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
+            
+                <a href="r-cwdnmpf2.html" class="article-card">
+                    <div class="article-thumbnail cpc">
+                        <span class="article-category">Análisis</span>
+                        <span class="article-icon">📊</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">Amazon Command Center: Operación Vacío</h3>
+                        <p class="article-excerpt">$4.2M /
+                        año...</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
+            
+                <a href="r-eja91hpc.html" class="article-card">
+                    <div class="article-thumbnail cpc">
+                        <span class="article-category">Análisis</span>
+                        <span class="article-icon">📊</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">Manual Básico de Firebase</h3>
+                        <p class="article-excerpt">Esta guía te ayudará a reemplazar tu "Sistema de Autenticación Simulado" por los servicios reales de
+                Google Firebase. Aquí aprenderás a conectar, autenticar usuarios y guardar datos....</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
+            
+                <a href="r-ewdkxo7h.html" class="article-card">
+                    <div class="article-thumbnail cpc">
+                        <span class="article-category">Análisis</span>
+                        <span class="article-icon">📊</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">U.S. Latino Market Strategy Report</h3>
+                        <p class="article-excerpt">A Synthesized Report on U.S. Latino Market Strategy, Integrating the Visions of Galloway, Patel, and Vaynerchuk...</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
+            
+                <a href="r-jj7mazpr.html" class="article-card">
+                    <div class="article-thumbnail cpc">
+                        <span class="article-category">Análisis</span>
+                        <span class="article-icon">📊</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">E-Commerce Strategic Compass: Seller's View</h3>
+                        <p class="article-excerpt">
+                    Choosing a platform is not just about fees; it's a trade-off between Traffic (Marketplaces) and Control (DTC). 
+                    Amazon and Walmart offer built-in audiences but...</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
+            
+                <a href="r-kdg51xre.html" class="article-card">
+                    <div class="article-thumbnail cpc">
+                        <span class="article-category">Análisis</span>
+                        <span class="article-icon">📊</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">The U.S. Latino Market: A New Era of Growth</h3>
+                        <p class="article-excerpt">U.S. Latino Market Analysis...</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
+            
+                <a href="r-kdp7sim3.html" class="article-card">
+                    <div class="article-thumbnail cpc">
+                        <span class="article-category">Análisis</span>
+                        <span class="article-icon">📊</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">KDP Simulator v9: ACOS Resultante</h3>
+                        <p class="article-excerpt">Define tu presupuesto mensual ($) y descubre tu ACOS real
+                        (%)....</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
+            
+                <a href="r-lkg9kvu6.html" class="article-card">
+                    <div class="article-thumbnail cpc">
+                        <span class="article-category">Análisis</span>
+                        <span class="article-icon">📊</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">Interactive Guide to Amazon Logistics: AWD &amp; AGL</h3>
+                        <p class="article-excerpt">An interactive guide to Amazon Warehousing &amp; Distribution (AWD) and Amazon Global Logistics (AGL)....</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
+            
+                <a href="r-n6ppru77.html" class="article-card">
+                    <div class="article-thumbnail cpc">
+                        <span class="article-category">Análisis</span>
+                        <span class="article-icon">📊</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">PPC Playbook Infographic Preview</h3>
+                        <p class="article-excerpt">Recurso exclusivo para clientes de OBS360...</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
+            
+                <a href="r-ntf1jphh.html" class="article-card">
+                    <div class="article-thumbnail cpc">
+                        <span class="article-category">Análisis</span>
+                        <span class="article-icon">📊</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">Análisis Interactivo de la Marca Poppi con IA</h3>
+                        <p class="article-excerpt">
+                Explora cómo Poppi transformó una solución casera en una marca multimillonaria, redefiniendo el mercado de bebidas con estrategias innovadoras en branding, marketing digital y ventas,...</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
+            
+                <a href="r-p9zo6rm2.html" class="article-card">
+                    <div class="article-thumbnail cpc">
+                        <span class="article-category">Análisis</span>
+                        <span class="article-icon">📊</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">In-Depth Analysis of the Amazon Ads CPC Environment</h3>
+                        <p class="article-excerpt">This dashboard provides a comprehensive
+                look into the Cost-Per-Click (CPC) environment for Amazon advertising. We will explore what CPC is, how
+                the ad auction works, an...</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
+            
+                <a href="r-ta8mpgnb.html" class="article-card">
+                    <div class="article-thumbnail cpc">
+                        <span class="article-category">Análisis</span>
+                        <span class="article-icon">📊</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">Explicación de Pensamiento de Primeros Principios</h3>
+                        <p class="article-excerpt">Recurso exclusivo para clientes de OBS360...</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
+            
+                <a href="r-teria1y3.html" class="article-card">
+                    <div class="article-thumbnail cpc">
+                        <span class="article-category">Análisis</span>
+                        <span class="article-icon">📊</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">Nielsen Report: Curating the Narrative</h3>
+                        <p class="article-excerpt">Recurso exclusivo para clientes de OBS360...</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
+            
+                <a href="r-u24ij3da.html" class="article-card">
+                    <div class="article-thumbnail cpc">
+                        <span class="article-category">Análisis</span>
+                        <span class="article-icon">📊</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">Anyeluz: Deep Dive Cosméticos 2026</h3>
+                        <p class="article-excerpt">
+                    Lanzar cosméticos en Amazon US es viable y necesario para escalar, PERO no como una
+                    línea de maquillaje tradicional ("color").
+                    La estrategi...</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
+            
+                <a href="r-u77hfkoz.html" class="article-card">
+                    <div class="article-thumbnail cpc">
+                        <span class="article-category">Análisis</span>
+                        <span class="article-icon">📊</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">Amazon Command Center: Operación Vacío</h3>
+                        <p class="article-excerpt">$4.2M /
+                        año...</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
+            
+                <a href="r-vj6iddt2.html" class="article-card">
+                    <div class="article-thumbnail cristal">
+                        <span class="article-category">Informe Mensual</span>
+                        <span class="article-icon">💎</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">Reporte de Higiene de Cuenta: VAJILLAS Corona</h3>
+                        <p class="article-excerpt">
+                La gestión de Negative Keywords es el pilar defensivo para proteger el ROAS de VAJILLAS
+                Corona.
+                Dada la posición en el segmento Premium, la estrategia ...</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
+            
+                <a href="r-yk7khrld.html" class="article-card">
+                    <div class="article-thumbnail cpc">
+                        <span class="article-category">Análisis</span>
+                        <span class="article-icon">📊</span>
+                    </div>
+                    <div class="article-content">
+                        <span class="article-date">Diciembre 2025</span>
+                        <h3 class="article-title">Product Opportunity Explorer - Metrics Guide</h3>
+                        <p class="article-excerpt">Click on any metric below to see its definition and why it's important, based on the official Amazon documentation....</p>
+                        <span class="article-read-more">Ver análisis completo →</span>
+                    </div>
+                </a>
             </div>
         </div>
     </section>
@@ -1009,10 +1312,10 @@
     <!-- Footer -->
     <footer class="blog-footer">
         <div class="container">
-            <img src="../Logo-Obs360.co_.webp" alt="OBS360" />
+            <img src="../Logo-Obs360.co_.webp" alt="OBS360">
             <p>© 2025 OBS360. Recursos exclusivos para clientes.</p>
         </div>
     </footer>
-</body>
 
-</html>
+
+</body></html>
