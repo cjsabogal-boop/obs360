@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<!DOCTYPE html><html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PPC Playbook Infographic Preview</title>
@@ -8,14 +6,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- 2. Load React & ReactDOM -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin=""></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin=""></script>
     
     <!-- 3. Load Babel for JSX Transpilation -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
-    <style>
-        /* Ensure the preview area takes up reasonable space */
+    <style>/* Ensure the preview area takes up reasonable space */
         body {
             background-color: #1a202c; /* bg-gray-900 */
             padding: 2rem;
@@ -28,9 +25,116 @@
             width: 100%;
             max-width: 1600px; /* Max width for a large widescreen */
         }
-    </style>
-</head>
-<body>
+
+/* ========== OBS360 Branding Estándar ========== */
+body {
+    margin: 0;
+    padding: 0;
+    background: #f9fafb;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    display: block !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    min-height: auto !important;
+    height: auto !important;
+}
+
+.obs-header {
+    background: white !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+.obs-header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.obs-logo img {
+    height: 45px;
+    width: auto;
+}
+.obs-header-badge {
+    background: linear-gradient(135deg, #28529a, #84cc16);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.obs-article-content {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.obs-article-content * {
+    max-width: 100%;
+}
+
+.obs-article-content img {
+    display: block;
+    margin: 20px auto;
+    border-radius: 8px;
+}
+
+.obs-footer {
+    background: linear-gradient(135deg, #1f2937 0%, #28529a 100%) !important;
+    padding: 40px 0;
+    text-align: center;
+    margin-top: 60px;
+}
+.obs-footer img { 
+    height: 50px; 
+    margin-bottom: 15px; 
+    filter: brightness(0) invert(1); 
+}
+.obs-footer p { 
+    color: rgba(255, 255, 255, 0.7); 
+    font-size: 14px; 
+    margin-bottom: 10px; 
+}
+.obs-footer-btn {
+    display: inline-block;
+    background: #84cc16;
+    color: white !important;
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+}
+.obs-footer-btn:hover { 
+    background: #65a30d; 
+    transform: translateY(-2px); 
+}
+/* ========== Fin OBS360 Branding ========== */
+</style>
+<meta name="robots" content="noindex, nofollow"><link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp"></head>
+<body class="">
+<!-- OBS360 Header Estándar -->
+<header class="obs-header">
+    <div class="obs-header-content">
+        <div class="obs-logo">
+            <a href="../index.html">
+                <img src="../Logo-Obs360.co_.webp" alt="OBS360">
+            </a>
+        </div>
+        <span class="obs-header-badge">RECURSO PRIVADO</span>
+    </div>
+</header>
+<div class="obs-article-content">
     <!-- 4. The root element where the React app will be mounted -->
     <div id="root"></div>
 
@@ -216,8 +320,19 @@
         const root = ReactDOM.createRoot(container);
         root.render(<App />);
     </script>
-</body>
-</html>
 
 
 
+
+
+</div>
+<!-- OBS360 Footer Estándar -->
+<footer class="obs-footer">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <img src="../Logo-Obs360.co_.webp" alt="OBS360">
+        <p>Recurso exclusivo para clientes de OBS360</p>
+        <p style="font-size: 12px; opacity: 0.6;">© 2025 OBS360 - Todos los derechos reservados</p>
+        <a href="https://wa.me/19803370518" target="_blank" class="obs-footer-btn">Contactar a OBS360</a>
+    </div>
+</footer>
+</body></html>

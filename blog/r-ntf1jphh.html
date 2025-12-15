@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
+<!DOCTYPE html><html lang="es"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Análisis Interactivo de la Marca Poppi con IA</title>
@@ -15,8 +13,7 @@
         - Report Info: Key Learnings. Goal: Synthesize takeaways. Viz/Presentation: Clickable cards for each lesson. Interaction: Click to reveal detailed explanation. Justification: Actionable insights.
         - Report Info: Overall Poppi success. Goal: Provide executive summary. Viz/Presentation: Button to trigger Gemini API call. Interaction: Click to generate summary in modal. Justification: AI-powered summarization.
         - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #FFFBF5; color: #333333; }
+    <style>body { font-family: 'Inter', sans-serif; background-color: #FFFBF5; color: #333333; }
         .nav-link { transition: color 0.3s ease; }
         .nav-link:hover { color: #FF6B6B; }
         .section-title { color: #FF6B6B; border-bottom: 2px solid #FF8C8C; padding-bottom: 0.5rem; }
@@ -41,9 +38,116 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .gemini-button { background-color: #FF6B6B; color: white; padding: 10px 15px; border-radius: 5px; font-weight: bold; transition: background-color 0.3s ease; }
         .gemini-button:hover { background-color: #E05252; }
-    </style>
-</head>
+
+/* ========== OBS360 Branding Estándar ========== */
+body {
+    margin: 0;
+    padding: 0;
+    background: #f9fafb;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    display: block !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    min-height: auto !important;
+    height: auto !important;
+}
+
+.obs-header {
+    background: white !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+.obs-header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.obs-logo img {
+    height: 45px;
+    width: auto;
+}
+.obs-header-badge {
+    background: linear-gradient(135deg, #28529a, #84cc16);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.obs-article-content {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.obs-article-content * {
+    max-width: 100%;
+}
+
+.obs-article-content img {
+    display: block;
+    margin: 20px auto;
+    border-radius: 8px;
+}
+
+.obs-footer {
+    background: linear-gradient(135deg, #1f2937 0%, #28529a 100%) !important;
+    padding: 40px 0;
+    text-align: center;
+    margin-top: 60px;
+}
+.obs-footer img { 
+    height: 50px; 
+    margin-bottom: 15px; 
+    filter: brightness(0) invert(1); 
+}
+.obs-footer p { 
+    color: rgba(255, 255, 255, 0.7); 
+    font-size: 14px; 
+    margin-bottom: 10px; 
+}
+.obs-footer-btn {
+    display: inline-block;
+    background: #84cc16;
+    color: white !important;
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+}
+.obs-footer-btn:hover { 
+    background: #65a30d; 
+    transform: translateY(-2px); 
+}
+/* ========== Fin OBS360 Branding ========== */
+</style>
+<meta name="robots" content="noindex, nofollow"><link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp"></head>
 <body class="antialiased">
+<!-- OBS360 Header Estándar -->
+<header class="obs-header">
+    <div class="obs-header-content">
+        <div class="obs-logo">
+            <a href="../index.html">
+                <img src="../Logo-Obs360.co_.webp" alt="OBS360">
+            </a>
+        </div>
+        <span class="obs-header-badge">RECURSO PRIVADO</span>
+    </div>
+</header>
+<div class="obs-article-content">
 
     <header class="bg-white shadow-md sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
@@ -186,7 +290,7 @@
                     <p class="text-[#555555]">Contenido nativo, participación en tendencias, colaboraciones con influencers (desde nano hasta estrellas como Alix Earle). Fomento del Contenido Generado por el Usuario (UGC), merchandising y programas de embajadores universitarios (#RushTok).</p>
                     <ul class="list-disc list-inside mt-3 text-[#555555] space-y-1">
                         <li>Videos de "restock" de refrigeradores.</li>
-                        <li>Q&As sobre salud intestinal.</li>
+                        <li>Q&amp;As sobre salud intestinal.</li>
                         <li>Rutinas de bienestar con Poppi.</li>
                     </ul>
                 </div>
@@ -402,7 +506,7 @@
 
     <div id="aiModal" class="modal">
         <div class="modal-content">
-            <span class="close-button" id="closeModalButton">&times;</span>
+            <span class="close-button" id="closeModalButton">×</span>
             <h3 id="aiModalTitle" class="text-2xl font-bold text-[#FF6B6B] mb-4"></h3>
             <div id="aiModalLoader" class="loader" style="display: none;"></div>
             <div id="aiModalResult" class="text-[#555555] text-sm md:text-base whitespace-pre-wrap"></div>
@@ -410,7 +514,7 @@
     </div>
 
     <footer class="bg-gray-800 text-white text-center py-8 mt-12">
-        <p>&copy; 2025 Análisis Interactivo de la Marca Poppi con IA. Creado para fines educativos.</p>
+        <p>© 2025 Análisis Interactivo de la Marca Poppi con IA. Creado para fines educativos.</p>
         <p class="text-sm text-gray-400 mt-1">Inspirado en el informe "Análisis profundo de la marca Poppi". Funcionalidades de IA por Gemini.</p>
     </footer>
 
@@ -697,5 +801,15 @@
         }
 
     </script>
-</body>
-</html>
+
+</div>
+<!-- OBS360 Footer Estándar -->
+<footer class="obs-footer">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <img src="../Logo-Obs360.co_.webp" alt="OBS360">
+        <p>Recurso exclusivo para clientes de OBS360</p>
+        <p style="font-size: 12px; opacity: 0.6;">© 2025 OBS360 - Todos los derechos reservados</p>
+        <a href="https://wa.me/19803370518" target="_blank" class="obs-footer-btn">Contactar a OBS360</a>
+    </div>
+</footer>
+</body></html>

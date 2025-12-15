@@ -1,13 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<!DOCTYPE html><html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Amazon PPC Playbook Mentor</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <style>body {
             font-family: 'Inter', sans-serif;
             background-color: #111827; /* bg-gray-900 */
             color: #d1d5db; /* text-gray-300 */
@@ -100,9 +97,116 @@
             margin-right: 0.75rem;
             flex-shrink: 0;
         }
-    </style>
-</head>
+
+/* ========== OBS360 Branding Estándar ========== */
+body {
+    margin: 0;
+    padding: 0;
+    background: #f9fafb;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    display: block !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    min-height: auto !important;
+    height: auto !important;
+}
+
+.obs-header {
+    background: white !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+.obs-header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.obs-logo img {
+    height: 45px;
+    width: auto;
+}
+.obs-header-badge {
+    background: linear-gradient(135deg, #28529a, #84cc16);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.obs-article-content {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.obs-article-content * {
+    max-width: 100%;
+}
+
+.obs-article-content img {
+    display: block;
+    margin: 20px auto;
+    border-radius: 8px;
+}
+
+.obs-footer {
+    background: linear-gradient(135deg, #1f2937 0%, #28529a 100%) !important;
+    padding: 40px 0;
+    text-align: center;
+    margin-top: 60px;
+}
+.obs-footer img { 
+    height: 50px; 
+    margin-bottom: 15px; 
+    filter: brightness(0) invert(1); 
+}
+.obs-footer p { 
+    color: rgba(255, 255, 255, 0.7); 
+    font-size: 14px; 
+    margin-bottom: 10px; 
+}
+.obs-footer-btn {
+    display: inline-block;
+    background: #84cc16;
+    color: white !important;
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+}
+.obs-footer-btn:hover { 
+    background: #65a30d; 
+    transform: translateY(-2px); 
+}
+/* ========== Fin OBS360 Branding ========== */
+</style>
+<meta name="robots" content="noindex, nofollow"><link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp"></head>
 <body class="antialiased">
+<!-- OBS360 Header Estándar -->
+<header class="obs-header">
+    <div class="obs-header-content">
+        <div class="obs-logo">
+            <a href="../index.html">
+                <img src="../Logo-Obs360.co_.webp" alt="OBS360">
+            </a>
+        </div>
+        <span class="obs-header-badge">RECURSO PRIVADO</span>
+    </div>
+</header>
+<div class="obs-article-content">
 
     <div class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
         <div class="w-full max-w-5xl mx-auto">
@@ -135,7 +239,7 @@
                 
                 <!-- Step 2: The Visualization & Foundation -->
                 <div id="step-2" class="step-content">
-                    <h2 class="text-2xl font-bold text-white mb-4">Step 2: Visualizing the Flow & Building the Foundation</h2>
+                    <h2 class="text-2xl font-bold text-white mb-4">Step 2: Visualizing the Flow &amp; Building the Foundation</h2>
                     <p class="mb-4">This canvas represents your entire PPC ecosystem for one <span class="tooltip">ASIN<span class="tooltiptext">Amazon Standard Identification Number. A unique 10-character code for a product.</span></span>. Your goal is to move profitable search terms from wide discovery to precise, controlled campaigns. Watch how it works.</p>
                     
                     <canvas id="ppcCanvas" class="w-full h-64 md:h-80 bg-gray-900 rounded-lg mb-4 border border-gray-700"></canvas>
@@ -158,7 +262,7 @@
                 
                 <!-- Step 3: The Framework -->
                 <div id="step-3" class="step-content">
-                    <h2 class="text-2xl font-bold text-white mb-4">Step 3: The Framework - Harvesting & Promoting</h2>
+                    <h2 class="text-2xl font-bold text-white mb-4">Step 3: The Framework - Harvesting &amp; Promoting</h2>
                     <p class="mb-4">Now we get to the core routine. This is the process you'll repeat to continuously optimize your account.</p>
                     
                     <div class="grid md:grid-cols-2 gap-6">
@@ -173,12 +277,12 @@
                              <p class="mt-2 text-sm">You "promote" it by creating a new <strong class="text-white">Single Keyword Campaign (SKC)</strong>. This gives you maximum control over its budget and placement bids.</p>
                         </div>
                     </div>
-                     <p class="mt-6">This process systematically moves your budget from hopeful exploration (Auto) to proven performance (Exact & SKCs).</p>
+                     <p class="mt-6">This process systematically moves your budget from hopeful exploration (Auto) to proven performance (Exact &amp; SKCs).</p>
                 </div>
 
                 <!-- Step 4: Maintenance -->
                 <div id="step-4" class="step-content">
-                    <h2 class="text-2xl font-bold text-white mb-4">Step 4: Maintenance - Pruning & Budgeting</h2>
+                    <h2 class="text-2xl font-bold text-white mb-4">Step 4: Maintenance - Pruning &amp; Budgeting</h2>
                     <p class="mb-6">Great structure needs regular maintenance. Here are your key ongoing tasks.</p>
                     
                     <div class="space-y-4">
@@ -199,7 +303,7 @@
                 
                 <!-- Step 5: The North Star -->
                 <div id="step-5" class="step-content">
-                     <h2 class="text-2xl font-bold text-white mb-4">Step 5: Your North Star Metric & Final Checklist</h2>
+                     <h2 class="text-2xl font-bold text-white mb-4">Step 5: Your North Star Metric &amp; Final Checklist</h2>
                      <p class="mb-4">It's easy to get lost in all the metrics Amazon throws at you. The playbook simplifies this: your North Star metric, the one that should guide all your scaling decisions, is <strong class="text-yellow-400">Conversion Rate (CVR)</strong>.</p>
                      
                      <div class="bg-gray-900/50 p-6 rounded-lg text-center">
@@ -471,8 +575,19 @@
         resizeObserver.observe(canvas);
 
     </script>
-</body>
-</html>
 
 
 
+
+
+</div>
+<!-- OBS360 Footer Estándar -->
+<footer class="obs-footer">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <img src="../Logo-Obs360.co_.webp" alt="OBS360">
+        <p>Recurso exclusivo para clientes de OBS360</p>
+        <p style="font-size: 12px; opacity: 0.6;">© 2025 OBS360 - Todos los derechos reservados</p>
+        <a href="https://wa.me/19803370518" target="_blank" class="obs-footer-btn">Contactar a OBS360</a>
+    </div>
+</footer>
+</body></html>

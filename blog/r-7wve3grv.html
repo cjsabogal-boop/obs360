@@ -1,17 +1,14 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
+<!DOCTYPE html><html lang="es"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guía Interactiva de Amazon Logistics: AWD y AGL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
     <!-- Paleta Elegida: Armonía Serena de Neutrales -->
-    <style>
-        body {
+    <style>body {
             font-family: 'Inter', sans-serif;
             background-color: #F8F7F4;
             color: #374151;
@@ -76,15 +73,122 @@
             margin: 0 auto 0.5rem;
             border: 2px solid #BFDBFE;
         }
-    </style>
-</head>
+
+/* ========== OBS360 Branding Estándar ========== */
+body {
+    margin: 0;
+    padding: 0;
+    background: #f9fafb;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    display: block !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    min-height: auto !important;
+    height: auto !important;
+}
+
+.obs-header {
+    background: white !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+.obs-header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.obs-logo img {
+    height: 45px;
+    width: auto;
+}
+.obs-header-badge {
+    background: linear-gradient(135deg, #28529a, #84cc16);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.obs-article-content {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.obs-article-content * {
+    max-width: 100%;
+}
+
+.obs-article-content img {
+    display: block;
+    margin: 20px auto;
+    border-radius: 8px;
+}
+
+.obs-footer {
+    background: linear-gradient(135deg, #1f2937 0%, #28529a 100%) !important;
+    padding: 40px 0;
+    text-align: center;
+    margin-top: 60px;
+}
+.obs-footer img { 
+    height: 50px; 
+    margin-bottom: 15px; 
+    filter: brightness(0) invert(1); 
+}
+.obs-footer p { 
+    color: rgba(255, 255, 255, 0.7); 
+    font-size: 14px; 
+    margin-bottom: 10px; 
+}
+.obs-footer-btn {
+    display: inline-block;
+    background: #84cc16;
+    color: white !important;
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+}
+.obs-footer-btn:hover { 
+    background: #65a30d; 
+    transform: translateY(-2px); 
+}
+/* ========== Fin OBS360 Branding ========== */
+</style>
+<meta name="robots" content="noindex, nofollow"><link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp"></head>
 <body class="antialiased">
+<!-- OBS360 Header Estándar -->
+<header class="obs-header">
+    <div class="obs-header-content">
+        <div class="obs-logo">
+            <a href="../index.html">
+                <img src="../Logo-Obs360.co_.webp" alt="OBS360">
+            </a>
+        </div>
+        <span class="obs-header-badge">RECURSO PRIVADO</span>
+    </div>
+</header>
+<div class="obs-article-content">
 
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         
         <header class="text-center mb-16">
             <h1 class="text-4xl md:text-5xl font-bold text-gray-800 tracking-tight">Optimiza Tu Cadena de Suministro</h1>
-            <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">Una guía interactiva de Amazon Warehousing & Distribution (AWD) y Amazon Global Logistics (AGL).</p>
+            <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">Una guía interactiva de Amazon Warehousing &amp; Distribution (AWD) y Amazon Global Logistics (AGL).</p>
         </header>
 
         <main>
@@ -121,14 +225,14 @@
             <div class="section-card p-6 md:p-8">
                 <div class="border-b border-gray-200 mb-6">
                     <nav class="-mb-px flex justify-center space-x-4 md:space-x-8" aria-label="Pestañas">
-                        <button id="tab-awd" class="tab-button whitespace-nowrap py-4 px-1 text-base font-medium active">Amazon Warehousing & Distribution (AWD)</button>
+                        <button id="tab-awd" class="tab-button whitespace-nowrap py-4 px-1 text-base font-medium active">Amazon Warehousing &amp; Distribution (AWD)</button>
                         <button id="tab-agl" class="tab-button whitespace-nowrap py-4 px-1 text-base font-medium">Amazon Global Logistics (AGL)</button>
                     </nav>
                 </div>
 
                 <div id="content-awd" class="space-y-12">
                     <div>
-                        <h3 class="text-2xl font-bold text-gray-800 mb-2 text-center">Amazon Warehousing & Distribution (AWD)</h3>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2 text-center">Amazon Warehousing &amp; Distribution (AWD)</h3>
                         <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">AWD es la solución de almacenamiento masivo de bajo coste de Amazon diseñada para guardar tu inventario antes de que se traslade a los centros de gestión. Te ayuda a ahorrar en tarifas de almacenamiento, evitar límites de existencias de FBA y automatizar el reabastecimiento. Explora las herramientas a continuación para ver si AWD es adecuado para tu negocio.</p>
                         
                         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 text-center mb-12">
@@ -161,7 +265,7 @@
                                     <div>
                                         <label for="storageType" class="block text-sm font-medium text-gray-700">Período de Almacenamiento</label>
                                         <select id="storageType" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
-                                            <option value="non-holiday" selected>Estándar (Ene-Sep)</option>
+                                            <option value="non-holiday" selected="">Estándar (Ene-Sep)</option>
                                             <option value="holiday">Festivo (Oct-Dic)</option>
                                         </select>
                                     </div>
@@ -187,10 +291,10 @@
                                  <div><label class="flex items-center"><input type="checkbox" data-rule="hazmat" class="h-4 w-4 rounded border-gray-300 mr-2">Mercancías Peligrosas (Hazmat)</label></div>
                                  <div><label class="flex items-center"><input type="checkbox" data-rule="refrigerated" class="h-4 w-4 rounded border-gray-300 mr-2">Refrigerado o Perecedero</label></div>
                                  <div><label class="flex items-center"><input type="checkbox" data-rule="highvalue" class="h-4 w-4 rounded border-gray-300 mr-2">Joyas, Relojes, Tarjetas de Regalo</label></div>
-                                 <div><label class="flex items-center"><input type="checkbox" data-rule="boxsize" class="h-4 w-4 rounded border-gray-300 mr-2">Lado de la caja es > 25 pulgadas</label></div>
-                                 <div><label class="flex items-center"><input type="checkbox" data-rule="boxweight" class="h-4 w-4 rounded border-gray-300 mr-2">Peso de la caja es > 50 lbs</label></div>
+                                 <div><label class="flex items-center"><input type="checkbox" data-rule="boxsize" class="h-4 w-4 rounded border-gray-300 mr-2">Lado de la caja es &gt; 25 pulgadas</label></div>
+                                 <div><label class="flex items-center"><input type="checkbox" data-rule="boxweight" class="h-4 w-4 rounded border-gray-300 mr-2">Peso de la caja es &gt; 50 lbs</label></div>
                                  <div><label class="flex items-center"><input type="checkbox" data-rule="mixedsku" class="h-4 w-4 rounded border-gray-300 mr-2">La caja contiene SKUs mezclados</label></div>
-                                 <div><label class="flex items-center"><input type="checkbox" data-rule="expiration" class="h-4 w-4 rounded border-gray-300 mr-2">Fecha de caducidad es < 185 días</label></div>
+                                 <div><label class="flex items-center"><input type="checkbox" data-rule="expiration" class="h-4 w-4 rounded border-gray-300 mr-2">Fecha de caducidad es &lt; 185 días</label></div>
                             </div>
                              <div id="eligibility-result" class="mt-6 p-4 rounded-md text-center font-medium">
                                 Selecciona cualquier atributo aplicable para ver la elegibilidad.
@@ -567,5 +671,16 @@
         });
     </script>
 
-</body>
-</html>
+
+
+</div>
+<!-- OBS360 Footer Estándar -->
+<footer class="obs-footer">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <img src="../Logo-Obs360.co_.webp" alt="OBS360">
+        <p>Recurso exclusivo para clientes de OBS360</p>
+        <p style="font-size: 12px; opacity: 0.6;">© 2025 OBS360 - Todos los derechos reservados</p>
+        <a href="https://wa.me/19803370518" target="_blank" class="obs-footer-btn">Contactar a OBS360</a>
+    </div>
+</footer>
+</body></html>

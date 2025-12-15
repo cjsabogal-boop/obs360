@@ -1,15 +1,12 @@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<!DOCTYPE html><html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Guide to Amazon Logistics: AWD & AGL</title>
+    <title>Interactive Guide to Amazon Logistics: AWD &amp; AGL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
     <!-- Chosen Palette: Calm Harmony Neutrals -->
     <!-- Application Structure Plan: A multi-section, single-page application with a dashboard-like feel. The structure prioritizes user tasks and decision-making over the linear format of the source report. It starts with a high-level overview of the integrated supply chain, then allows users to deep-dive into AWD or AGL via a tabbed interface. This contains interactive tools (cost calculator, eligibility checker, IOR checklist) to make the data actionable. The app then explains the synergistic benefits of combining the services and provides clear next steps. This structure was chosen to empower sellers to quickly find relevant information, apply it to their specific situation, and make informed strategic decisions without needing to read the entire document linearly. -->
     <!-- Visualization & Content Choices: 
@@ -21,8 +18,7 @@
         - Report Info: Integrated Service Discounts. Goal: Show Relationships. Viz: HTML/CSS relationship map. Interaction: Hover effects to show cause-and-effect for discounts. Justification: Clarifies how actions unlock specific financial benefits.
     -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-    <style>
-        body {
+    <style>body {
             font-family: 'Inter', sans-serif;
             background-color: #F8F7F4;
             color: #374151;
@@ -87,15 +83,122 @@
             margin: 0 auto 0.5rem;
             border: 2px solid #BFDBFE;
         }
-    </style>
-</head>
+
+/* ========== OBS360 Branding Estándar ========== */
+body {
+    margin: 0;
+    padding: 0;
+    background: #f9fafb;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    display: block !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    min-height: auto !important;
+    height: auto !important;
+}
+
+.obs-header {
+    background: white !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+.obs-header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.obs-logo img {
+    height: 45px;
+    width: auto;
+}
+.obs-header-badge {
+    background: linear-gradient(135deg, #28529a, #84cc16);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.obs-article-content {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.obs-article-content * {
+    max-width: 100%;
+}
+
+.obs-article-content img {
+    display: block;
+    margin: 20px auto;
+    border-radius: 8px;
+}
+
+.obs-footer {
+    background: linear-gradient(135deg, #1f2937 0%, #28529a 100%) !important;
+    padding: 40px 0;
+    text-align: center;
+    margin-top: 60px;
+}
+.obs-footer img { 
+    height: 50px; 
+    margin-bottom: 15px; 
+    filter: brightness(0) invert(1); 
+}
+.obs-footer p { 
+    color: rgba(255, 255, 255, 0.7); 
+    font-size: 14px; 
+    margin-bottom: 10px; 
+}
+.obs-footer-btn {
+    display: inline-block;
+    background: #84cc16;
+    color: white !important;
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+}
+.obs-footer-btn:hover { 
+    background: #65a30d; 
+    transform: translateY(-2px); 
+}
+/* ========== Fin OBS360 Branding ========== */
+</style>
+<meta name="robots" content="noindex, nofollow"><link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp"></head>
 <body class="antialiased">
+<!-- OBS360 Header Estándar -->
+<header class="obs-header">
+    <div class="obs-header-content">
+        <div class="obs-logo">
+            <a href="../index.html">
+                <img src="../Logo-Obs360.co_.webp" alt="OBS360">
+            </a>
+        </div>
+        <span class="obs-header-badge">RECURSO PRIVADO</span>
+    </div>
+</header>
+<div class="obs-article-content">
 
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         
         <header class="text-center mb-16">
             <h1 class="text-4xl md:text-5xl font-bold text-gray-800 tracking-tight">Optimize Your Supply Chain</h1>
-            <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">An interactive guide to Amazon Warehousing & Distribution (AWD) and Amazon Global Logistics (AGL).</p>
+            <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">An interactive guide to Amazon Warehousing &amp; Distribution (AWD) and Amazon Global Logistics (AGL).</p>
         </header>
 
         <main>
@@ -132,14 +235,14 @@
             <div class="section-card p-6 md:p-8">
                 <div class="border-b border-gray-200 mb-6">
                     <nav class="-mb-px flex justify-center space-x-4 md:space-x-8" aria-label="Tabs">
-                        <button id="tab-awd" class="tab-button whitespace-nowrap py-4 px-1 text-base font-medium active">Amazon Warehousing & Distribution (AWD)</button>
+                        <button id="tab-awd" class="tab-button whitespace-nowrap py-4 px-1 text-base font-medium active">Amazon Warehousing &amp; Distribution (AWD)</button>
                         <button id="tab-agl" class="tab-button whitespace-nowrap py-4 px-1 text-base font-medium">Amazon Global Logistics (AGL)</button>
                     </nav>
                 </div>
 
                 <div id="content-awd" class="space-y-12">
                     <div>
-                        <h3 class="text-2xl font-bold text-gray-800 mb-2 text-center">Amazon Warehousing & Distribution (AWD)</h3>
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2 text-center">Amazon Warehousing &amp; Distribution (AWD)</h3>
                         <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">AWD is Amazon's low-cost bulk storage solution designed to hold your inventory before it moves to fulfillment centers. It helps you save on storage fees, avoid FBA stock limits, and automate replenishment. Explore the tools below to see if AWD is right for your business.</p>
                         
                         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 text-center mb-12">
@@ -172,7 +275,7 @@
                                     <div>
                                         <label for="storageType" class="block text-sm font-medium text-gray-700">Storage Period</label>
                                         <select id="storageType" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2">
-                                            <option value="non-holiday" selected>Standard (Jan-Sep)</option>
+                                            <option value="non-holiday" selected="">Standard (Jan-Sep)</option>
                                             <option value="holiday">Holiday (Oct-Dec)</option>
                                         </select>
                                     </div>
@@ -198,10 +301,10 @@
                                  <div><label class="flex items-center"><input type="checkbox" data-rule="hazmat" class="h-4 w-4 rounded border-gray-300 mr-2">Dangerous Goods (Hazmat)</label></div>
                                  <div><label class="flex items-center"><input type="checkbox" data-rule="refrigerated" class="h-4 w-4 rounded border-gray-300 mr-2">Refrigerated or Perishable</label></div>
                                  <div><label class="flex items-center"><input type="checkbox" data-rule="highvalue" class="h-4 w-4 rounded border-gray-300 mr-2">Jewelry, Watches, Gift Cards</label></div>
-                                 <div><label class="flex items-center"><input type="checkbox" data-rule="boxsize" class="h-4 w-4 rounded border-gray-300 mr-2">Box side is > 25 inches</label></div>
-                                 <div><label class="flex items-center"><input type="checkbox" data-rule="boxweight" class="h-4 w-4 rounded border-gray-300 mr-2">Box weight is > 50 lbs</label></div>
+                                 <div><label class="flex items-center"><input type="checkbox" data-rule="boxsize" class="h-4 w-4 rounded border-gray-300 mr-2">Box side is &gt; 25 inches</label></div>
+                                 <div><label class="flex items-center"><input type="checkbox" data-rule="boxweight" class="h-4 w-4 rounded border-gray-300 mr-2">Box weight is &gt; 50 lbs</label></div>
                                  <div><label class="flex items-center"><input type="checkbox" data-rule="mixedsku" class="h-4 w-4 rounded border-gray-300 mr-2">Box contains mixed SKUs</label></div>
-                                 <div><label class="flex items-center"><input type="checkbox" data-rule="expiration" class="h-4 w-4 rounded border-gray-300 mr-2">Expiration date is < 185 days</label></div>
+                                 <div><label class="flex items-center"><input type="checkbox" data-rule="expiration" class="h-4 w-4 rounded border-gray-300 mr-2">Expiration date is &lt; 185 days</label></div>
                             </div>
                              <div id="eligibility-result" class="mt-6 p-4 rounded-md text-center font-medium">
                                 Select any applicable attributes to see eligibility.
@@ -289,7 +392,7 @@
                                  <label class="flex items-start p-3 bg-white rounded-md shadow-sm">
                                     <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-red-600 focus:ring-red-500 mt-1">
                                     <span class="ml-3 text-sm">
-                                        <strong class="text-gray-900">Pay All Duties & Taxes:</strong> I will pay all assessed import duties, taxes (e.g., VAT), and fees for my shipment.
+                                        <strong class="text-gray-900">Pay All Duties &amp; Taxes:</strong> I will pay all assessed import duties, taxes (e.g., VAT), and fees for my shipment.
                                     </span>
                                 </label>
                                  <label class="flex items-start p-3 bg-white rounded-md shadow-sm">
@@ -375,7 +478,7 @@
                                   <p class="text-sm text-green-700">20% off AWD Storage + 10% off AWD-to-FBA Transport</p>
                                </div>
                                <div class="p-4 bg-blue-100 rounded-lg shadow">
-                                  <p class="font-semibold text-blue-900">THEN you get "Smart Storage Rates" & Waivers</p>
+                                  <p class="font-semibold text-blue-900">THEN you get "Smart Storage Rates" &amp; Waivers</p>
                                   <p class="text-sm text-blue-700">10% off AWD storage + waiver of certain FBA surcharges</p>
                                </div>
                             </div>
@@ -555,5 +658,15 @@
         });
     </script>
 
-</body>
-</html>
+
+</div>
+<!-- OBS360 Footer Estándar -->
+<footer class="obs-footer">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <img src="../Logo-Obs360.co_.webp" alt="OBS360">
+        <p>Recurso exclusivo para clientes de OBS360</p>
+        <p style="font-size: 12px; opacity: 0.6;">© 2025 OBS360 - Todos los derechos reservados</p>
+        <a href="https://wa.me/19803370518" target="_blank" class="obs-footer-btn">Contactar a OBS360</a>
+    </div>
+</footer>
+</body></html>
