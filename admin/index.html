@@ -739,12 +739,30 @@
                         <div class="form-field">
                             <label>Información del Sistema</label>
                             <p style="color: #6b7280; font-size: 14px; margin-top: 10px;">
-                                <strong>Versión:</strong> 1.12<br>
+                                <strong>Versión:</strong> 1.13<br>
                                 <strong>Artículos totales:</strong> <span id="totalArticles">0</span><br>
                                 <strong>Categorías:</strong> <span id="totalCategories">0</span><br>
                                 <strong>Última actualización:</strong> <span id="lastUpdate">-</span>
                             </p>
                         </div>
+
+                        <!-- Mantenimiento -->
+                        <div class="form-field"
+                            style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                            <label><i class="fa-solid fa-wrench"></i> Mantenimiento</label>
+                            <p style="color: #6b7280; font-size: 14px; margin-top: 10px; margin-bottom: 15px;">
+                                Re-estandariza todos los artículos con el formato actualizado (header, footer, y
+                                contenido centrado).
+                            </p>
+                            <button type="button" class="btn-primary" onclick="standardizeAllArticles()"
+                                id="standardizeBtn">
+                                <i class="fa-solid fa-sync"></i> Re-estandarizar Todos los Artículos
+                            </button>
+                            <div id="standardizeStatus"
+                                style="margin-top: 15px; padding: 12px; border-radius: 8px; font-size: 14px; display: none;">
+                            </div>
+                        </div>
+
                         <div class="form-field"
                             style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
                             <p style="color: #9ca3af; font-size: 13px; text-align: center;">
@@ -804,6 +822,59 @@
             localStorage.removeItem('obs360_username');
             localStorage.removeItem('obs360_password');
             location.reload();
+        }
+
+        // Re-estandarizar todos los artículos
+        async function standardizeAllArticles() {
+            const btn = document.getElementById('standardizeBtn');
+            const status = document.getElementById('standardizeStatus');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Re-estandarizando...';
+            status.style.display = 'none';
+
+            try {
+                const response = await fetch(`${API_URL}/standardize-all`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    status.style.display = 'block';
+                    status.style.background = '#d1fae5';
+                    status.style.color = '#065f46';
+                    status.innerHTML = `
+                        <i class="fa-solid fa-check-circle"></i> 
+                        <strong>¡Éxito!</strong><br>
+                        ${data.updatedCount} artículos re-estandarizados correctamente.<br>
+                        <small>Los artículos ahora tienen el formato centrado actualizado.</small>
+                    `;
+
+                    // Recargar artículos para mostrar los cambios
+                    setTimeout(() => {
+                        loadArticles();
+                    }, 2000);
+                } else {
+                    throw new Error(data.error || 'Error desconocido');
+                }
+            } catch (error) {
+                console.error('Error al re-estandarizar:', error);
+                status.style.display = 'block';
+                status.style.background = '#fee2e2';
+                status.style.color = '#dc2626';
+                status.innerHTML = `
+                    <i class="fa-solid fa-exclamation-circle"></i> 
+                    <strong>Error</strong><br>
+                    No se pudieron re-estandarizar los artículos: ${error.message}
+                `;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-sync"></i> Re-estandarizar Todos los Artículos';
+            }
         }
 
         // Panel Navigation
