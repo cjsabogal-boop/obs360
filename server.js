@@ -1141,8 +1141,9 @@ async function updateBlogIndex() {
 // ==================== SERVIDOR ====================
 
 app.listen(PORT, () => {
-    console.log(`🚀 Servidor CMS corriendo en http://localhost:${PORT}`);
-    console.log(`📁 Directorio del blog: ${BLOG_DIR}`);
+    console.log(`Server running on port ${PORT}`);
+    console.log(`BLOG_DIR is: ${BLOG_DIR}`);
+    console.log(`Version: 2.1.0 - Content Protection Active`);
     console.log(`👤 Usuario admin: ${process.env.ADMIN_USERNAME}`);
 });
 
