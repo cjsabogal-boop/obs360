@@ -44,6 +44,12 @@ app.use(cors());
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 
+// Servir archivos estáticos del blog (imágenes, CSS, JS)
+app.use(express.static(BLOG_DIR));
+
+// Servir explícitamente el panel de administración
+app.use('/admin', express.static(path.join(BLOG_DIR, 'admin')));
+
 // Autenticación simple para middleware
 const authenticate = (req, res, next) => {
     const { username, password } = req.body;
