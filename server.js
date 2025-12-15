@@ -107,263 +107,72 @@ app.post('/api/auth/blog', (req, res) => {
 
 // ==================== TEMPLATES OBS360 ====================
 
-// CSS para header (solo logo) y footer - MEJORADO V3 (CON CENTRADO)
-const OBS360_CSS = `
-/* ========== OBS360 Branding Estándar ========== */
-/* Reset body para centrado */
-body {
-    margin: 0;
-    padding: 0;
-    background: #f9fafb;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
+// VERSIÓN 5: Header/Footer con estilos INLINE que NO rompen layouts especiales
+// NO usar wrapper .obs-article-content - rompe Canvas, React, y layouts full-screen
 
-.obs-header {
-    background: white !important;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 15px 0;
-    position: sticky;
-    top: 0;
-    z-index: 9999;
-}
-.obs-header-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-.obs-logo img {
-    height: 45px;
-    width: auto;
-}
-.obs-header-badge {
-    background: linear-gradient(135deg, #28529a, #84cc16);
-    color: white;
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-}
-
-/* Contenedor de contenido centrado */
-.obs-article-content {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 40px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.obs-article-content * {
-    max-width: 100%;
-}
-
-.obs-article-content img {
-    display: block;
-    margin: 20px auto;
-    border-radius: 8px;
-}
-
-.obs-article-content h1,
-.obs-article-content h2,
-.obs-article-content h3,
-.obs-article-content h4,
-.obs-article-content h5,
-.obs-article-content h6 {
-    color: #1f2937;
-    margin-top: 1.5em;
-    margin-bottom: 0.5em;
-    line-height: 1.3;
-}
-
-.obs-article-content p {
-    line-height: 1.8;
-    color: #374151;
-    margin-bottom: 1.2em;
-}
-
-.obs-article-content ul,
-.obs-article-content ol {
-    padding-left: 2em;
-    margin-bottom: 1.2em;
-}
-
-.obs-article-content li {
-    margin-bottom: 0.5em;
-    line-height: 1.6;
-}
-
-.obs-footer {
-    background: linear-gradient(135deg, #1f2937 0%, #28529a 100%) !important;
-    padding: 40px 0;
-    text-align: center;
-    margin-top: 60px;
-}
-.obs-footer img { 
-    height: 50px; 
-    margin-bottom: 15px; 
-    filter: brightness(0) invert(1); 
-}
-.obs-footer p { 
-    color: rgba(255, 255, 255, 0.7); 
-    font-size: 14px; 
-    margin-bottom: 10px; 
-}
-.obs-footer-btn {
-    display: inline-block;
-    background: #84cc16;
-    color: white !important;
-    padding: 12px 30px;
-    border-radius: 25px;
-    text-decoration: none;
-    font-weight: 600;
-    margin-top: 15px;
-    transition: all 0.3s ease;
-}
-.obs-footer-btn:hover { 
-    background: #65a30d; 
-    transform: translateY(-2px); 
-}
-/* ========== Fin OBS360 Branding ========== */
-`;
-
-// Header con logo y badge - MEJORADO V2
+// Header con estilos inline - position: fixed para no interferir con layouts
 const OBS360_HEADER = `
 <!-- OBS360 Header Estándar -->
-<header class="obs-header">
-    <div class="obs-header-content">
-        <div class="obs-logo">
+<header class="obs-header" style="background: white !important; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 15px 0; position: fixed; top: 0; left: 0; right: 0; z-index: 9999;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between;">
+        <div>
             <a href="../index.html">
-                <img src="../Logo-Obs360.co_.webp" alt="OBS360" />
+                <img src="../Logo-Obs360.co_.webp" alt="OBS360" style="height: 40px; width: auto;" />
             </a>
         </div>
-        <span class="obs-header-badge">RECURSO PRIVADO</span>
+        <span style="background: linear-gradient(135deg, #28529a, #84cc16); color: white; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600;">RECURSO PRIVADO</span>
     </div>
 </header>
+<div style="height: 70px;"></div>
 `;
 
-// Footer estándar - MEJORADO V2
+// Footer con estilos inline
 const OBS360_FOOTER = `
 <!-- OBS360 Footer Estándar -->
-<footer class="obs-footer">
+<footer class="obs-footer" style="background: linear-gradient(135deg, #1f2937 0%, #28529a 100%) !important; padding: 40px 0; text-align: center; margin-top: 40px;">
     <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
-        <img src="../Logo-Obs360.co_.webp" alt="OBS360" />
-        <p>Recurso exclusivo para clientes de OBS360</p>
-        <p style="font-size: 12px; opacity: 0.6;">© 2025 OBS360 - Todos los derechos reservados</p>
-        <a href="https://wa.me/19803370518" target="_blank" class="obs-footer-btn">Contactar a OBS360</a>
+        <img src="../Logo-Obs360.co_.webp" alt="OBS360" style="height: 50px; margin-bottom: 15px; filter: brightness(0) invert(1);" />
+        <p style="color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 10px;">Recurso exclusivo para clientes de OBS360</p>
+        <p style="color: rgba(255,255,255,0.5); font-size: 12px;">© 2025 OBS360 - Todos los derechos reservados</p>
+        <a href="https://wa.me/19803370518" target="_blank" style="display: inline-block; background: #84cc16; color: white !important; padding: 12px 30px; border-radius: 25px; text-decoration: none; font-weight: 600; margin-top: 15px;">Contactar a OBS360</a>
     </div>
 </footer>
 `;
 
-// Función FORZADA para aplicar template OBS360 (siempre re-aplica) - V4 (ARREGLADO - NO PIERDE CONTENIDO)
+// CSS ya NO se inyecta porque usamos estilos inline
+const OBS360_CSS = '';
+
+// Función FORZADA para aplicar template OBS360 - V5 (SIN WRAPPER, NO ROMPE LAYOUTS)
 function forceOBS360Template(htmlContent) {
     const $ = cheerio.load(htmlContent, { decodeEntities: false });
 
-    // 1. SIEMPRE asegurar meta noindex, nofollow
-    $('meta[name="robots"]').remove();
-    $('head').append('<meta name="robots" content="noindex, nofollow" />');
-
-    // 2. SIEMPRE asegurar favicon
-    $('link[rel="icon"]').remove();
-    $('head').append('<link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp" />');
-
-    // 3. EXTRAER CONTENIDO ORIGINAL ANTES de remover nada
-    let originalContent = '';
-
-    // Si ya existe .obs-article-content, usar su contenido
-    if ($('.obs-article-content').length > 0) {
-        originalContent = $('.obs-article-content').html() || '';
-    } else {
-        // Si no existe, obtener todo el body y limpiar elementos OBS360
-        const bodyClone = $('body').clone();
-        bodyClone.find('.obs-header, header.obs-header').remove();
-        bodyClone.find('.obs-footer, footer.obs-footer').remove();
-        bodyClone.find('.obs-article-content').remove();
-        originalContent = bodyClone.html() || '';
+    // 1. Asegurar meta noindex, nofollow
+    if ($('meta[name="robots"]').length === 0) {
+        $('head').append('<meta name="robots" content="noindex, nofollow" />');
     }
 
-    // Verificar que tengamos contenido
-    if (!originalContent || originalContent.trim().length === 0) {
-        console.error('❌ ERROR: No se pudo extraer contenido del artículo');
-        return htmlContent; // Retornar sin cambios si no hay contenido
+    // 2. Asegurar favicon
+    if ($('link[rel="icon"]').length === 0) {
+        $('head').append('<link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp" />');
     }
 
-    // 4. Limpiar CSS duplicado de OBS360 en todos los <style>
-    $('style').each(function () {
-        let css = $(this).html() || '';
-        // Eliminar todos los bloques CSS de OBS360
-        css = css.replace(/\/\*\s*=+\s*OBS360[\s\S]*?=+\s*\*\//g, '');
-        css = css.replace(/\/\*\s*=+\s*Fin OBS360[\s\S]*?=+\s*\*\//g, '');
-        css = css.replace(/\/\*\s*OBS360[\s\S]*?\*\//g, '');
-        css = css.replace(/\.obs-[a-z-]+\s*\{[\s\S]*?\}/g, '');
-        css = css.replace(/\.obs-[a-z-]+:hover\s*\{[\s\S]*?\}/g, '');
-        css = css.replace(/\.obs-[a-z-]+\s+img\s*\{[\s\S]*?\}/g, '');
-        css = css.replace(/\.obs-[a-z-]+\s+p\s*\{[\s\S]*?\}/g, '');
-        css = css.replace(/\.obs-[a-z-]+\s+\*\s*\{[\s\S]*?\}/g, '');
-        css = css.replace(/\.obs-[a-z-]+\s+(h[1-6]|ul|ol|li)\s*\{[\s\S]*?\}/g, '');
-        // Limpiar líneas vacías múltiples
-        css = css.replace(/\n\s*\n\s*\n+/g, '\n\n');
-        $(this).html(css.trim());
-    });
+    // 3. Eliminar headers/footers OBS360 existentes antes de agregar los nuevos
+    $('header.obs-header, .obs-header').remove();
+    $('footer.obs-footer, .obs-footer').remove();
+    $('div[style*="height: 70px"]').first().remove(); // Spacer
 
-    // 5. Agregar CSS de OBS360 al primer <style> o crear uno nuevo
-    if ($('style').length > 0) {
-        $('style').first().append('\n' + OBS360_CSS);
-    } else {
-        $('head').append('<style>' + OBS360_CSS + '</style>');
+    // 4. Extraer contenido del wrapper si existe (para no perder contenido)
+    const wrapper = $('.obs-article-content');
+    if (wrapper.length > 0) {
+        const innerContent = wrapper.html();
+        wrapper.replaceWith(innerContent);
     }
 
-    // 6. ARREGLAR BODY: Eliminar clases y estilos que rompen el layout
-    const $body = $('body');
+    // 5. Agregar nuevo header al inicio del body
+    $('body').prepend(OBS360_HEADER);
 
-    // Eliminar clases problemáticas de Tailwind
-    const bodyClasses = $body.attr('class') || '';
-    const cleanedClasses = bodyClasses
-        .split(' ')
-        .filter(cls => !['flex', 'flex-col', 'items-center', 'justify-center', 'min-h-screen', 'h-screen'].includes(cls))
-        .join(' ');
-    $body.attr('class', cleanedClasses);
-
-    // Eliminar overflow:hidden del style inline
-    const bodyStyle = $body.attr('style') || '';
-    const cleanedStyle = bodyStyle.replace(/overflow\s*:\s*hidden\s*;?/gi, '');
-    if (cleanedStyle) {
-        $body.attr('style', cleanedStyle);
-    } else {
-        $body.removeAttr('style');
-    }
-
-    // Agregar CSS para arreglar layout del body
-    $('head').append(`
-    <style>
-    body {
-        display: block !important;
-        overflow-y: auto !important;
-        overflow-x: hidden !important;
-        min-height: auto !important;
-        height: auto !important;
-    }
-    </style>
-    `);
-
-    // 7. Limpiar estilos inline que puedan afectar el centrado
-    originalContent = originalContent.replace(/style\s*=\s*["'][^"']*text-align\s*:\s*left[^"']*["']/gi, '');
-
-    // 8. RECONSTRUIR BODY con estructura correcta
-    $body.empty();
-
-    // Agregar header
-    $body.append(OBS360_HEADER);
-
-    // Envolver contenido original en contenedor centrado
-    $body.append(`<div class="obs-article-content">${originalContent}</div>`);
-
-    // Agregar footer
-    $body.append(OBS360_FOOTER);
+    // 6. Agregar footer al final del body
+    $('body').append(OBS360_FOOTER);
 
     return $.html();
 }

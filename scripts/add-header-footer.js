@@ -1,229 +1,102 @@
+#!/usr/bin/env node
 /**
- * Script para agregar header y footer estándar de OBS360 a todos los artículos del blog
- * También asegura que todos tengan meta noindex, nofollow para privacidad
+ * Script MEJORADO para aplicar header/footer OBS360 
+ * SIN romper layouts especiales (Canvas, React, full-screen)
  */
 
 const fs = require('fs');
 const path = require('path');
+const cheerio = require('cheerio');
 
 const BLOG_DIR = path.join(__dirname, '../blog');
 
-// Template del header estándar
-const HEADER_STYLES = `
-    /* OBS360 Header Styles */
-    .obs-header {
-        background: white;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        padding: 15px 0;
-        position: sticky;
-        top: 0;
-        z-index: 1100;
-    }
-
-    .obs-header-content {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .obs-logo img {
-        height: 45px;
-        width: auto;
-    }
-
-    .obs-back-link {
-        color: #28529a;
-        text-decoration: none;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 10px 20px;
-        border-radius: 25px;
-        background: #f3f6fa;
-        font-size: 14px;
-        transition: all 0.3s ease;
-    }
-
-    .obs-back-link:hover {
-        background: #28529a;
-        color: white;
-    }
-
-    /* OBS360 Footer */
-    .obs-footer {
-        background: linear-gradient(135deg, #1f2937 0%, #28529a 100%);
-        padding: 40px 0;
-        text-align: center;
-        margin-top: 60px;
-    }
-
-    .obs-footer img {
-        height: 50px;
-        margin-bottom: 15px;
-        filter: brightness(0) invert(1);
-    }
-
-    .obs-footer p {
-        color: rgba(255, 255, 255, 0.7);
-        font-size: 14px;
-    }
-
-    .obs-footer-btn {
-        display: inline-block;
-        background: #84cc16;
-        color: white;
-        padding: 12px 30px;
-        border-radius: 25px;
-        text-decoration: none;
-        font-weight: 600;
-        margin-top: 20px;
-        transition: all 0.3s ease;
-    }
-
-    .obs-footer-btn:hover {
-        background: #65a30d;
-        transform: translateY(-2px);
-    }
-`;
-
-const HEADER_HTML = `
-    <!-- OBS360 Header -->
-    <header class="obs-header">
-        <div class="obs-header-content">
-            <a href="index.html" class="obs-logo">
-                <img src="../Logo-Obs360.co_.webp" alt="OBS360 Logo" />
-            </a>
-            <a href="index.html" class="obs-back-link">
-                ← Volver a Recursos
+const OBS360_HEADER = `
+<!-- OBS360 Header Estándar -->
+<header class="obs-header" style="background: white !important; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 15px 0; position: fixed; top: 0; left: 0; right: 0; z-index: 9999;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between;">
+        <div>
+            <a href="../index.html">
+                <img src="../Logo-Obs360.co_.webp" alt="OBS360" style="height: 40px; width: auto;" />
             </a>
         </div>
-    </header>
+        <span style="background: linear-gradient(135deg, #28529a, #84cc16); color: white; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600;">RECURSO PRIVADO</span>
+    </div>
+</header>
+<div style="height: 70px;"></div>
 `;
 
-const FOOTER_HTML = `
-    <!-- OBS360 Footer -->
-    <footer class="obs-footer">
-        <div class="max-w-7xl mx-auto px-4">
-            <img src="../Logo-Obs360.co_.webp" alt="OBS360" />
-            <p>Recurso exclusivo para clientes de OBS360</p>
-            <a href="https://wa.me/19803370518" target="_blank" class="obs-footer-btn">Contactar a OBS360</a>
-        </div>
-    </footer>
+const OBS360_FOOTER = `
+<!-- OBS360 Footer Estándar -->
+<footer class="obs-footer" style="background: linear-gradient(135deg, #1f2937 0%, #28529a 100%) !important; padding: 40px 0; text-align: center; margin-top: 40px;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <img src="../Logo-Obs360.co_.webp" alt="OBS360" style="height: 50px; margin-bottom: 15px; filter: brightness(0) invert(1);" />
+        <p style="color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 10px;">Recurso exclusivo para clientes de OBS360</p>
+        <p style="color: rgba(255,255,255,0.5); font-size: 12px;">© 2025 OBS360 - Todos los derechos reservados</p>
+        <a href="https://wa.me/19803370518" target="_blank" style="display: inline-block; background: #84cc16; color: white !important; padding: 12px 30px; border-radius: 25px; text-decoration: none; font-weight: 600; margin-top: 15px;">Contactar a OBS360</a>
+    </div>
+</footer>
 `;
 
-const META_TAGS = `    <meta name="robots" content="noindex, nofollow" />
-    <link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp" />`;
+function addHeaderFooterOnly(htmlContent, filename) {
+    const $ = cheerio.load(htmlContent, { decodeEntities: false });
 
-function processFile(filePath) {
-    const filename = path.basename(filePath);
-
-    // Skip index.html
-    if (filename === 'index.html') {
-        console.log(`⏭️  Saltando ${filename} (índice del blog)`);
-        return;
+    // 1. Asegurar meta noindex
+    if ($('meta[name="robots"]').length === 0) {
+        $('head').append('<meta name="robots" content="noindex, nofollow" />');
     }
 
-    let content = fs.readFileSync(filePath, 'utf-8');
-    let modified = false;
-
-    // 1. Verificar y agregar meta noindex, nofollow
-    if (!content.includes('noindex, nofollow')) {
-        // Insertar después del viewport meta tag
-        const viewportMatch = content.match(/<meta\s+name="viewport"[^>]*>/i);
-        if (viewportMatch) {
-            content = content.replace(
-                viewportMatch[0],
-                viewportMatch[0] + '\n' + META_TAGS
-            );
-            modified = true;
-            console.log(`  ✅ Agregado meta noindex, nofollow`);
-        } else {
-            // Insertar después de charset
-            const charsetMatch = content.match(/<meta\s+charset="[^"]*"[^>]*>/i);
-            if (charsetMatch) {
-                content = content.replace(
-                    charsetMatch[0],
-                    charsetMatch[0] + '\n' + META_TAGS
-                );
-                modified = true;
-                console.log(`  ✅ Agregado meta noindex, nofollow`);
-            }
-        }
-    } else {
-        console.log(`  ℹ️  Ya tiene meta noindex, nofollow`);
+    // 2. Asegurar favicon
+    if ($('link[rel="icon"]').length === 0) {
+        $('head').append('<link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp" />');
     }
 
-    // 2. Verificar y agregar header
-    if (!content.includes('obs-header')) {
-        // Agregar estilos antes de </style>
-        const styleCloseMatch = content.match(/<\/style>/i);
-        if (styleCloseMatch) {
-            content = content.replace(
-                '</style>',
-                HEADER_STYLES + '\n    </style>'
-            );
-        }
+    // 3. Verificar si ya tiene header/footer
+    const hasHeader = $('header.obs-header').length > 0 || $('.obs-header').length > 0;
+    const hasFooter = $('footer.obs-footer').length > 0 || $('.obs-footer').length > 0;
 
-        // Agregar header HTML después de <body...>
-        const bodyMatch = content.match(/<body[^>]*>/i);
-        if (bodyMatch) {
-            content = content.replace(
-                bodyMatch[0],
-                bodyMatch[0] + HEADER_HTML
-            );
-            modified = true;
-            console.log(`  ✅ Agregado header OBS360`);
-        }
-    } else {
-        console.log(`  ℹ️  Ya tiene header OBS360`);
+    if (hasHeader && hasFooter) {
+        console.log(`⏭️  ${filename} - Ya tiene header/footer`);
+        return { html: htmlContent, changed: false };
     }
 
-    // 3. Verificar y agregar footer
-    if (!content.includes('obs-footer')) {
-        // Agregar footer antes de </body>
-        content = content.replace(
-            '</body>',
-            FOOTER_HTML + '\n</body>'
-        );
-        modified = true;
-        console.log(`  ✅ Agregado footer OBS360`);
-    } else {
-        console.log(`  ℹ️  Ya tiene footer OBS360`);
+    // 4. Agregar header al inicio del body (si no existe)
+    if (!hasHeader) {
+        $('body').prepend(OBS360_HEADER);
     }
 
-    // Guardar cambios
-    if (modified) {
-        fs.writeFileSync(filePath, content, 'utf-8');
-        console.log(`  💾 Guardado: ${filename}`);
-    } else {
-        console.log(`  ⏭️  Sin cambios necesarios`);
+    // 5. Agregar footer al final del body (si no existe)
+    if (!hasFooter) {
+        $('body').append(OBS360_FOOTER);
     }
 
-    return modified;
+    console.log(`✅ ${filename} - Header/footer agregados`);
+    return { html: $.html(), changed: true };
 }
 
-// Procesar todos los archivos HTML en el directorio blog
-console.log('🚀 Procesando artículos del blog...\n');
+// Ejecutar
+console.log('🔧 OBS360 - Add Header/Footer Only (Sin wrapper)\n');
+console.log(`📁 Directorio: ${BLOG_DIR}\n`);
 
-const files = fs.readdirSync(BLOG_DIR).filter(f =>
-    f.endsWith('.html') &&
-    f !== 'index.html' &&
-    f.startsWith('r-')
-);
+const files = fs.readdirSync(BLOG_DIR).filter(f => f.startsWith('r-') && f.endsWith('.html'));
 
-let modifiedCount = 0;
+let fixed = 0;
+let skipped = 0;
 
 files.forEach(file => {
-    console.log(`📄 ${file}:`);
     const filePath = path.join(BLOG_DIR, file);
-    if (processFile(filePath)) {
-        modifiedCount++;
+    const content = fs.readFileSync(filePath, 'utf-8');
+
+    const result = addHeaderFooterOnly(content, file);
+
+    if (result.changed) {
+        fs.writeFileSync(filePath, result.html, 'utf-8');
+        fixed++;
+    } else {
+        skipped++;
     }
-    console.log('');
 });
 
-console.log(`\n✅ Proceso completado. ${modifiedCount} archivos modificados de ${files.length} totales.`);
+console.log('\n📊 Resumen:');
+console.log(`   ✅ Actualizados: ${fixed}`);
+console.log(`   ⏭️  Saltados: ${skipped}`);
+console.log(`   📄 Total: ${files.length}`);

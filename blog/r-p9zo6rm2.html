@@ -1,23 +1,17 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-
-<head>
+<!DOCTYPE html><html lang="en" class="scroll-smooth"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>In-Depth Analysis of the Amazon Ads CPC Environment | OBS360 Blog</title>
-    <meta name="robots" content="noindex, nofollow" />
-    <link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp" />
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap"
-        rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Montserrat:wght@600;700;800&amp;display=swap" rel="stylesheet">
 
-    <style>
-        body {
+    <style>body {
             font-family: 'Inter', sans-serif;
             background-color: #F8F7F4;
             color: #374151;
@@ -76,99 +70,27 @@
         }
 
         /* OBS360 Header Styles */
-        .obs-header {
-            background: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 1100;
-        }
 
-        .obs-header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .obs-logo img {
-            height: 45px;
-            width: auto;
-        }
-
-        .obs-back-link {
-            color: #28529a;
-            text-decoration: none;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border-radius: 25px;
-            background: #f3f6fa;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        .obs-back-link:hover {
-            background: #28529a;
-            color: white;
-        }
-
-        /* OBS360 Footer */
-        .obs-footer {
-            background: linear-gradient(135deg, #1f2937 0%, #28529a 100%);
-            padding: 40px 0;
-            text-align: center;
-            margin-top: 60px;
-        }
-
-        .obs-footer img {
-            height: 50px;
-            margin-bottom: 15px;
-            filter: brightness(0) invert(1);
-        }
-
-        .obs-footer p {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 14px;
-        }
-
-        .obs-footer-btn {
-            display: inline-block;
-            background: #84cc16;
-            color: white;
-            padding: 12px 30px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 600;
-            margin-top: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .obs-footer-btn:hover {
-            background: #65a30d;
-            transform: translateY(-2px);
-        }
-    </style>
+        /* OBS360 Footer */</style>
 </head>
 
 <body class="antialiased">
-
-    <!-- OBS360 Header -->
-    <header class="obs-header">
-        <div class="obs-header-content">
-            <a href="index.html" class="obs-logo">
-                <img src="../Logo-Obs360.co_.webp" alt="OBS360 Logo" />
-            </a>
-            <a href="index.html" class="obs-back-link">
-                ← Volver a Recursos
+<!-- OBS360 Header Estándar -->
+<header class="obs-header" style="background: white !important; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 15px 0; position: fixed; top: 0; left: 0; right: 0; z-index: 9999;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between;">
+        <div>
+            <a href="../index.html">
+                <img src="../Logo-Obs360.co_.webp" alt="OBS360" style="height: 40px; width: auto;">
             </a>
         </div>
-    </header>
+        <span style="background: linear-gradient(135deg, #28529a, #84cc16); color: white; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600;">RECURSO PRIVADO</span>
+    </div>
+</header>
+<div style="height: 70px;"></div>
+
+
+    
+    
 
     <header id="header" class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -178,12 +100,10 @@
                 </div>
                 <nav class="hidden md:block">
                     <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="#overview"
-                            class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-600">Overview</a>
+                        <a href="#overview" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-600">Overview</a>
                         <a href="#drivers" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-600">CPC
                             Drivers</a>
-                        <a href="#strategies"
-                            class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-600">Strategic Levers</a>
+                        <a href="#strategies" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-600">Strategic Levers</a>
                         <a href="#trends" class="nav-link px-3 py-2 rounded-md text-sm font-medium text-gray-600">Market
                             Trends</a>
                     </div>
@@ -230,8 +150,7 @@
                 <p class="mt-2 text-center text-gray-600 max-w-2xl mx-auto">Amazon uses a second-price auction system.
                     You don't pay your maximum bid; you pay just $0.01 more than the next highest bidder. Winning the
                     auction depends on both your bid and your ad's relevance.</p>
-                <div
-                    class="mt-8 flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">
+                <div class="mt-8 flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">
                     <div class="text-center p-4 bg-teal-50 rounded-lg border border-teal-200">
                         <div class="text-lg font-semibold">Your Bid</div>
                         <div class="text-sm text-gray-600">The maximum you're willing to pay per click.</div>
@@ -347,7 +266,7 @@
                 </div>
                 <div class="strategy-card bg-white rounded-lg shadow-sm cursor-pointer" data-target="details-5">
                     <div class="p-6">
-                        <h3 class="font-semibold text-lg text-gray-800">🗓️ Dayparting & Scheduling</h3>
+                        <h3 class="font-semibold text-lg text-gray-800">🗓️ Dayparting &amp; Scheduling</h3>
                         <p class="text-gray-600 mt-2 text-sm">Advertise when your customers are most likely to buy.</p>
                     </div>
                     <div id="details-5" class="details-content bg-gray-50 px-6">
@@ -377,7 +296,7 @@
         </section>
 
         <section id="trends" class="scroll-mt-20">
-            <h2 class="text-3xl font-bold tracking-tight text-gray-800 text-center">Market Trends & Future Outlook</h2>
+            <h2 class="text-3xl font-bold tracking-tight text-gray-800 text-center">Market Trends &amp; Future Outlook</h2>
             <p class="mt-4 max-w-3xl mx-auto text-center text-lg text-gray-600">The Amazon advertising landscape is
                 constantly evolving. Staying ahead of trends is crucial for long-term success. Competition is
                 increasing, leading to a general rise in CPCs over time, which makes efficiency and strategy more
@@ -391,7 +310,7 @@
                 </div>
                 <div class="space-y-6">
                     <div class="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
-                        <h3 class="font-semibold text-gray-800">📈 Focus on Profitability (RoAS > ACoS)</h3>
+                        <h3 class="font-semibold text-gray-800">📈 Focus on Profitability (RoAS &gt; ACoS)</h3>
                         <p class="text-gray-600 mt-1 text-sm">Mature advertisers are shifting focus from just managing
                             ACoS to maximizing RoAS. This means prioritizing campaigns that drive the most revenue for
                             every dollar spent, not just those with the lowest percentage cost.</p>
@@ -415,14 +334,8 @@
 
     </main>
 
-    <!-- OBS360 Footer -->
-    <footer class="obs-footer">
-        <div class="container mx-auto px-4">
-            <img src="../Logo-Obs360.co_.webp" alt="OBS360" />
-            <p>Análisis preparado por OBS360 - Tu socio estratégico en Amazon</p>
-            <a href="https://wa.me/19803370518" target="_blank" class="obs-footer-btn">Contactar a OBS360</a>
-        </div>
-    </footer>
+    
+    
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -591,6 +504,16 @@
             });
         });
     </script>
-</body>
 
-</html>
+
+
+<!-- OBS360 Footer Estándar -->
+<footer class="obs-footer" style="background: linear-gradient(135deg, #1f2937 0%, #28529a 100%) !important; padding: 40px 0; text-align: center; margin-top: 40px;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <img src="../Logo-Obs360.co_.webp" alt="OBS360" style="height: 50px; margin-bottom: 15px; filter: brightness(0) invert(1);">
+        <p style="color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 10px;">Recurso exclusivo para clientes de OBS360</p>
+        <p style="color: rgba(255,255,255,0.5); font-size: 12px;">© 2025 OBS360 - Todos los derechos reservados</p>
+        <a href="https://wa.me/19803370518" target="_blank" style="display: inline-block; background: #84cc16; color: white !important; padding: 12px 30px; border-radius: 25px; text-decoration: none; font-weight: 600; margin-top: 15px;">Contactar a OBS360</a>
+    </div>
+</footer>
+</body></html>
