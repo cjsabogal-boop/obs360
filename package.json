@@ -1,6 +1,6 @@
 {
     "name": "obs360-blog-cms",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "Backend CMS for OBS360 Blog",
     "main": "server.js",
     "scripts": {
