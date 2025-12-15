@@ -11,11 +11,11 @@ const PORT = process.env.PORT || 3000;
 
 // ==================== AUTO-DESCUBRIMIENTO DE RUTA ====================
 const findBlogRoot = () => {
-    // 1. RUTA ABSOLUTA CPANEL (La más probable)
-    const absolutePath = '/home/vukcpszx/public_html/blog';
-    if (fs.existsSync(absolutePath)) {
-        console.log(`✅ Ruta absoluta confirmada: ${absolutePath}`);
-        return absolutePath;
+    // 1. Directorio ACTUAL (Prioritario si server.js está junto a los .html)
+    if (fs.existsSync(path.join(__dirname, 'index.html')) ||
+        fs.existsSync(path.join(__dirname, 'articles.json'))) {
+        console.log(`✅ Ruta actual confirmada: ${__dirname}`);
+        return __dirname;
     }
 
     // 2. Variable de entorno
@@ -23,7 +23,7 @@ const findBlogRoot = () => {
         return process.env.BLOG_DIR;
     }
 
-    // 3. Relativa standard (development)
+    // 3. Un nivel arriba (si server.js está en /server/)
     return path.join(__dirname, '../');
 };
 
