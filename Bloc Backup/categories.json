@@ -1,0 +1,52 @@
+{
+    "categories": [
+        {
+            "id": "analisis",
+            "name": "Análisis",
+            "icon": "📊",
+            "color": "#d1fae5",
+            "textColor": "#065f46",
+            "isDefault": false
+        },
+        {
+            "id": "informe",
+            "name": "Informe Mensual",
+            "icon": "💎",
+            "color": "#fce7f3",
+            "textColor": "#9f1239",
+            "isDefault": false
+        },
+        {
+            "id": "estrategia",
+            "name": "Estrategia",
+            "icon": "🍽️",
+            "color": "#dbeafe",
+            "textColor": "#1e3a8a",
+            "isDefault": false
+        },
+        {
+            "id": "capacitacion",
+            "name": "Capacitación",
+            "icon": "🎓",
+            "color": "#fef3c7",
+            "textColor": "#92400e",
+            "isDefault": false
+        },
+        {
+            "id": "herramientas",
+            "name": "Herramientas",
+            "icon": "🛠️",
+            "color": "#e0e7ff",
+            "textColor": "#3730a3",
+            "isDefault": false
+        },
+        {
+            "id": "otras",
+            "name": "Otras",
+            "icon": "📁",
+            "color": "#f3f4f6",
+            "textColor": "#374151",
+            "isDefault": true
+        }
+    ]
+}

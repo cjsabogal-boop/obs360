@@ -8,38 +8,36 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-// Función para encontrar automáticamente el directorio del blog
-const findBlogRoot = () => {
-    // Lista de posibles rutas candidatas
-    const candidates = [
-        process.env.BLOG_DIR, // Variable de entorno (si existe)
-        path.join(__dirname, '../'), // Un nivel arriba (estructura standard)
-        path.join(__dirname, '../../blog'), // Dos niveles arriba
-        '/home/vukcpszx/public_html/blog', // Ruta absoluta confirmada por PHP
-        '/home/vukcpszx/public_html/blog/blog', // Ruta antigua por si acaso
-        process.cwd() // Directorio actual de ejecución
-    ];
 
-    for (const dir of candidates) {
-        if (!dir) continue;
-        try {
-            // Buscamos un archivo clave que sabemos que existe en el blog
-            if (fs.existsSync(path.join(dir, 'index.html')) ||
-                fs.existsSync(path.join(dir, 'categories.json'))) {
-                console.log(`✅ [AUTO-DISCOVERY] Directorio del blog encontrado en: ${dir}`);
-                return dir;
-            }
-        } catch (e) {
-            // Ignorar errores de acceso en rutas inválidas
-        }
+// ==================== AUTO-DESCUBRIMIENTO DE RUTA ====================
+const findBlogRoot = () => {
+    // 1. RUTA ABSOLUTA CPANEL (La más probable)
+    const absolutePath = '/home/vukcpszx/public_html/blog';
+    if (fs.existsSync(absolutePath)) {
+        console.log(`✅ Ruta absoluta confirmada: ${absolutePath}`);
+        return absolutePath;
     }
 
-    // Fallback: Retornar el padre relativo aunque no hayamos confirmado
-    console.warn('⚠️ [AUTO-DISCOVERY] No se pudo confirmar ruta, usando fallback relativo.');
+    // 2. Variable de entorno
+    if (process.env.BLOG_DIR && fs.existsSync(process.env.BLOG_DIR)) {
+        return process.env.BLOG_DIR;
+    }
+
+    // 3. Relativa standard (development)
     return path.join(__dirname, '../');
 };
 
 const BLOG_DIR = findBlogRoot();
+
+// ==================== SONDA DE DIAGNÓSTICO ====================
+app.get('/api/version/check', (req, res) => {
+    res.json({
+        status: 'online',
+        version: '2.0.0-FINAL',
+        blog_dir: BLOG_DIR,
+        files_count: fs.existsSync(BLOG_DIR) ? fs.readdirSync(BLOG_DIR).length : 'Dir not found'
+    });
+});
 
 // Middleware
 app.use(cors());

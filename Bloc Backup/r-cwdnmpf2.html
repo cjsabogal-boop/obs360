@@ -1,0 +1,618 @@
+<!DOCTYPE html><html lang="es"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon Command Center: Operación Vacío</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: "Amazon Prime Analytics"
+         Primary: Amazon Dark Blue (#232F3E) - Authority/Backend
+         Accent: Amazon Orange (#FF9900) - Action/Conversion
+         Alert: Red (#DC2626) - Threats/Liquidation
+         Success: Green (#10B981) - Profit/Growth
+    -->
+    <style>body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #eaeded;
+            color: #0f1111;
+        }
+
+        .chart-box {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            border: 1px solid #d5d9d9;
+            height: 320px;
+            position: relative;
+        }
+
+        .stat-card {
+            border-left: 4px solid #FF9900;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .tactic-toggle.active {
+            background-color: #232F3E;
+            color: white;
+            border-color: #232F3E;
+        }
+
+/* Reset body para centrado */
+body {
+    margin: 0;
+    padding: 0;
+    background: #f9fafb;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Contenedor de contenido centrado */
+
+.obs-article-content h1,
+.obs-article-content h2,
+.obs-article-content h3,
+.obs-article-content h4,
+.obs-article-content h5,
+
+.obs-article-content ul,
+
+/* Reset body para centrado */
+body {
+    margin: 0;
+    padding: 0;
+    background: #f9fafb;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Contenedor de contenido centrado */
+
+.obs-article-content h1,
+.obs-article-content h2,
+.obs-article-content h3,
+.obs-article-content h4,
+.obs-article-content h5,
+
+.obs-article-content ul,
+
+/* ========== OBS360 Branding Estándar ========== */
+/* Reset body para centrado */
+body {
+    margin: 0;
+    padding: 0;
+    background: #f9fafb;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.obs-header {
+    background: white !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+.obs-header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.obs-logo img {
+    height: 45px;
+    width: auto;
+}
+.obs-header-badge {
+    background: linear-gradient(135deg, #28529a, #84cc16);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Contenedor de contenido centrado */
+.obs-article-content {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.obs-article-content * {
+    max-width: 100%;
+}
+
+.obs-article-content img {
+    display: block;
+    margin: 20px auto;
+    border-radius: 8px;
+}
+
+.obs-article-content h1,
+.obs-article-content h2,
+.obs-article-content h3,
+.obs-article-content h4,
+.obs-article-content h5,
+.obs-article-content h6 {
+    color: #1f2937;
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    line-height: 1.3;
+}
+
+.obs-article-content p {
+    line-height: 1.8;
+    color: #374151;
+    margin-bottom: 1.2em;
+}
+
+.obs-article-content ul,
+.obs-article-content ol {
+    padding-left: 2em;
+    margin-bottom: 1.2em;
+}
+
+.obs-article-content li {
+    margin-bottom: 0.5em;
+    line-height: 1.6;
+}
+
+.obs-footer {
+    background: linear-gradient(135deg, #1f2937 0%, #28529a 100%) !important;
+    padding: 40px 0;
+    text-align: center;
+    margin-top: 60px;
+}
+.obs-footer img { 
+    height: 50px; 
+    margin-bottom: 15px; 
+    filter: brightness(0) invert(1); 
+}
+.obs-footer p { 
+    color: rgba(255, 255, 255, 0.7); 
+    font-size: 14px; 
+    margin-bottom: 10px; 
+}
+.obs-footer-btn {
+    display: inline-block;
+    background: #84cc16;
+    color: white !important;
+    padding: 12px 30px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+}
+.obs-footer-btn:hover { 
+    background: #65a30d; 
+    transform: translateY(-2px); 
+}
+/* ========== Fin OBS360 Branding ========== */
+</style>
+
+    <style>body {
+        display: block !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        min-height: auto !important;
+        height: auto !important;
+    }</style>
+    
+    <style>body {
+        display: block !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        min-height: auto !important;
+        height: auto !important;
+    }</style>
+    
+    <style>body {
+        display: block !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        min-height: auto !important;
+        height: auto !important;
+    }</style>
+    <meta name="robots" content="noindex, nofollow"><link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp">
+    <style>
+    body {
+        display: block !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        min-height: auto !important;
+        height: auto !important;
+    }
+    </style>
+    </head>
+
+<body class="">
+<!-- OBS360 Header Estándar -->
+<header class="obs-header">
+    <div class="obs-header-content">
+        <div class="obs-logo">
+            <a href="../index.html">
+                <img src="../Logo-Obs360.co_.webp" alt="OBS360">
+            </a>
+        </div>
+        <span class="obs-header-badge">RECURSO PRIVADO</span>
+    </div>
+</header>
+<div class="obs-article-content">
+<!-- OBS360 Header Estándar -->
+
+
+
+    <!-- Application Structure Plan:
+         1. Header: Amazon-style dashboard header. Focus on "Q1 2026 Forecast".
+         2. KPI Dashboard: Real-time opportunity metrics (Search Volume, Competitor Price, Conversion Gap).
+         3. Strategy Tabs: 
+            - "La Tormenta" (Liquidation Phase): Survival strategy.
+            - "El Asalto" (PPC & Keywords): Attack plan.
+            - "El Foso" (Product/Listing): Conversion optimization.
+         4. Interactive Timeline: 12-Month execution roadmap.
+         5. Footer: Confidential strategy note.
+    -->
+
+    <!-- Header -->
+    <header class="bg-[#232F3E] text-white p-4 sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="text-[#FF9900] font-bold text-2xl tracking-tight">AMZ<span class="text-white">COMMAND</span>
+                </div>
+                <div class="h-6 w-px bg-gray-600"></div>
+                <div class="text-xs text-gray-300">
+                    <span class="block font-bold">OBJETIVO: CATEGORY BEST SELLER</span>
+                    <span class="block text-gray-400">Escenario: Post-Rocketbook (Dic 2025)</span>
+                </div>
+            </div>
+            <div class="flex gap-4 text-xs font-mono">
+                <div class="text-right">
+                    <span class="block text-gray-400">Volumen Búsqueda "Rocketbook"</span>
+                    <span class="block text-red-400 font-bold">▼ 15% (Tendencia Bajista)</span>
+                </div>
+                <div class="text-right">
+                    <span class="block text-gray-400">Volumen "Smart Notebook"</span>
+                    <span class="block text-[#FF9900] font-bold">▲ 40% (Oportunidad)</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 py-6 w-full space-y-6">
+
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="stat-card bg-white p-4 rounded shadow-sm">
+                <h3 class="text-gray-500 text-xs font-bold uppercase">Oportunidad Real</h3>
+                <p class="text-2xl font-bold text-[#232F3E]">$4.2M <span class="text-xs text-gray-400 font-normal">/
+                        año</span></p>
+                <p class="text-xs text-green-600 mt-1">Est. Revenue Top 3 (Post-Crisis)</p>
+            </div>
+            <div class="stat-card bg-white p-4 rounded shadow-sm border-l-red-500">
+                <h3 class="text-gray-500 text-xs font-bold uppercase">Amenaza Precio</h3>
+                <p class="text-2xl font-bold text-red-600">$9.99</p>
+                <p class="text-xs text-gray-400 mt-1">Precio Liquidación Rocketbook Core</p>
+            </div>
+            <div class="stat-card bg-white p-4 rounded shadow-sm border-l-blue-500">
+                <h3 class="text-gray-500 text-xs font-bold uppercase">Target CPC (PPC)</h3>
+                <p class="text-2xl font-bold text-[#232F3E]">$2.50+</p>
+                <p class="text-xs text-gray-400 mt-1">Inflado por competidores chinos</p>
+            </div>
+            <div class="stat-card bg-white p-4 rounded shadow-sm border-l-green-500">
+                <h3 class="text-gray-500 text-xs font-bold uppercase">Meta Conversión</h3>
+                <p class="text-2xl font-bold text-green-600">18%</p>
+                <p class="text-xs text-gray-400 mt-1">Requerido para rankear Top 5</p>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="flex space-x-1 border-b border-gray-300" id="nav-tabs">
+            <!-- Injected by JS -->
+        </div>
+
+        <!-- Dynamic Content Section -->
+        <div id="strategy-view" class="min-h-[500px]">
+            <!-- Injected by JS -->
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 border-t border-gray-200 mt-12 py-6 text-center text-xs text-gray-500">
+        <p>AMAZON STRATEGIC INTELLIGENCE // DOCUMENTO CONFIDENCIAL</p>
+        <p>Estrategia basada en algoritmo A10 y tendencias Q4 2025.</p>
+    </footer>
+
+    <script>
+        // --- DATA STORE ---
+        const strategyData = {
+            liquidation: {
+                title: "Fase 1: Sobrevivir a la Liquidación (Mes 1-3)",
+                desc: "BIC está inundando el mercado con stock a precio de coste ($10-$12). Si intentas competir en precio, morirás. Tu estrategia debe ser 'Premium Assurance'.",
+                chartLabels: ['Dic 25', 'Ene 26', 'Feb 26', 'Mar 26', 'Abr 26'],
+                chartData1: [32, 25, 15, 10, 8], // Rocketbook Price Crash
+                chartData2: [35, 35, 35, 35, 35], // Our Price (Steady)
+                tactics: [
+                    {
+                        name: "El Anti-Listing",
+                        detail: "En tus imágenes y A+ Content, NO compares specs. Compara FUTURO. '¿Por qué comprar tecnología muerta?'. Usa badges de 'Soporte Garantizado 2026-2030'.",
+                        type: "Content"
+                    },
+                    {
+                        name: "Defensa de ASIN",
+                        detail: "No hagas PPC en la keyword 'Rocketbook' todavía (CPC altísimo y conversión baja por precio). Haz PPC en ASIN Targeting (Product Targeting) directamente en las páginas de producto de Rocketbook. Tu anuncio debe decir: 'La alternativa con App que SÍ funciona'.",
+                        type: "PPC"
+                    },
+                    {
+                        name: "Bundling de Valor",
+                        detail: "Para justificar tus $35 vs los $10 de ellos, tu pack debe incluir: Cuaderno + 2 Bolis + Spray + Paño + Plantillas PDF descargables. El valor percibido debe ser x3.",
+                        type: "Offer"
+                    }
+                ]
+            },
+            attack: {
+                title: "Fase 2: El Asalto de Keywords (Mes 4-9)",
+                desc: "El inventario de liquidación se agota o se fragmenta (solo quedan colores feos). Es el momento de capturar el tráfico orgánico.",
+                keywords: [
+                    { kw: "Smart Notebook", vol: "Alta", strat: "Aggressive Exact Match" },
+                    { kw: "Rocketbook Alternative", vol: "Media", strat: "Top of Search (Tos)" },
+                    { kw: "Reusable Notepad", vol: "Media", strat: "Broad + Negative Phrase" },
+                    { kw: "Erasable Notebook", vol: "Alta", strat: "Video Ads (Demo)" }
+                ],
+                actions: [
+                    "Lanzar campañas de **Amazon Vine** agresivas (30 unidades) para diluir las reseñas de 'precio alto'.",
+                    "Activar **Sponsored Brands Video**: Mostrar a alguien borrando la página y escaneando CON ÉXITO (atacando el dolor de la app fallida de RB).",
+                    "Compra de palabras clave de competidores chinos (Homestec, Elfinbook) que tienen mala calidad."
+                ]
+            },
+            moat: {
+                title: "Fase 3: Construir el Foso (Mes 9+)",
+                desc: "Consolidación como 'Best Seller'. El objetivo es la retención y el Life Time Value (LTV).",
+                features: [
+                    { icon: "⭐", title: "Flywheel de Reseñas", text: "Insertar tarjeta física en la caja: 'Garantía Extendida de por Vida si registras tu producto'. Esto captura el email (fuera de Amazon) para vender recambios." },
+                    { icon: "📦", title: "Subscribe & Save", text: "Lanzar recambios de tinta (bolígrafos compatibles) y activar 'Suscríbete y Ahorra'. Amazon premia los productos con suscripciones." },
+                    { icon: "🛡️", title: "Brand Defense", text: "Registrar patente de diseño de portada o funcionalidad única para usar 'Amazon Project Zero' y eliminar falsificaciones chinas." }
+                ]
+            }
+        };
+
+        let currentTab = 'liquidation';
+
+        // --- RENDER FUNCTIONS ---
+
+        function init() {
+            renderTabs();
+            renderContent();
+        }
+
+        function renderTabs() {
+            const tabs = [
+                { id: 'liquidation', label: '1. La Tormenta (Defensa)' },
+                { id: 'attack', label: '2. El Asalto (PPC)' },
+                { id: 'moat', label: '3. El Foso (Consolidación)' }
+            ];
+
+            const container = document.getElementById('nav-tabs');
+            container.innerHTML = tabs.map(t => `
+                <button onclick="setTab('${t.id}')" 
+                    class="px-6 py-3 text-sm font-bold uppercase transition-colors border-b-4 ${currentTab === t.id ? 'border-[#FF9900] bg-white text-[#232F3E]' : 'border-transparent text-gray-500 hover:text-[#232F3E]'}">
+                    ${t.label}
+                </button>
+            `).join('');
+        }
+
+        function setTab(id) {
+            currentTab = id;
+            renderTabs();
+            renderContent();
+        }
+
+        function renderContent() {
+            const container = document.getElementById('strategy-view');
+            container.innerHTML = ''; // Clear
+
+            if (currentTab === 'liquidation') renderLiquidation(container);
+            else if (currentTab === 'attack') renderAttack(container);
+            else if (currentTab === 'moat') renderMoat(container);
+        }
+
+        // --- PHASE 1: LIQUIDATION ---
+        function renderLiquidation(container) {
+            const data = strategyData.liquidation;
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in">
+                    <!-- Chart Section -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-white p-6 rounded shadow border border-gray-200">
+                            <h2 class="text-xl font-bold text-[#232F3E] mb-2">${data.title}</h2>
+                            <p class="text-gray-600 mb-6 text-sm">${data.desc}</p>
+                            
+                            <div class="chart-box">
+                                <canvas id="priceChart"></canvas>
+                            </div>
+                            <div class="mt-4 text-xs text-center text-gray-400">
+                                <span>📉 Rocketbook (Rojo) colapsa por liquidación</span> vs 
+                                <span>➖ Tu Precio (Azul) se mantiene firme por valor</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tactics Section -->
+                    <div class="space-y-4">
+                        <div class="bg-[#232F3E] text-white p-4 rounded shadow">
+                            <h3 class="font-bold text-[#FF9900] uppercase text-sm mb-2">⚠ Directiva Clave</h3>
+                            <p class="text-sm leading-relaxed">NO entres en guerra de precios. Si bajas a $15, pierdes margen para PPC y te mezclas con la "basura" china. Mantente en $30-$35 como la opción "Premium/Segura".</p>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            ${data.tactics.map(t => `
+                                <div class="bg-white p-4 rounded border-l-4 border-[#FF9900] shadow-sm hover:bg-orange-50 transition-colors">
+                                    <div class="flex justify-between mb-1">
+                                        <h4 class="font-bold text-sm text-gray-800">${t.name}</h4>
+                                        <span class="text-[10px] font-bold bg-gray-200 px-2 py-0.5 rounded text-gray-600 uppercase">${t.type}</span>
+                                    </div>
+                                    <p class="text-xs text-gray-600">${t.detail}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            setTimeout(initPriceChart, 50);
+        }
+
+        // --- PHASE 2: ATTACK ---
+        function renderAttack(container) {
+            const data = strategyData.attack;
+            container.innerHTML = `
+                <div class="bg-white p-6 rounded shadow border border-gray-200 mb-6">
+                    <h2 class="text-xl font-bold text-[#232F3E] mb-2">${data.title}</h2>
+                    <p class="text-gray-600 text-sm mb-6">${data.desc}</p>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">Keyword Objetivo</th>
+                                    <th scope="col" class="px-6 py-3">Volumen</th>
+                                    <th scope="col" class="px-6 py-3">Estrategia PPC</th>
+                                    <th scope="col" class="px-6 py-3">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.keywords.map(k => `
+                                    <tr class="bg-white border-b hover:bg-gray-50">
+                                        <th scope="row" class="px-6 py-4 font-medium text-[#232F3E] whitespace-nowrap">${k.kw}</th>
+                                        <td class="px-6 py-4"><span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded">${k.vol}</span></td>
+                                        <td class="px-6 py-4 font-mono text-xs text-gray-600">${k.strat}</td>
+                                        <td class="px-6 py-4">
+                                            <button class="text-[#FF9900] hover:underline font-bold text-xs">Lanzar Campaña</button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    ${data.actions.map((act, idx) => `
+                        <div class="bg-gray-50 p-4 rounded border border-gray-200 flex gap-3 items-start">
+                            <div class="bg-[#232F3E] text-white w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-xs">${idx + 1}</div>
+                            <p class="text-sm text-gray-700">${act.replace(/\*\*(.*?)\*\*/g, '<span class="font-bold text-[#232F3E]">$1</span>')}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // --- PHASE 3: MOAT ---
+        function renderMoat(container) {
+            const data = strategyData.moat;
+            container.innerHTML = `
+                <div class="text-center mb-8 max-w-2xl mx-auto">
+                    <h2 class="text-2xl font-bold text-[#232F3E]">${data.title}</h2>
+                    <p class="text-gray-600 mt-2">${data.desc}</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    ${data.features.map(f => `
+                        <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-[#FF9900] hover:-translate-y-1 transition-transform duration-300">
+                            <div class="text-4xl mb-4 text-center">${f.icon}</div>
+                            <h3 class="font-bold text-[#232F3E] text-lg mb-2 text-center">${f.title}</h3>
+                            <p class="text-gray-600 text-sm text-center leading-relaxed">${f.text}</p>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="mt-12 bg-red-50 border border-red-200 p-6 rounded-lg flex gap-4 items-start">
+                    <div class="text-3xl">🛑</div>
+                    <div>
+                        <h4 class="font-bold text-red-800 text-sm uppercase">El Riesgo Final: "Race to the Bottom"</h4>
+                        <p class="text-sm text-red-700 mt-1">
+                            Si en el mes 12 tu marca no es reconocida por CALIDAD, serás devorado por los clones chinos de $8. 
+                            Tu única defensa es la <strong>Marca (Branding)</strong> y la <strong>Comunidad</strong>. 
+                            No dejes de invertir en Brand Story.
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- CHART JS INIT ---
+        function initPriceChart() {
+            const ctx = document.getElementById('priceChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: strategyData.liquidation.chartLabels,
+                    datasets: [
+                        {
+                            label: 'Precio Rocketbook (Liquidación)',
+                            data: strategyData.liquidation.chartData1,
+                            borderColor: '#DC2626',
+                            backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            borderDash: [5, 5]
+                        },
+                        {
+                            label: 'Tu Estrategia Premium',
+                            data: strategyData.liquidation.chartData2,
+                            borderColor: '#232F3E',
+                            backgroundColor: 'rgba(35, 47, 62, 0.05)',
+                            borderWidth: 3,
+                            tension: 0, // Straight line stability
+                            pointRadius: 4,
+                            pointBackgroundColor: '#FF9900'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: { mode: 'index', intersect: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Precio (USD)' },
+                            suggestedMax: 45
+                        }
+                    }
+                }
+            });
+        }
+
+        // Init App
+        window.onload = init;
+
+    </script>
+
+
+
+<!-- OBS360 Footer Estándar -->
+
+</div>
+<!-- OBS360 Footer Estándar -->
+<footer class="obs-footer">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+        <img src="../Logo-Obs360.co_.webp" alt="OBS360">
+        <p>Recurso exclusivo para clientes de OBS360</p>
+        <p style="font-size: 12px; opacity: 0.6;">© 2025 OBS360 - Todos los derechos reservados</p>
+        <a href="https://wa.me/19803370518" target="_blank" class="obs-footer-btn">Contactar a OBS360</a>
+    </div>
+</footer>
+</body></html>
