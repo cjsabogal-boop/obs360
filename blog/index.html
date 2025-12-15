@@ -1,22 +1,25 @@
-<!DOCTYPE html><html lang="es"><head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OBS360 Blog - Insights de Amazon Marketing | Recursos y Estrategias</title>
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Blog privado de OBS360 con recursos, análisis de campañas y estrategias de Amazon Marketing para clientes.">
-    <meta name="robots" content="noindex, nofollow">
+    <meta name="description"
+        content="Blog privado de OBS360 con recursos, análisis de campañas y estrategias de Amazon Marketing para clientes." />
+    <meta name="robots" content="noindex, nofollow" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp">
-
-    <!-- Font Awesome for Professional Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp" />
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
 
     <style>
         * {
@@ -107,164 +110,6 @@
             text-align: center;
             position: relative;
             overflow: hidden;
-        }
-
-        .blog-hero.hidden {
-            display: none;
-        }
-
-        /* Login Screen - Full Page */
-        .login-screen {
-            display: none;
-            min-height: calc(100vh - 80px);
-            background: linear-gradient(135deg, #28529a 0%, #1e3a6e 100%);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .login-screen::before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(132, 204, 22, 0.1) 0%, transparent 50%);
-            animation: pulse 8s infinite;
-        }
-
-        .login-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: calc(100vh - 80px);
-            padding: 20px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .login-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 40px;
-            max-width: 420px;
-            width: 100%;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-        }
-
-        .login-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .login-header .lock-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #28529a, #84cc16);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 28px;
-        }
-
-        .login-header h2 {
-            font-family: 'Montserrat', sans-serif;
-            color: #1f2937;
-            font-size: 1.75rem;
-            margin-bottom: 8px;
-        }
-
-        .login-header p {
-            color: #6b7280;
-            font-size: 15px;
-        }
-
-        .login-form .form-group {
-            margin-bottom: 20px;
-        }
-
-        .login-form label {
-            display: block;
-            margin-bottom: 8px;
-            color: #374151;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .login-form input {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            font-size: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .login-form input:focus {
-            outline: none;
-            border-color: #28529a;
-            box-shadow: 0 0 0 4px rgba(40, 82, 154, 0.1);
-        }
-
-        .login-form button {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #28529a, #84cc16);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .login-form button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(40, 82, 154, 0.3);
-        }
-
-        .login-error {
-            display: none;
-            background: #fee2e2;
-            color: #dc2626;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            text-align: center;
-        }
-
-        .login-branding {
-            text-align: center;
-            margin-top: 24px;
-            padding-top: 24px;
-            border-top: 1px solid #e5e7eb;
-        }
-
-        .login-branding img {
-            height: 35px;
-            opacity: 0.7;
-        }
-
-        @media (max-width: 480px) {
-            .login-card {
-                padding: 30px 24px;
-            }
-
-            .login-header h2 {
-                font-size: 1.5rem;
-            }
-
-            .login-header .lock-icon {
-                width: 50px;
-                height: 50px;
-                font-size: 24px;
-            }
         }
 
         .blog-hero::before {
@@ -373,7 +218,7 @@
         }
 
         .article-thumbnail {
-            height: 160px;
+            height: 180px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -381,60 +226,21 @@
             overflow: hidden;
         }
 
-        .article-thumbnail::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            opacity: 0.1;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        .article-thumbnail.cpc {
+            background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
         }
 
-        /* Professional gradient backgrounds for each category */
-        .article-thumbnail.analisis {
-            background: linear-gradient(135deg, #059669 0%, #047857 50%, #065f46 100%);
+        .article-thumbnail.cristal {
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
         }
 
-        .article-thumbnail.informe {
-            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 50%, #5b21b6 100%);
-        }
-
-        .article-thumbnail.estrategia {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 50%, #1e40af 100%);
-        }
-
-        .article-thumbnail.capacitacion {
-            background: linear-gradient(135deg, #d97706 0%, #b45309 50%, #92400e 100%);
-        }
-
-        .article-thumbnail.herramientas {
-            background: linear-gradient(135deg, #0891b2 0%, #0e7490 50%, #155e75 100%);
-        }
-
-        .article-thumbnail.otras {
-            background: linear-gradient(135deg, #4b5563 0%, #374151 50%, #1f2937 100%);
+        .article-thumbnail.porcelana {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
         }
 
         .article-icon {
-            font-size: 3rem;
-            color: white;
-            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
-            z-index: 1;
-        }
-
-        .article-icon-wrapper {
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            z-index: 1;
+            font-size: 4rem;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
         }
 
         .article-category {
@@ -442,16 +248,13 @@
             top: 15px;
             left: 15px;
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            color: #1f2937;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #28529a;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            z-index: 2;
         }
 
         .article-content {
@@ -553,19 +356,14 @@
                 <div class="logo-section">
                     <div class="logo">
                         <a href="../index.html" aria-label="OBS360 Home">
-                            <img src="../Logo-Obs360.co_.webp" alt="OBS360 Logo">
+                            <img src="../Logo-Obs360.co_.webp" alt="OBS360 Logo" />
                         </a>
                     </div>
                     <span class="blog-badge">RECURSOS</span>
                 </div>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <a href="../admin/index.html" id="adminLink" style="display: none; padding: 10px 18px; background: linear-gradient(135deg, #7c3aed, #6d28d9); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; font-size: 14px; transition: all 0.3s ease;">
-                        <i class="fa-solid fa-cog"></i> Admin
-                    </a>
-                    <a href="../index.html" class="back-link">
-                        ← Volver a OBS360
-                    </a>
-                </div>
+                <a href="../index.html" class="back-link">
+                    ← Volver a OBS360
+                </a>
             </div>
         </div>
     </header>
@@ -579,33 +377,34 @@
         </div>
     </section>
 
-    <!-- Login Screen - Full Page -->
-    <div id="loginScreen" class="login-screen">
-        <div class="login-container">
-            <div class="login-card">
-                <div class="login-header">
-                    <div class="lock-icon">🔒</div>
-                    <h2>Centro de Recursos</h2>
-                    <p>Ingresa tus credenciales para acceder</p>
-                </div>
-                <div id="loginError" class="login-error">
-                    Credenciales incorrectas
-                </div>
-                <form id="loginForm" class="login-form">
-                    <div class="form-group">
-                        <label for="username">Usuario</label>
-                        <input type="text" id="username" required="" placeholder="Tu usuario">
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Contraseña</label>
-                        <input type="password" id="password" required="" placeholder="Tu contraseña">
-                    </div>
-                    <button type="submit">Acceder</button>
-                </form>
-                <div class="login-branding">
-                    <img src="../Logo-Obs360.co_.webp" alt="OBS360">
-                </div>
+    <!-- Login Screen -->
+    <div id="loginScreen" style="display: none; padding: 80px 20px; background: white;">
+        <div style="max-width: 400px; margin: 0 auto; text-align: center;">
+            <h2 style="font-family: 'Montserrat', sans-serif; color: #1f2937; margin-bottom: 10px;">Acceso Restringido
+            </h2>
+            <p style="color: #6b7280; margin-bottom: 30px;">Ingresa tus credenciales para acceder a los recursos</p>
+            <div id="loginError"
+                style="display: none; background: #fee2e2; color: #dc2626; padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 14px;">
+                Credenciales incorrectas
             </div>
+            <form id="loginForm" style="text-align: left;">
+                <div style="margin-bottom: 20px;">
+                    <label
+                        style="display: block; margin-bottom: 8px; color: #374151; font-weight: 600; font-size: 14px;">Usuario</label>
+                    <input type="text" id="username" required
+                        style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 14px;">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label
+                        style="display: block; margin-bottom: 8px; color: #374151; font-weight: 600; font-size: 14px;">Contraseña</label>
+                    <input type="password" id="password" required
+                        style="width: 100%; padding: 12px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 14px;">
+                </div>
+                <button type="submit"
+                    style="width: 100%; padding: 14px; background: linear-gradient(135deg, #28529a, #84cc16); color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 14px;">
+                    Acceder
+                </button>
+            </form>
         </div>
     </div>
 
@@ -614,377 +413,37 @@
         <div class="container">
             <h2 class="section-title">Recursos Disponibles</h2>
 
-            <!-- Search Bar -->
-            <div style="max-width: 500px; margin: 0 auto 30px; position: relative;">
-                <input type="text" id="searchInput" placeholder="Buscar artículos por título, contenido o tags..." style="width: 100%; padding: 15px 20px 15px 50px; border: 2px solid #e5e7eb; border-radius: 30px; font-size: 15px; transition: all 0.3s ease; outline: none;" onfocus="this.style.borderColor='#28529a'; this.style.boxShadow='0 0 0 4px rgba(40, 82, 154, 0.1)';" onblur="this.style.borderColor='#e5e7eb'; this.style.boxShadow='none';">
-                <i class="fa-solid fa-search" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: #9ca3af; font-size: 18px;"></i>
-                <button id="clearSearch" onclick="clearSearch()" style="display: none; position: absolute; right: 15px; top: 50%; transform: translateY(-50%); background: #ef4444; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 12px;">
-                    <i class="fa-solid fa-times"></i>
-                </button>
-            </div>
-
-            <!-- Active Tags -->
-            <div id="activeTags" style="display: none; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
-                <!-- Active tags will appear here -->
-            </div>
-
             <!-- Category Filters -->
             <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 40px; flex-wrap: wrap;">
-                <button class="category-filter active" data-category="all" style="padding: 10px 20px; border: 2px solid #28529a; background: #28529a; color: white; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
-                    <i class="fa-solid fa-layer-group"></i> Todos
+                <button class="category-filter active" data-category="all"
+                    style="padding: 10px 20px; border: 2px solid #28529a; background: #28529a; color: white; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                    Todos
                 </button>
-                <button class="category-filter" data-category="Análisis" style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
-                    <i class="fa-solid fa-chart-line"></i> Análisis
+                <button class="category-filter" data-category="Análisis"
+                    style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                    📊 Análisis
                 </button>
-                <button class="category-filter" data-category="Informe Mensual" style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
-                    <i class="fa-solid fa-gem"></i> Informes
+                <button class="category-filter" data-category="Informe Mensual"
+                    style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                    💎 Informes
                 </button>
-                <button class="category-filter" data-category="Estrategia" style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
-                    <i class="fa-solid fa-chess"></i> Estrategia
+                <button class="category-filter" data-category="Estrategia"
+                    style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                    🍽️ Estrategia
                 </button>
-                <button class="category-filter" data-category="Capacitación" style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
-                    <i class="fa-solid fa-graduation-cap"></i> Capacitación
+                <button class="category-filter" data-category="Capacitación"
+                    style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                    🎓 Capacitación
                 </button>
-                <button class="category-filter" data-category="Herramientas" style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
-                    <i class="fa-solid fa-wrench"></i> Herramientas
+                <button class="category-filter" data-category="Otras"
+                    style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                    📁 Otras
                 </button>
-                <button class="category-filter" data-category="Otras" style="padding: 10px 20px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
-                    <i class="fa-solid fa-folder-open"></i> Otras
-                </button>
-            </div>
-
-            <!-- Results Counter -->
-            <div id="resultsInfo" style="text-align: center; margin-bottom: 20px; color: #6b7280; font-size: 14px; display: none;">
-                <span id="resultsCount">0</span> artículos encontrados
             </div>
 
             <div class="articles-grid" id="articlesGrid">
-                <a href="r-0f5bmxjk.html" class="article-card">
-                    <div class="article-thumbnail cpc">
-                        <span class="article-category">Análisis</span>
-                        <span class="article-icon">📊</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">Nano Banana Pro Playbook</h3>
-                        <p class="article-excerpt">Amazon Seller Image Generator SOP...</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
-            
-                <a href="r-3n8mcrjz.html" class="article-card">
-                    <div class="article-thumbnail cristal">
-                        <span class="article-category">Informe Mensual</span>
-                        <span class="article-icon">💎</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">Informe de Gestión: Cristal Up - Agosto 2025</h3>
-                        <p class="article-excerpt">Informe de Gestión - Agosto 2025...</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
-            
-                <a href="r-3qoquyw0.html" class="article-card">
-                    <div class="article-thumbnail cpc">
-                        <span class="article-category">Análisis</span>
-                        <span class="article-icon">📊</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">Explicación de Pensamiento de Primeros Principios</h3>
-                        <p class="article-excerpt">Recurso exclusivo para clientes de OBS360...</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
-            
-                <a href="r-7wve3grv.html" class="article-card">
-                    <div class="article-thumbnail cpc">
-                        <span class="article-category">Análisis</span>
-                        <span class="article-icon">📊</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">Guía Interactiva de Amazon Logistics: AWD y AGL</h3>
-                        <p class="article-excerpt">Una guía interactiva de Amazon Warehousing &amp; Distribution (AWD) y Amazon Global Logistics (AGL)....</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
-            
-                <a href="r-8xo3bmtj.html" class="article-card">
-                    <div class="article-thumbnail cpc">
-                        <span class="article-category">Análisis</span>
-                        <span class="article-icon">📊</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">Explicación de Pensamiento de Primeros Principios</h3>
-                        <p class="article-excerpt">Recurso exclusivo para clientes de OBS360...</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
-            
-                <a href="r-9bmh2k5t.html" class="article-card">
-                    <div class="article-thumbnail cpc">
-                        <span class="article-category">Análisis</span>
-                        <span class="article-icon">📊</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">Reporte de Funnel de Conversión - VITASEI</h3>
-                        <p class="article-excerpt">Marca: VITASEI | Periodo: Semanas 38-41, 2025...</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
-            
-                <a href="r-9p5p4kez.html" class="article-card">
-                    <div class="article-thumbnail cpc">
-                        <span class="article-category">Análisis</span>
-                        <span class="article-icon">📊</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">Amazon PPC Playbook Mentor</h3>
-                        <p class="article-excerpt">Your interactive guide to mastering Amazon PPC structure....</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
-            
-                <a href="r-bozoi772.html" class="article-card">
-                    <div class="article-thumbnail cpc">
-                        <span class="article-category">Análisis</span>
-                        <span class="article-icon">📊</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">Economía del Crédito con Bitcoin: La Revolución del Colateral</h3>
-                        <p class="article-excerpt">Cómo BTC se está convirtiendo en el colateral ideal y universal....</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
-            
-                <a href="r-cwdnmpf2.html" class="article-card">
-                    <div class="article-thumbnail cpc">
-                        <span class="article-category">Análisis</span>
-                        <span class="article-icon">📊</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">Amazon Command Center: Operación Vacío</h3>
-                        <p class="article-excerpt">$4.2M /
-                        año...</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
-            
-                <a href="r-eja91hpc.html" class="article-card">
-                    <div class="article-thumbnail cpc">
-                        <span class="article-category">Análisis</span>
-                        <span class="article-icon">📊</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">Manual Básico de Firebase</h3>
-                        <p class="article-excerpt">Esta guía te ayudará a reemplazar tu "Sistema de Autenticación Simulado" por los servicios reales de
-                Google Firebase. Aquí aprenderás a conectar, autenticar usuarios y guardar datos....</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
-            
-                <a href="r-ewdkxo7h.html" class="article-card">
-                    <div class="article-thumbnail cpc">
-                        <span class="article-category">Análisis</span>
-                        <span class="article-icon">📊</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">U.S. Latino Market Strategy Report</h3>
-                        <p class="article-excerpt">A Synthesized Report on U.S. Latino Market Strategy, Integrating the Visions of Galloway, Patel, and Vaynerchuk...</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
-            
-                <a href="r-jj7mazpr.html" class="article-card">
-                    <div class="article-thumbnail cpc">
-                        <span class="article-category">Análisis</span>
-                        <span class="article-icon">📊</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">E-Commerce Strategic Compass: Seller's View</h3>
-                        <p class="article-excerpt">
-                    Choosing a platform is not just about fees; it's a trade-off between Traffic (Marketplaces) and Control (DTC). 
-                    Amazon and Walmart offer built-in audiences but...</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
-            
-                <a href="r-kdg51xre.html" class="article-card">
-                    <div class="article-thumbnail cpc">
-                        <span class="article-category">Análisis</span>
-                        <span class="article-icon">📊</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">The U.S. Latino Market: A New Era of Growth</h3>
-                        <p class="article-excerpt">U.S. Latino Market Analysis...</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
-            
-                <a href="r-kdp7sim3.html" class="article-card">
-                    <div class="article-thumbnail cpc">
-                        <span class="article-category">Análisis</span>
-                        <span class="article-icon">📊</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">KDP Simulator v9: ACOS Resultante</h3>
-                        <p class="article-excerpt">Define tu presupuesto mensual ($) y descubre tu ACOS real
-                        (%)....</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
-            
-                <a href="r-lkg9kvu6.html" class="article-card">
-                    <div class="article-thumbnail cpc">
-                        <span class="article-category">Análisis</span>
-                        <span class="article-icon">📊</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">Interactive Guide to Amazon Logistics: AWD &amp; AGL</h3>
-                        <p class="article-excerpt">An interactive guide to Amazon Warehousing &amp; Distribution (AWD) and Amazon Global Logistics (AGL)....</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
-            
-                <a href="r-n6ppru77.html" class="article-card">
-                    <div class="article-thumbnail cpc">
-                        <span class="article-category">Análisis</span>
-                        <span class="article-icon">📊</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">PPC Playbook Infographic Preview</h3>
-                        <p class="article-excerpt">Recurso exclusivo para clientes de OBS360...</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
-            
-                <a href="r-ntf1jphh.html" class="article-card">
-                    <div class="article-thumbnail cpc">
-                        <span class="article-category">Análisis</span>
-                        <span class="article-icon">📊</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">Análisis Interactivo de la Marca Poppi con IA</h3>
-                        <p class="article-excerpt">
-                Explora cómo Poppi transformó una solución casera en una marca multimillonaria, redefiniendo el mercado de bebidas con estrategias innovadoras en branding, marketing digital y ventas,...</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
-            
-                <a href="r-p9zo6rm2.html" class="article-card">
-                    <div class="article-thumbnail cpc">
-                        <span class="article-category">Análisis</span>
-                        <span class="article-icon">📊</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">In-Depth Analysis of the Amazon Ads CPC Environment</h3>
-                        <p class="article-excerpt">This dashboard provides a comprehensive
-                look into the Cost-Per-Click (CPC) environment for Amazon advertising. We will explore what CPC is, how
-                the ad auction works, an...</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
-            
-                <a href="r-ta8mpgnb.html" class="article-card">
-                    <div class="article-thumbnail cpc">
-                        <span class="article-category">Análisis</span>
-                        <span class="article-icon">📊</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">Explicación de Pensamiento de Primeros Principios</h3>
-                        <p class="article-excerpt">Recurso exclusivo para clientes de OBS360...</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
-            
-                <a href="r-teria1y3.html" class="article-card">
-                    <div class="article-thumbnail cpc">
-                        <span class="article-category">Análisis</span>
-                        <span class="article-icon">📊</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">Nielsen Report: Curating the Narrative</h3>
-                        <p class="article-excerpt">Recurso exclusivo para clientes de OBS360...</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
-            
-                <a href="r-u24ij3da.html" class="article-card">
-                    <div class="article-thumbnail cpc">
-                        <span class="article-category">Análisis</span>
-                        <span class="article-icon">📊</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">Anyeluz: Deep Dive Cosméticos 2026</h3>
-                        <p class="article-excerpt">
-                    Lanzar cosméticos en Amazon US es viable y necesario para escalar, PERO no como una
-                    línea de maquillaje tradicional ("color").
-                    La estrategi...</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
-            
-                <a href="r-u77hfkoz.html" class="article-card">
-                    <div class="article-thumbnail cpc">
-                        <span class="article-category">Análisis</span>
-                        <span class="article-icon">📊</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">Amazon Command Center: Operación Vacío</h3>
-                        <p class="article-excerpt">$4.2M /
-                        año...</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
-            
-                <a href="r-vj6iddt2.html" class="article-card">
-                    <div class="article-thumbnail cristal">
-                        <span class="article-category">Informe Mensual</span>
-                        <span class="article-icon">💎</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">Reporte de Higiene de Cuenta: VAJILLAS Corona</h3>
-                        <p class="article-excerpt">
-                La gestión de Negative Keywords es el pilar defensivo para proteger el ROAS de VAJILLAS
-                Corona.
-                Dada la posición en el segmento Premium, la estrategia ...</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
-            
-                <a href="r-yk7khrld.html" class="article-card">
-                    <div class="article-thumbnail cpc">
-                        <span class="article-category">Análisis</span>
-                        <span class="article-icon">📊</span>
-                    </div>
-                    <div class="article-content">
-                        <span class="article-date">Diciembre 2025</span>
-                        <h3 class="article-title">Product Opportunity Explorer - Metrics Guide</h3>
-                        <p class="article-excerpt">Click on any metric below to see its definition and why it's important, based on the official Amazon documentation....</p>
-                        <span class="article-read-more">Ver análisis completo →</span>
-                    </div>
-                </a>
+                <!-- Articles will be loaded dynamically -->
+                <p style="text-align: center; color: #6b7280; padding: 40px;">Cargando artículos...</p>
             </div>
         </div>
     </section>
@@ -992,62 +451,40 @@
 
 
     <script>
-        // API Configuration
-        const API_URL = window.location.hostname === 'localhost'
-            ? 'http://localhost:3000/api'
-            : 'https://obs360.co/api';
-
-        // CREDENCIALES FIJAS - SISTEMA SIMPLE
-        const BLOG_USER = 'obs360admin';
-        const BLOG_PASS = 'Obs.2025$$';
+        // Authentication
+        const BLOG_CREDENTIALS = {
+            username: 'obs360client',
+            password: 'Resources2025!'
+        };
 
         let allArticles = [];
         let currentFilter = 'all';
-        let articlesLoaded = false;
 
-        // Initialize page
-        function initPage() {
-            if (sessionStorage.getItem('blog_logged_in') === 'true') {
-                showArticles();
-            } else {
-                document.getElementById('loginScreen').style.display = 'block';
-                document.querySelector('.blog-hero').classList.add('hidden');
-            }
+        // Check if already logged in
+        if (sessionStorage.getItem('blog_logged_in') === 'true') {
+            showArticles();
+        } else {
+            document.getElementById('loginScreen').style.display = 'block';
         }
 
-        // LOGIN SIMPLE - SIN SERVIDOR
+        // Login form handler
         document.getElementById('loginForm').addEventListener('submit', function (e) {
             e.preventDefault();
-            const username = document.getElementById('username').value.trim();
+            const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            const loginError = document.getElementById('loginError');
 
-            loginError.style.display = 'none';
-
-            // VALIDACIÓN DIRECTA LOCAL
-            if (username === BLOG_USER && password === BLOG_PASS) {
+            if (username === BLOG_CREDENTIALS.username && password === BLOG_CREDENTIALS.password) {
                 sessionStorage.setItem('blog_logged_in', 'true');
                 document.getElementById('loginScreen').style.display = 'none';
                 showArticles();
             } else {
-                loginError.textContent = 'Credenciales incorrectas';
-                loginError.style.display = 'block';
+                document.getElementById('loginError').style.display = 'block';
             }
         });
 
         function showArticles() {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.querySelector('.blog-hero').classList.remove('hidden');
             document.getElementById('articlesSection').style.display = 'block';
-            // Show admin link when logged in
-            const adminLink = document.getElementById('adminLink');
-            if (adminLink) adminLink.style.display = 'inline-flex';
-
-            // Prevent double loading
-            if (!articlesLoaded) {
-                articlesLoaded = true;
-                loadArticles();
-            }
+            loadArticles();
         }
 
         // Categorize articles automatically
@@ -1082,15 +519,19 @@
                 return 'Estrategia';
             }
 
-            // Herramientas keywords (Tools)
-            if (titleLower.includes('simulator') || titleLower.includes('simulador') ||
-                titleLower.includes('calculator') || titleLower.includes('calculador') ||
-                titleLower.includes('kdp') || titleLower.includes('tool') ||
-                titleLower.includes('herramienta') || titleLower.includes('budget')) {
-                return 'Herramientas';
-            }
-
             return 'Otras';
+        }
+
+        // Get icon for category
+        function getCategoryIcon(category) {
+            const icons = {
+                'Análisis': '📊',
+                'Informe Mensual': '💎',
+                'Estrategia': '🍽️',
+                'Capacitación': '🎓',
+                'Otras': '📁'
+            };
+            return icons[category] || '📄';
         }
 
         // Load articles from API
@@ -1098,6 +539,10 @@
             const grid = document.getElementById('articlesGrid');
 
             try {
+                const API_URL = window.location.hostname === 'localhost'
+                    ? 'http://localhost:3000/api'
+                    : 'https://obs360.co/api';
+
                 const response = await fetch(`${API_URL}/articles`);
                 const data = await response.json();
                 let articles = data.articles || [];
@@ -1115,9 +560,14 @@
                 });
 
                 articles = articles.map(article => {
-                    // Auto-categorize if no category
-                    if (!article.category || article.category === 'Sin categoría') {
+                    // Auto-categorize if no category or "Sin fecha"
+                    if (!article.category || article.category === 'Sin fecha') {
                         article.category = categorizeArticle(article.title, article.filename);
+                    }
+
+                    // Set icon based on category
+                    if (!article.icon || article.icon === '📄') {
+                        article.icon = getCategoryIcon(article.category);
                     }
 
                     // Set today's date if no date
@@ -1141,129 +591,34 @@
         function renderArticles(articles) {
             const grid = document.getElementById('articlesGrid');
 
-            // Update results counter
-            const resultsInfo = document.getElementById('resultsInfo');
-            const resultsCount = document.getElementById('resultsCount');
-            if (document.getElementById('searchInput').value.trim()) {
-                resultsInfo.style.display = 'block';
-                resultsCount.textContent = articles.length;
-            } else {
-                resultsInfo.style.display = 'none';
-            }
-
-            // Handle empty results
-            if (articles.length === 0) {
-                grid.innerHTML = `
-                    <div style="text-align: center; padding: 60px 20px; color: #6b7280;">
-                        <i class="fa-solid fa-search" style="font-size: 48px; margin-bottom: 20px; opacity: 0.3;"></i>
-                        <p style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">No se encontraron artículos</p>
-                        <p style="font-size: 14px;">Intenta con otros términos de búsqueda</p>
-                    </div>
-                `;
-                return;
-            }
-
-            // Map categories to CSS classes and Font Awesome icons
-            const categoryConfig = {
-                'Análisis': { class: 'analisis', icon: 'fa-chart-line' },
-                'Informe Mensual': { class: 'informe', icon: 'fa-gem' },
-                'Estrategia': { class: 'estrategia', icon: 'fa-chess' },
-                'Capacitación': { class: 'capacitacion', icon: 'fa-graduation-cap' },
-                'Herramientas': { class: 'herramientas', icon: 'fa-wrench' },
-                'Otras': { class: 'otras', icon: 'fa-folder-open' }
+            // Map categories to colors
+            const categoryColors = {
+                'Análisis': 'cpc',
+                'Informe Mensual': 'cristal',
+                'Estrategia': 'porcelana',
+                'Capacitación': 'cpc',
+                'Otras': 'cristal'
             };
 
             grid.innerHTML = articles.map(article => {
-                const config = categoryConfig[article.category] || categoryConfig['Otras'];
-                const tags = article.tags || [];
-                const tagsHtml = tags.length > 0 ? `
-                    <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px;">
-                        ${tags.map(tag => `<span onclick="event.preventDefault(); filterByTag('${tag}')" style="background: #e0e7ff; color: #3730a3; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">#${tag}</span>`).join('')}
-                    </div>
-                ` : '';
-
+                const colorClass = categoryColors[article.category] || 'cpc';
                 return `
                     <a href="${article.filename}" class="article-card">
-                        <div class="article-thumbnail ${config.class}">
+                        <div class="article-thumbnail ${colorClass}">
                             <span class="article-category">${article.category}</span>
-                            <div class="article-icon-wrapper">
-                                <i class="fa-solid ${config.icon} article-icon"></i>
-                            </div>
+                            <span class="article-icon">${article.icon}</span>
                         </div>
                         <div class="article-content">
-                            <span class="article-date"><i class="fa-regular fa-calendar"></i> ${article.date}</span>
+                            <span class="article-date">${article.date}</span>
                             <h3 class="article-title">${article.title}</h3>
                             <p class="article-excerpt">${article.excerpt}</p>
-                            ${tagsHtml}
                             <span class="article-read-more">
-                                Ver completo <i class="fa-solid fa-arrow-right"></i>
+                                Ver completo →
                             </span>
                         </div>
                     </a>
                 `;
             }).join('');
-        }
-
-        // Search functionality
-        let searchTimeout;
-        document.getElementById('searchInput').addEventListener('input', function (e) {
-            clearTimeout(searchTimeout);
-            const query = e.target.value.trim().toLowerCase();
-
-            // Show/hide clear button
-            document.getElementById('clearSearch').style.display = query ? 'block' : 'none';
-
-            searchTimeout = setTimeout(() => {
-                if (query.length === 0) {
-                    applyFilters();
-                } else {
-                    const filtered = allArticles.filter(article => {
-                        const inTitle = article.title.toLowerCase().includes(query);
-                        const inExcerpt = article.excerpt.toLowerCase().includes(query);
-                        const inTags = (article.tags || []).some(tag => tag.toLowerCase().includes(query));
-                        const inCategory = article.category.toLowerCase().includes(query);
-                        return inTitle || inExcerpt || inTags || inCategory;
-                    });
-                    renderArticles(filtered);
-                }
-            }, 300);
-        });
-
-        function clearSearch() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('clearSearch').style.display = 'none';
-            document.getElementById('activeTags').style.display = 'none';
-            document.getElementById('activeTags').innerHTML = '';
-            applyFilters();
-        }
-
-        function filterByTag(tag) {
-            document.getElementById('searchInput').value = tag;
-            document.getElementById('clearSearch').style.display = 'block';
-
-            // Show active tag
-            const activeTagsDiv = document.getElementById('activeTags');
-            activeTagsDiv.style.display = 'flex';
-            activeTagsDiv.innerHTML = `
-                <span style="background: #7c3aed; color: white; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-tag"></i> #${tag}
-                    <span onclick="clearSearch()" style="cursor: pointer; opacity: 0.8;">&times;</span>
-                </span>
-            `;
-
-            const filtered = allArticles.filter(article =>
-                (article.tags || []).some(t => t.toLowerCase() === tag.toLowerCase())
-            );
-            renderArticles(filtered);
-        }
-
-        function applyFilters() {
-            if (currentFilter === 'all') {
-                renderArticles(allArticles);
-            } else {
-                const filtered = allArticles.filter(article => article.category === currentFilter);
-                renderArticles(filtered);
-            }
         }
 
         // Setup category filters
@@ -1272,11 +627,6 @@
 
             filterButtons.forEach(button => {
                 button.addEventListener('click', function () {
-                    // Clear search when clicking category
-                    document.getElementById('searchInput').value = '';
-                    document.getElementById('clearSearch').style.display = 'none';
-                    document.getElementById('activeTags').style.display = 'none';
-
                     // Remove active class from all buttons
                     filterButtons.forEach(btn => {
                         btn.style.background = 'white';
@@ -1305,17 +655,19 @@
             });
         }
 
-        // Initialize page when DOM is ready
-        document.addEventListener('DOMContentLoaded', initPage);
+        // Load articles when page loads (if logged in)
+        if (sessionStorage.getItem('blog_logged_in') === 'true') {
+            document.addEventListener('DOMContentLoaded', loadArticles);
+        }
     </script>
 
     <!-- Footer -->
     <footer class="blog-footer">
         <div class="container">
-            <img src="../Logo-Obs360.co_.webp" alt="OBS360">
+            <img src="../Logo-Obs360.co_.webp" alt="OBS360" />
             <p>© 2025 OBS360. Recursos exclusivos para clientes.</p>
         </div>
     </footer>
+</body>
 
-
-</body></html>
+</html>
