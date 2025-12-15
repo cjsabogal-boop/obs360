@@ -567,6 +567,17 @@ async function updateArticleCategoriesInFiles(oldCategory, newCategory) {
     return updatedCount;
 }
 
+// Endpoint para verificar estado del servidor y versión del código
+app.get('/api/version/check', (req, res) => {
+    res.json({
+        status: 'online',
+        version: '1.2.0-autodiscovery-fix',
+        timestamp: new Date().toISOString(),
+        blog_dir: BLOG_DIR,
+        is_content_excluded: true
+    });
+});
+
 // GET - Obtener todos los artículos (Resumido para evitar sobrecarga)
 app.get('/api/articles', async (req, res) => {
     try {
