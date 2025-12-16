@@ -1150,16 +1150,16 @@
                     <div style="margin: 12px 0; padding: 12px; background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0;">
                         <label style="font-size: 11px; color: #64748b; font-weight: 600; display: block; margin-bottom: 6px;"><i class="fa-solid fa-share-nodes"></i> URL para clientes:</label>
                         <div style="display: flex; gap: 8px; align-items: center;">
-                            <input type="text" readonly value="https://obs360.co/blog/${article.filename}" 
+                            <input type="text" readonly value="https://obs360.co/blog/article.html?id=${article.id}" 
                                 id="url-${article.slug}"
                                 style="flex: 1; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; background: white; color: #334155;">
-                            <button onclick="copyUrl('${article.slug}', '${article.filename}')" 
+                            <button onclick="copyUrl('${article.slug}', '${article.id}')" 
                         style="padding: 10px 16px; background: linear-gradient(135deg, #28529a, #1e3a6e); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 6px; transition: all 0.3s ease;"
                         onmouseover="this.style.transform='translateY(-2px)'"
                         onmouseout="this.style.transform='translateY(0)'">
                         <i class="fa-solid fa-copy"></i> Copiar
                     </button>
-                    <a href="https://obs360.co/blog/${article.filename}" target="_blank"
+                    <a href="https://obs360.co/blog/article.html?id=${article.id}" target="_blank"
                         style="padding: 10px 16px; background: white; color: #2563eb; border: 2px solid #2563eb; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 6px; transition: all 0.3s ease; text-decoration: none;"
                         onmouseover="this.style.background='#eff6ff'; this.style.transform='translateY(-2px)'"
                         onmouseout="this.style.background='white'; this.style.transform='translateY(0)'">
@@ -1177,8 +1177,8 @@
                     }
 
                     // Copy URL function
-                    function copyUrl(slug, filename) {
-                        const url = `https://obs360.co/blog/${filename}`;
+                    function copyUrl(slug, articleId) {
+                        const url = `https://obs360.co/blog/article.html?id=${articleId}`;
                         navigator.clipboard.writeText(url).then(() => {
                             // Visual feedback
                             const input = document.getElementById(`url-${slug}`);
