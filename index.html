@@ -605,7 +605,7 @@
             grid.innerHTML = articles.map(article => {
                 const colorClass = categoryColors[article.category] || 'cpc';
                 return `
-                    <a href="${article.filename}" class="article-card">
+                    <a href="article.html?id=${article.id}" class="article-card">
                         <div class="article-thumbnail ${colorClass}">
                             <span class="article-category">${article.category}</span>
                             <span class="article-icon">${article.icon}</span>
