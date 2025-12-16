@@ -8,28 +8,27 @@
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" type="image/webp" href="Logo-Obs360.co_.webp" />
     <style>
-        /* Reset mínimo - solo lo necesario */
-        .obs-header,
-        .obs-footer {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f9fafb;
         }
 
         /* Header fijo */
         .obs-header {
             background: white;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 15px 0;
+            padding: 15px 20px;
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             z-index: 9999;
-        }
-
-        .obs-header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -49,69 +48,60 @@
             font-weight: 600;
         }
 
-        /* Espaciador para el header fijo */
-        .obs-header-spacer {
-            height: 70px;
-        }
-
-        /* Contenedor del artículo - centrado simple */
-        .obs-article-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+        /* IFrame container */
+        .content-frame {
+            margin-top: 70px;
+            width: 100%;
+            height: calc(100vh - 140px);
+            border: none;
         }
 
         /* Footer */
         .obs-footer {
             background: linear-gradient(135deg, #1f2937 0%, #28529a 100%);
-            padding: 40px 0;
+            padding: 20px;
             text-align: center;
-            margin-top: 40px;
-        }
-
-        .obs-footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .obs-footer img {
-            height: 50px;
-            margin-bottom: 15px;
-            filter: brightness(0) invert(1);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
         }
 
         .obs-footer p {
             color: rgba(255, 255, 255, 0.7);
-            font-size: 14px;
-            margin: 0 0 10px 0;
+            font-size: 12px;
+            margin: 0;
         }
 
-        .obs-footer-link {
-            display: inline-block;
-            background: #84cc16;
-            color: white !important;
-            padding: 12px 30px;
-            border-radius: 25px;
+        .obs-footer a {
+            color: #84cc16;
             text-decoration: none;
             font-weight: 600;
-            margin-top: 15px;
         }
 
-        /* Loading y error */
-        .obs-loading,
-        .obs-error {
-            text-align: center;
-            padding: 80px 20px;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
-
-        .obs-error {
-            color: #ef4444;
-        }
-
-        .obs-loading {
+        /* Loading */
+        .loading-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 140px);
+            margin-top: 70px;
             color: #6b7280;
+        }
+
+        .error-container {
+            text-align: center;
+            padding: 40px;
+            margin-top: 70px;
+        }
+
+        .error-container h2 {
+            color: #ef4444;
+            margin-bottom: 15px;
+        }
+
+        .error-container a {
+            color: #28529a;
         }
     </style>
 </head>
@@ -119,71 +109,93 @@
 <body>
     <!-- OBS360 Header -->
     <header class="obs-header">
-        <div class="obs-header-content">
-            <a href="index.html">
-                <img src="Logo-Obs360.co_.webp" alt="OBS360" />
-            </a>
-            <span class="obs-private-badge">RECURSO PRIVADO</span>
-        </div>
+        <a href="index.html">
+            <img src="Logo-Obs360.co_.webp" alt="OBS360" />
+        </a>
+        <span class="obs-private-badge">RECURSO PRIVADO</span>
     </header>
 
-    <!-- Espaciador -->
-    <div class="obs-header-spacer"></div>
-
-    <!-- Contenido del artículo -->
-    <div id="articleContainer">
-        <div class="obs-loading">
+    <!-- Contenido -->
+    <div id="contentContainer">
+        <div class="loading-container">
             <p>📡 Cargando artículo...</p>
         </div>
     </div>
 
     <!-- OBS360 Footer -->
     <footer class="obs-footer">
-        <div class="obs-footer-content">
-            <img src="Logo-Obs360.co_.webp" alt="OBS360" />
-            <p>Recurso exclusivo para clientes de OBS360</p>
-            <p style="font-size: 12px; color: rgba(255,255,255,0.5);">© 2025 OBS360 - Todos los derechos reservados</p>
-            <a href="https://wa.me/19803370518" target="_blank" class="obs-footer-link">Contactar a OBS360</a>
-        </div>
+        <p>© 2025 OBS360 - Recurso exclusivo | <a href="https://wa.me/19803370518" target="_blank">Contactar</a></p>
     </footer>
 
     <script>
         const API_URL = 'https://obs360.vercel.app/api';
-
-        // Get article ID from URL
+        
         const urlParams = new URLSearchParams(window.location.search);
         const articleId = urlParams.get('id') || urlParams.get('slug');
-
+        
         async function loadArticle() {
-            const container = document.getElementById('articleContainer');
-
+            const container = document.getElementById('contentContainer');
+            
             if (!articleId) {
-                container.innerHTML = '<div class="obs-error"><h2>⚠️ Artículo no especificado</h2></div>';
+                container.innerHTML = '<div class="error-container"><h2>⚠️ Artículo no especificado</h2><a href="index.html">← Volver</a></div>';
                 return;
             }
-
+            
             try {
                 const response = await fetch(`${API_URL}/articles/${articleId}`);
-
-                if (!response.ok) {
-                    throw new Error('Artículo no encontrado');
-                }
-
+                
+                if (!response.ok) throw new Error('Artículo no encontrado');
+                
                 const article = await response.json();
-
-                // Update page title
+                
                 document.title = `${article.title} | OBS360 Blog`;
-
-                // Mostrar el contenido HTML tal cual, solo centrado
-                container.innerHTML = `
-                    <div class="obs-article-wrapper">
-                        ${article.content}
-                    </div>
-                `;
+                
+                // Crear iframe con el contenido completo
+                const iframe = document.createElement('iframe');
+                iframe.className = 'content-frame';
+                iframe.style.cssText = 'margin-top: 70px; width: 100%; height: calc(100vh - 140px); border: none; background: white;';
+                
+                container.innerHTML = '';
+                container.appendChild(iframe);
+                
+                // Escribir el contenido al iframe
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                
+                // Si el contenido tiene estructura HTML completa, usarla directamente
+                let htmlContent = article.content;
+                
+                if (!htmlContent.includes('<!DOCTYPE') && !htmlContent.includes('<html')) {
+                    // Si es solo contenido parcial, envolverlo en HTML básico
+                    htmlContent = `
+                        <!DOCTYPE html>
+                        <html lang="es">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <style>
+                                body { 
+                                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+                                    padding: 20px;
+                                    max-width: 1200px;
+                                    margin: 0 auto;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            ${htmlContent}
+                        </body>
+                        </html>
+                    `;
+                }
+                
+                iframeDoc.open();
+                iframeDoc.write(htmlContent);
+                iframeDoc.close();
+                
             } catch (error) {
                 console.error('Error:', error);
                 container.innerHTML = `
-                    <div class="obs-error">
+                    <div class="error-container">
                         <h2>⚠️ Error al cargar el artículo</h2>
                         <p>${error.message}</p>
                         <p style="margin-top: 20px;"><a href="index.html">← Volver al blog</a></p>
@@ -191,7 +203,7 @@
                 `;
             }
         }
-
+        
         loadArticle();
     </script>
 </body>

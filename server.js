@@ -296,8 +296,8 @@ app.post('/api/articles', async (req, res) => {
             return res.status(400).json({ error: 'Título y contenido son requeridos' });
         }
 
-        // Limpiar el HTML para extraer solo el contenido útil
-        content = cleanHtmlContent(content);
+        // Ya no limpiamos el HTML - se mostrará en iframe aislado
+        // content = cleanHtmlContent(content);
 
         const { db } = await connectToDatabase();
 
