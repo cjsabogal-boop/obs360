@@ -192,18 +192,31 @@
                 iframeDoc.write(htmlContent);
                 iframeDoc.close();
 
-                // Inyectar CSS responsive forzado para móvil
+                // Detectar si es móvil basado en el viewport
+                const isMobile = window.innerWidth <= 768;
+
+                // Inyectar CSS responsive ULTRA AGRESIVO para móvil
                 const responsiveCSS = document.createElement('style');
+                responsiveCSS.id = 'obs360-responsive-override';
                 responsiveCSS.textContent = `
-                    /* CSS Responsive forzado para todos los artículos */
-                    * {
+                    /* ========================================= */
+                    /* CSS RESPONSIVE ULTRA AGRESIVO - OBS360   */
+                    /* Fuerza adaptación móvil en todo contenido */
+                    /* ========================================= */
+                    
+                    /* Reset forzado para todo */
+                    *, *::before, *::after {
                         max-width: 100% !important;
                         box-sizing: border-box !important;
                     }
                     
+                    /* Eliminar overflow hidden que bloquea scroll */
                     html, body {
+                        overflow: auto !important;
                         overflow-x: hidden !important;
                         width: 100% !important;
+                        height: auto !important;
+                        min-height: 100% !important;
                     }
                     
                     body {
@@ -213,12 +226,14 @@
                         line-height: 1.6 !important;
                     }
                     
-                    img {
+                    /* Imágenes responsive */
+                    img, svg, picture {
                         max-width: 100% !important;
                         height: auto !important;
                         display: block !important;
                     }
                     
+                    /* Tablas responsive */
                     table {
                         width: 100% !important;
                         max-width: 100% !important;
@@ -227,51 +242,137 @@
                         -webkit-overflow-scrolling: touch !important;
                     }
                     
+                    /* Código responsive */
                     pre, code {
                         white-space: pre-wrap !important;
                         word-wrap: break-word !important;
+                        word-break: break-word !important;
                         max-width: 100% !important;
                         overflow-x: auto !important;
                     }
                     
+                    /* Media embebido */
                     iframe, video, embed, object {
                         max-width: 100% !important;
+                        height: auto !important;
                     }
                     
-                    /* Ajustar títulos en móvil */
-                    @media (max-width: 768px) {
+                    /* ========================================= */
+                    /* ESTILOS ESPECÍFICOS PARA MÓVIL           */
+                    /* ========================================= */
+                    @media screen and (max-width: 768px) {
+                        /* Títulos reducidos */
                         h1 {
-                            font-size: 1.5rem !important;
-                            line-height: 1.3 !important;
+                            font-size: 1.4rem !important;
+                            line-height: 1.2 !important;
+                            padding: 0 !important;
                         }
                         
                         h2 {
-                            font-size: 1.25rem !important;
+                            font-size: 1.2rem !important;
+                            line-height: 1.3 !important;
                         }
                         
                         h3 {
-                            font-size: 1.1rem !important;
+                            font-size: 1rem !important;
                         }
                         
-                        p, li, td, th {
+                        p, li, td, th, span, a {
                             font-size: 14px !important;
+                            line-height: 1.5 !important;
                         }
                         
-                        /* Contenedores con ancho fijo */
-                        div, section, article, aside, nav, header, footer {
-                            max-width: 100% !important;
-                            width: auto !important;
+                        /* SLIDES - Convertir a scroll vertical */
+                        .slide, .slides-container, [class*="slide"] {
+                            position: relative !important;
+                            height: auto !important;
+                            min-height: auto !important;
+                            transform: none !important;
+                            opacity: 1 !important;
+                            visibility: visible !important;
+                            pointer-events: all !important;
+                            padding: 20px 10px !important;
+                            margin-bottom: 30px !important;
+                            border-bottom: 1px solid rgba(255,255,255,0.1) !important;
                         }
                         
-                        /* Flexbox y Grid responsive */
-                        .flex, [style*="display: flex"], [style*="display:flex"] {
-                            flex-wrap: wrap !important;
-                        }
-                        
-                        .grid, [style*="display: grid"], [style*="display:grid"] {
+                        /* Grids - Forzar 1 columna */
+                        .grid-2, .grid-3, .grid-4,
+                        [class*="grid-"],
+                        [style*="grid-template-columns"] {
+                            display: block !important;
                             grid-template-columns: 1fr !important;
                         }
+                        
+                        .grid-2 > *, .grid-3 > *, .grid-4 > *,
+                        [class*="grid-"] > * {
+                            margin-bottom: 15px !important;
+                        }
+                        
+                        /* Cards - Reducir padding */
+                        .card, [class*="card"] {
+                            padding: 15px !important;
+                            margin-bottom: 15px !important;
+                        }
+                        
+                        /* Stats - Reducir tamaño */
+                        .stat-big, [class*="stat"] {
+                            font-size: 2rem !important;
+                        }
+                        
+                        /* Contenedores genéricos */
+                        div, section, article, aside, nav, header, footer, main {
+                            max-width: 100% !important;
+                            width: auto !important;
+                            padding-left: 10px !important;
+                            padding-right: 10px !important;
+                        }
+                        
+                        /* Flexbox responsive */
+                        .flex, [style*="display: flex"], [style*="display:flex"] {
+                            flex-wrap: wrap !important;
+                            flex-direction: column !important;
+                        }
+                        
+                        /* Controles de navegación de slides */
+                        .controls, [class*="control"], [class*="nav"] {
+                            position: relative !important;
+                            bottom: auto !important;
+                            right: auto !important;
+                            display: flex !important;
+                            justify-content: center !important;
+                            padding: 15px !important;
+                        }
+                        
+                        /* Progress bar */
+                        .progress-bar {
+                            display: none !important;
+                        }
+                        
+                        /* Highlight boxes */
+                        .highlight-box, [class*="highlight"] {
+                            padding: 10px !important;
+                            margin: 10px 0 !important;
+                        }
+                        
+                        /* Botones */
+                        button, .btn, [class*="btn"] {
+                            padding: 10px 15px !important;
+                            font-size: 14px !important;
+                        }
                     }
+                    
+                    /* Forzar visibilidad de todos los slides en móvil */
+                    ${isMobile ? `
+                        .slide, [class*="slide"] {
+                            position: relative !important;
+                            display: block !important;
+                            opacity: 1 !important;
+                            visibility: visible !important;
+                            transform: none !important;
+                            pointer-events: all !important;
+                        }
+                    ` : ''}
                 `;
 
                 // Insertar el CSS al principio del head del iframe
@@ -279,6 +380,16 @@
                     iframeDoc.head.appendChild(responsiveCSS);
                 } else if (iframeDoc.body) {
                     iframeDoc.body.insertBefore(responsiveCSS, iframeDoc.body.firstChild);
+                }
+
+                // Para presentaciones de slides, forzar mostrar todos los slides en móvil
+                if (isMobile) {
+                    setTimeout(() => {
+                        const slides = iframeDoc.querySelectorAll('.slide, [class*="slide"]');
+                        slides.forEach(slide => {
+                            slide.style.cssText += 'position: relative !important; display: block !important; opacity: 1 !important; visibility: visible !important; transform: none !important; height: auto !important;';
+                        });
+                    }, 100);
                 }
 
             } catch (error) {
