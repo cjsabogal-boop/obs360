@@ -1003,8 +1003,17 @@
                         const form = document.getElementById('articleForm');
                         if (form) {
                             form.reset();
-                            document.getElementById('currentSlug').value = ''; // Limpiar slug oculto
+                            document.getElementById('currentSlug').value = '';
                             document.getElementById('articleContent').value = '';
+
+                            // Setear fecha actual por defecto en español
+                            const now = new Date();
+                            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                            // Capitalizar primera letra del mes
+                            let dateStr = now.toLocaleDateString('es-ES', options);
+                            dateStr = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+
+                            document.getElementById('articleDate').value = dateStr;
                         }
                         showPanel('new');
                     }
