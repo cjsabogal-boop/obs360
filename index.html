@@ -394,73 +394,73 @@
 
         /* Tags Section */
         .tags-section {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .tags-header {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 8px;
+            margin-bottom: 10px;
         }
 
         .tags-title {
             font-family: 'Montserrat', sans-serif;
-            font-size: 0.85rem;
+            font-size: 0.7rem;
             font-weight: 600;
-            color: #6b7280;
+            color: #9ca3af;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
 
         .tags-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 10px;
+            gap: 6px;
             padding: 0 10px;
         }
 
         .tag-pill {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 8px 16px;
-            background: linear-gradient(135deg, rgba(40, 82, 154, 0.08), rgba(132, 204, 22, 0.08));
-            border: 2px solid transparent;
-            border-radius: 25px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #374151;
+            gap: 4px;
+            padding: 4px 10px;
+            background: rgba(40, 82, 154, 0.06);
+            border: 1px solid rgba(40, 82, 154, 0.15);
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 500;
+            color: #6b7280;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             text-transform: capitalize;
         }
 
         .tag-pill:hover {
-            background: linear-gradient(135deg, rgba(40, 82, 154, 0.15), rgba(132, 204, 22, 0.15));
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(40, 82, 154, 0.15);
+            background: rgba(40, 82, 154, 0.12);
+            color: #28529a;
+            transform: translateY(-1px);
         }
 
         .tag-pill.active {
-            background: linear-gradient(135deg, #28529a, #84cc16);
+            background: linear-gradient(135deg, #28529a, #3b6cb7);
             color: white;
             border-color: transparent;
-            box-shadow: 0 4px 15px rgba(40, 82, 154, 0.3);
+            box-shadow: 0 2px 8px rgba(40, 82, 154, 0.25);
         }
 
         .tag-count {
-            background: rgba(255, 255, 255, 0.3);
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 700;
+            background: rgba(0, 0, 0, 0.08);
+            padding: 1px 5px;
+            border-radius: 8px;
+            font-size: 9px;
+            font-weight: 600;
         }
 
         .tag-pill.active .tag-count {
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.2);
         }
 
         /* Search Results Info */
@@ -531,17 +531,51 @@
         .article-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 10px;
+            gap: 4px;
+            margin-top: 8px;
         }
 
         .article-tag {
-            font-size: 11px;
-            padding: 3px 10px;
-            background: linear-gradient(135deg, rgba(40, 82, 154, 0.1), rgba(132, 204, 22, 0.1));
-            border-radius: 15px;
-            color: #28529a;
-            font-weight: 600;
+            font-size: 9px;
+            padding: 2px 6px;
+            background: rgba(40, 82, 154, 0.08);
+            border-radius: 10px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        /* Copy URL Button */
+        .article-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+        }
+
+        .copy-url-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            background: #f3f4f6;
+            border: none;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 500;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .copy-url-btn:hover {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .copy-url-btn.copied {
+            background: #d1fae5;
+            color: #059669;
         }
 
         /* Highlight Search Match */
@@ -667,53 +701,54 @@
                 </div>
             </div>
 
-            <!-- Tags Section -->
+            <!-- Category Filters -->
+            <div style="display: flex; justify-content: center; gap: 6px; margin-bottom: 15px; flex-wrap: wrap;">
+                <button class="category-filter active" data-category="all"
+                    style="padding: 5px 12px; border: 1px solid #28529a; background: #28529a; color: white; border-radius: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-size: 11px;">
+                    Todos
+                </button>
+                <button class="category-filter" data-category="Análisis"
+                    style="padding: 5px 12px; border: 1px solid #e5e7eb; background: white; color: #374151; border-radius: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-size: 11px;">
+                    📊 Análisis
+                </button>
+                <button class="category-filter" data-category="Informe Mensual"
+                    style="padding: 5px 12px; border: 1px solid #e5e7eb; background: white; color: #374151; border-radius: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-size: 11px;">
+                    💎 Informes
+                </button>
+                <button class="category-filter" data-category="Estrategia"
+                    style="padding: 5px 12px; border: 1px solid #e5e7eb; background: white; color: #374151; border-radius: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-size: 11px;">
+                    🍽️ Estrategia
+                </button>
+                <button class="category-filter" data-category="Capacitación"
+                    style="padding: 5px 12px; border: 1px solid #e5e7eb; background: white; color: #374151; border-radius: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-size: 11px;">
+                    🎓 Capacitación
+                </button>
+                <button class="category-filter" data-category="Otras"
+                    style="padding: 5px 12px; border: 1px solid #e5e7eb; background: white; color: #374151; border-radius: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-size: 11px;">
+                    📁 Otras
+                </button>
+            </div>
+
+            <!-- Tags Section (below categories) -->
             <div class="tags-section" id="tagsSection">
                 <div class="tags-header">
-                    <span class="tags-title">🏷️ Tags Populares</span>
+                    <span class="tags-title">🏷️ Tags</span>
                 </div>
                 <div class="tags-container" id="tagsContainer">
                     <!-- Tags will be loaded dynamically -->
                 </div>
             </div>
 
-            <!-- Category Filters -->
-            <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 25px; flex-wrap: wrap;">
-                <button class="category-filter active" data-category="all"
-                    style="padding: 8px 16px; border: 2px solid #28529a; background: #28529a; color: white; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 13px;">
-                    Todos
-                </button>
-                <button class="category-filter" data-category="Análisis"
-                    style="padding: 8px 16px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 13px;">
-                    📊 Análisis
-                </button>
-                <button class="category-filter" data-category="Informe Mensual"
-                    style="padding: 8px 16px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 13px;">
-                    💎 Informes
-                </button>
-                <button class="category-filter" data-category="Estrategia"
-                    style="padding: 8px 16px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 13px;">
-                    🍽️ Estrategia
-                </button>
-                <button class="category-filter" data-category="Capacitación"
-                    style="padding: 8px 16px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 13px;">
-                    🎓 Capacitación
-                </button>
-                <button class="category-filter" data-category="Otras"
-                    style="padding: 8px 16px; border: 2px solid #e5e7eb; background: white; color: #374151; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 13px;">
-                    📁 Otras
-                </button>
-            </div>
-
             <!-- Search Results Info -->
             <div class="search-results-info" id="searchResultsInfo">
                 <!-- Results info will be shown here -->
             </div>
+        </div>
 
-            <div class="articles-grid" id="articlesGrid">
-                <!-- Articles will be loaded dynamically -->
-                <p style="text-align: center; color: #6b7280; padding: 40px;">Cargando artículos...</p>
-            </div>
+        <div class="articles-grid" id="articlesGrid">
+            <!-- Articles will be loaded dynamically -->
+            <p style="text-align: center; color: #6b7280; padding: 40px;">Cargando artículos...</p>
+        </div>
         </div>
     </section>
 
@@ -1141,6 +1176,7 @@
             grid.innerHTML = articles.map(article => {
                 const colorClass = categoryColors[article.category] || 'cpc';
                 const articleTags = getArticleTags(article).slice(0, 4); // Max 4 tags per article
+                const articleUrl = `https://obs360.co/blog/article.html?id=${article.id}`;
 
                 // Highlight search matches
                 const displayTitle = currentSearchQuery
@@ -1167,13 +1203,47 @@
                             <h3 class="article-title">${displayTitle}</h3>
                             <p class="article-excerpt">${displayExcerpt}</p>
                             ${tagsHTML}
-                            <span class="article-read-more">
-                                Ver completo →
-                            </span>
+                            <div class="article-footer">
+                                <span class="article-read-more">
+                                    Ver completo →
+                                </span>
+                                <button class="copy-url-btn" onclick="event.preventDefault(); event.stopPropagation(); copyArticleUrl('${articleUrl}', this);" title="Copiar URL">
+                                    📋 Copiar
+                                </button>
+                            </div>
                         </div>
                     </a>
                 `;
             }).join('');
+        }
+
+        // Copy article URL function
+        function copyArticleUrl(url, button) {
+            navigator.clipboard.writeText(url).then(() => {
+                const originalText = button.innerHTML;
+                button.innerHTML = '✓ Copiado';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = url;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+
+                const originalText = button.innerHTML;
+                button.innerHTML = '✓ Copiado';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            });
         }
 
         // Setup category filters
