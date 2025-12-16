@@ -44,6 +44,51 @@ app.use(cors({
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 
+// ==================== FUNCIÓN PARA LIMPIAR HTML ====================
+function cleanHtmlContent(html) {
+    if (!html) return '';
+
+    let content = html;
+
+    // Si tiene estructura HTML completa, extraer solo lo necesario
+    if (content.includes('<!DOCTYPE') || content.includes('<html')) {
+        // Extraer estilos del head
+        let styles = '';
+        const styleMatches = content.match(/<style[^>]*>[\s\S]*?<\/style>/gi);
+        if (styleMatches) {
+            styles = styleMatches.join('\n');
+        }
+
+        // Extraer contenido del body
+        const bodyMatch = content.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+        if (bodyMatch) {
+            content = bodyMatch[1];
+        } else {
+            // Si no hay body, intentar limpiar tags HTML/HEAD
+            content = content
+                .replace(/<!DOCTYPE[^>]*>/gi, '')
+                .replace(/<html[^>]*>/gi, '')
+                .replace(/<\/html>/gi, '')
+                .replace(/<head>[\s\S]*?<\/head>/gi, '')
+                .replace(/<body[^>]*>/gi, '')
+                .replace(/<\/body>/gi, '');
+        }
+
+        // Agregar estilos al inicio del contenido
+        if (styles) {
+            content = styles + '\n' + content;
+        }
+    }
+
+    // Limpiar cualquier header/footer OBS360 existente
+    content = content
+        .replace(/<header class="obs-header"[\s\S]*?<\/header>/gi, '')
+        .replace(/<footer class="obs-footer"[\s\S]*?<\/footer>/gi, '')
+        .replace(/<div style="height: 70px;">\s*<\/div>/gi, '');
+
+    return content.trim();
+}
+
 // ==================== SONDA DE DIAGNÓSTICO ====================
 app.get('/api/version/check', async (req, res) => {
     try {
@@ -244,11 +289,15 @@ function generateObfuscatedId() {
 // POST - Crear o actualizar artículo
 app.post('/api/articles', async (req, res) => {
     try {
-        const { title, content, date, category, icon, excerpt, tags, currentSlug } = req.body;
+        const { title, date, category, icon, excerpt, tags, currentSlug } = req.body;
+        let { content } = req.body;
 
         if (!title || !content) {
             return res.status(400).json({ error: 'Título y contenido son requeridos' });
         }
+
+        // Limpiar el HTML para extraer solo el contenido útil
+        content = cleanHtmlContent(content);
 
         const { db } = await connectToDatabase();
 
