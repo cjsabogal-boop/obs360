@@ -10,33 +10,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ==================== AUTO-DESCUBRIMIENTO DE RUTA ====================
+// Simplificado para cPanel: Usar siempre el directorio actual donde vive server.js
 const findBlogRoot = () => {
-    // 1. Variable de entorno (máxima prioridad)
-    if (process.env.BLOG_DIR && fs.existsSync(process.env.BLOG_DIR)) {
-        console.log(`✅ BLOG_DIR desde variable de entorno: ${process.env.BLOG_DIR}`);
-        return process.env.BLOG_DIR;
-    }
-
-    // 2. Verificar subdirectorio blog/ (donde están los artículos)
-    const blogSubdir = path.join(__dirname, 'blog');
-    const hasArticlesInSubdir = fs.existsSync(blogSubdir) &&
-        fs.readdirSync(blogSubdir).some(f => f.startsWith('r-') && f.endsWith('.html'));
-
-    if (hasArticlesInSubdir) {
-        console.log(`✅ Artículos encontrados en subdirectorio: ${blogSubdir}`);
-        return blogSubdir;
-    }
-
-    // 3. Directorio ACTUAL (si server.js está junto a los .html)
-    if (fs.existsSync(path.join(__dirname, 'index.html')) ||
-        fs.existsSync(path.join(__dirname, 'articles.json'))) {
-        console.log(`✅ Ruta actual confirmada: ${__dirname}`);
-        return __dirname;
-    }
-
-    // 4. Fallback: asumir subdirectorio blog/
-    console.log(`⚠️ Usando fallback: ${blogSubdir}`);
-    return blogSubdir;
+    console.log(`✅ Usando directorio raíz: ${__dirname}`);
+    return __dirname;
 };
 
 const BLOG_DIR = findBlogRoot();
@@ -52,6 +29,16 @@ app.get('/api/version/check', (req, res) => {
 });
 
 // Middleware
+// FIX CPanel: Normalizar rutas con prefijo /blog
+app.use((req, res, next) => {
+    if (req.url.startsWith('/blog/')) {
+        req.url = req.url.substring(5);
+    } else if (req.url === '/blog') {
+        req.url = '/';
+    }
+    next();
+});
+
 app.use(cors());
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
