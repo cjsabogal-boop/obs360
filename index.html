@@ -36,9 +36,9 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 40px;
         }
 
         .header {
@@ -193,8 +193,9 @@
 
         .articles-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            padding: 0 10px;
         }
 
         .article-card {
@@ -587,17 +588,22 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+
             .blog-hero h1 {
-                font-size: 2rem;
+                font-size: 1.75rem;
             }
 
             .blog-hero p {
-                font-size: 1rem;
+                font-size: 0.95rem;
             }
 
             .articles-grid {
                 grid-template-columns: 1fr;
-                padding: 0 10px;
+                gap: 20px;
+                padding: 0 5px;
             }
 
             .header-content {
