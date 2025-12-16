@@ -19,7 +19,13 @@ async function connectToDatabase() {
         return { client: cachedClient, db: cachedDb };
     }
 
-    const client = new MongoClient(MONGODB_URI);
+    const client = new MongoClient(MONGODB_URI, {
+        tls: true,
+        tlsAllowInvalidCertificates: false,
+        serverSelectionTimeoutMS: 5000,
+        connectTimeoutMS: 10000,
+    });
+
     await client.connect();
     const db = client.db(DB_NAME);
 
