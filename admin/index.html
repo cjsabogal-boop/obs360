@@ -772,207 +772,254 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
+                </header>
 
-    <script>
-        // API Configuration
-        const API_URL = window.location.hostname === 'localhost'
-            ? 'http://localhost:3000/api'
-            : 'https://obs360.co/api';
+                <!-- Modal Custom para Confirmaciones y Alertas -->
+                <div id="customModal"
+                    style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:10000; justify-content:center; align-items:center;">
+                    <div
+                        style="background:white; padding:30px; border-radius:12px; max-width:500px; text-align:center; box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+                        <h3 id="modalTitle" style="margin:0 0 15px 0; color:#1f2937; font-size:20px;"></h3>
+                        <p id="modalMessage" style="margin:0 0 25px 0; color:#6b7280; font-size:16px; line-height:1.6;">
+                        </p>
+                        <div id="modalButtons" style="display:flex; gap:10px; justify-content:center;">
+                            <!-- Botones se crean dinámicamente -->
+                        </div>
+                    </div>
+                </div>
 
-        // CREDENCIALES FIJAS - SISTEMA SIMPLE
-        const ADMIN_USER = 'obs360admin';
-        const ADMIN_PASS = 'Obs.2025$$';
+                <script>
+                    // API Configuration
+                    const API_URL = window.location.hostname === 'localhost'
+                        ? 'http://localhost:3000/api'
+                        : 'https://obs360.co/api';
 
-        // Check if already logged in
-        if (localStorage.getItem('obs360_logged_in') === 'true') {
-            showDashboard();
-        }
+                    // CREDENCIALES FIJAS - SISTEMA SIMPLE
+                    const ADMIN_USER = 'obs360admin';
+                    const ADMIN_PASS = 'Obs.2025$$';
 
-        // LOGIN SIMPLE - SIN SERVIDOR
-        document.getElementById('loginForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
-            const errorMessage = document.getElementById('errorMessage');
-
-            errorMessage.style.display = 'none';
-
-            // VALIDACIÓN DIRECTA LOCAL
-            if (username === ADMIN_USER && password === ADMIN_PASS) {
-                localStorage.setItem('obs360_logged_in', 'true');
-                showDashboard();
-            } else {
-                errorMessage.textContent = 'Usuario o contraseña incorrectos';
-                errorMessage.style.display = 'block';
-            }
-        });
-
-        function showDashboard() {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('adminDashboard').style.display = 'block';
-            loadArticles();
-            updateStats();
-        }
-
-        function logout() {
-            localStorage.removeItem('obs360_logged_in');
-            localStorage.removeItem('obs360_username');
-            localStorage.removeItem('obs360_password');
-            location.reload();
-        }
-
-        // Re-estandarizar todos los artículos
-        async function standardizeAllArticles() {
-            const btn = document.getElementById('standardizeBtn');
-            const status = document.getElementById('standardizeStatus');
-
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Re-estandarizando...';
-            status.style.display = 'none';
-
-            try {
-                const response = await fetch(`${API_URL}/standardize-all`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
+                    // Funciones para Modal Custom
+                    function showAlert(title, message) {
+                        const modal = document.getElementById('customModal');
+                        document.getElementById('modalTitle').textContent = title;
+                        document.getElementById('modalMessage').textContent = message;
+                        document.getElementById('modalButtons').innerHTML =
+                            `<button onclick="closeModal()" style="background:#1f2937; color:white; padding:12px 24px; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600;">Aceptar</button>`;
+                        modal.style.display = 'flex';
                     }
-                });
 
-                const data = await response.json();
+                    function showConfirm(title, message, onConfirm) {
+                        const modal = document.getElementById('customModal');
+                        document.getElementById('modalTitle').textContent = title;
+                        document.getElementById('modalMessage').textContent = message;
+                        document.getElementById('modalButtons').innerHTML =
+                            `<button onclick="closeModal()" style="background:#6b7280; color:white; padding:12px 24px; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600;">Cancelar</button>
+                         <button onclick="confirmAction()" style="background:#ef4444; color:white; padding:12px 24px; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600;">Eliminar</button>`;
+                        modal.style.display = 'flex';
 
-                if (data.success) {
-                    status.style.display = 'block';
-                    status.style.background = '#d1fae5';
-                    status.style.color = '#065f46';
-                    status.innerHTML = `
+                        // Guardar callback
+                        window.pendingConfirmAction = onConfirm;
+                    }
+
+                    function closeModal() {
+                        document.getElementById('customModal').style.display = 'none';
+                        window.pendingConfirmAction = null;
+                    }
+
+                    function confirmAction() {
+                        if (window.pendingConfirmAction) {
+                            window.pendingConfirmAction();
+                        }
+                        closeModal();
+                    }
+
+                    // Check if already logged in
+                    if (localStorage.getItem('obs360_logged_in') === 'true') {
+                        showDashboard();
+                    }
+
+                    // LOGIN SIMPLE - SIN SERVIDOR
+                    document.getElementById('loginForm').addEventListener('submit', function (e) {
+                        e.preventDefault();
+                        const username = document.getElementById('username').value.trim();
+                        const password = document.getElementById('password').value;
+                        const errorMessage = document.getElementById('errorMessage');
+
+                        errorMessage.style.display = 'none';
+
+                        // VALIDACIÓN DIRECTA LOCAL
+                        if (username === ADMIN_USER && password === ADMIN_PASS) {
+                            localStorage.setItem('obs360_logged_in', 'true');
+                            showDashboard();
+                        } else {
+                            errorMessage.textContent = 'Usuario o contraseña incorrectos';
+                            errorMessage.style.display = 'block';
+                        }
+                    });
+
+                    function showDashboard() {
+                        document.getElementById('loginScreen').style.display = 'none';
+                        document.getElementById('adminDashboard').style.display = 'block';
+                        loadArticles();
+                        updateStats();
+                    }
+
+                    function logout() {
+                        localStorage.removeItem('obs360_logged_in');
+                        localStorage.removeItem('obs360_username');
+                        localStorage.removeItem('obs360_password');
+                        location.reload();
+                    }
+
+                    // Re-estandarizar todos los artículos
+                    async function standardizeAllArticles() {
+                        const btn = document.getElementById('standardizeBtn');
+                        const status = document.getElementById('standardizeStatus');
+
+                        btn.disabled = true;
+                        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Re-estandarizando...';
+                        status.style.display = 'none';
+
+                        try {
+                            const response = await fetch(`${API_URL}/standardize-all`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                }
+                            });
+
+                            const data = await response.json();
+
+                            if (data.success) {
+                                status.style.display = 'block';
+                                status.style.background = '#d1fae5';
+                                status.style.color = '#065f46';
+                                status.innerHTML = `
                         <i class="fa-solid fa-check-circle"></i> 
                         <strong>¡Éxito!</strong><br>
                         ${data.updatedCount} artículos re-estandarizados correctamente.<br>
                         <small>Los artículos ahora tienen el formato centrado actualizado.</small>
                     `;
 
-                    // Recargar artículos para mostrar los cambios
-                    setTimeout(() => {
-                        loadArticles();
-                    }, 2000);
-                } else {
-                    throw new Error(data.error || 'Error desconocido');
-                }
-            } catch (error) {
-                console.error('Error al re-estandarizar:', error);
-                status.style.display = 'block';
-                status.style.background = '#fee2e2';
-                status.style.color = '#dc2626';
-                status.innerHTML = `
+                                // Recargar artículos para mostrar los cambios
+                                setTimeout(() => {
+                                    loadArticles();
+                                }, 2000);
+                            } else {
+                                throw new Error(data.error || 'Error desconocido');
+                            }
+                        } catch (error) {
+                            console.error('Error al re-estandarizar:', error);
+                            status.style.display = 'block';
+                            status.style.background = '#fee2e2';
+                            status.style.color = '#dc2626';
+                            status.innerHTML = `
                     <i class="fa-solid fa-exclamation-circle"></i> 
                     <strong>Error</strong><br>
                     No se pudieron re-estandarizar los artículos: ${error.message}
                 `;
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-sync"></i> Re-estandarizar Todos los Artículos';
-            }
-        }
+                        } finally {
+                            btn.disabled = false;
+                            btn.innerHTML = '<i class="fa-solid fa-sync"></i> Re-estandarizar Todos los Artículos';
+                        }
+                    }
 
-        // Panel Navigation
-        function showPanel(panelName) {
-            document.querySelectorAll('.panel-section').forEach(panel => {
-                panel.classList.remove('active');
-            });
+                    // Panel Navigation
+                    function showPanel(panelName) {
+                        document.querySelectorAll('.panel-section').forEach(panel => {
+                            panel.classList.remove('active');
+                        });
 
-            document.querySelectorAll('.sidebar-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+                        document.querySelectorAll('.sidebar-btn').forEach(btn => {
+                            btn.classList.remove('active');
+                        });
 
-            if (panelName === 'articles') {
-                document.getElementById('articlesPanel').classList.add('active');
-                document.querySelectorAll('.sidebar-btn')[0].classList.add('active');
-                loadArticles();
-            } else if (panelName === 'new') {
-                document.getElementById('newPanel').classList.add('active');
-                document.querySelectorAll('.sidebar-btn')[1].classList.add('active');
-            } else if (panelName === 'categories') {
-                document.getElementById('categoriesPanel').classList.add('active');
-                document.querySelectorAll('.sidebar-btn')[2].classList.add('active');
-                loadCategories();
-            } else if (panelName === 'settings') {
-                document.getElementById('settingsPanel').classList.add('active');
-                document.querySelectorAll('.sidebar-btn')[3].classList.add('active');
-                updateStats();
-            }
-        }
+                        if (panelName === 'articles') {
+                            document.getElementById('articlesPanel').classList.add('active');
+                            document.querySelectorAll('.sidebar-btn')[0].classList.add('active');
+                            loadArticles();
+                        } else if (panelName === 'new') {
+                            document.getElementById('newPanel').classList.add('active');
+                            document.querySelectorAll('.sidebar-btn')[1].classList.add('active');
+                        } else if (panelName === 'categories') {
+                            document.getElementById('categoriesPanel').classList.add('active');
+                            document.querySelectorAll('.sidebar-btn')[2].classList.add('active');
+                            loadCategories();
+                        } else if (panelName === 'settings') {
+                            document.getElementById('settingsPanel').classList.add('active');
+                            document.querySelectorAll('.sidebar-btn')[3].classList.add('active');
+                            updateStats();
+                        }
+                    }
 
-        // Article Management with API
-        let allArticles = [];
-        let currentFilter = 'all';
+                    // Article Management with API
+                    let allArticles = [];
+                    let currentFilter = 'all';
 
-        async function loadArticles(retryCount = 0) {
-            const container = document.getElementById('articlesList');
-            const maxRetries = 3;
+                    async function loadArticles(retryCount = 0) {
+                        const container = document.getElementById('articlesList');
+                        const maxRetries = 3;
 
-            // Mostrar estado de carga con reintento
-            if (retryCount === 0) {
-                container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">📡 Cargando artículos...</p>';
-            } else {
-                container.innerHTML = `<p style="color: #f59e0b; text-align: center; padding: 40px;">🔄 Reintentando... (${retryCount}/${maxRetries})</p>`;
-            }
+                        // Mostrar estado de carga con reintento
+                        if (retryCount === 0) {
+                            container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">📡 Cargando artículos...</p>';
+                        } else {
+                            container.innerHTML = `<p style="color: #f59e0b; text-align: center; padding: 40px;">🔄 Reintentando... (${retryCount}/${maxRetries})</p>`;
+                        }
 
-            try {
-                // Cache-busting + timeout
-                const timestamp = new Date().getTime();
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 segundos timeout
+                        try {
+                            // Cache-busting + timeout
+                            const timestamp = new Date().getTime();
+                            const controller = new AbortController();
+                            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 segundos timeout
 
-                console.log(`[${new Date().toISOString()}] Cargando artículos desde: ${API_URL}/articles`);
+                            console.log(`[${new Date().toISOString()}] Cargando artículos desde: ${API_URL}/articles`);
 
-                const response = await fetch(`${API_URL}/articles?_t=${timestamp}`, {
-                    cache: 'no-store',
-                    signal: controller.signal
-                });
+                            const response = await fetch(`${API_URL}/articles?_t=${timestamp}`, {
+                                cache: 'no-store',
+                                signal: controller.signal
+                            });
 
-                clearTimeout(timeoutId);
+                            clearTimeout(timeoutId);
 
-                if (!response.ok) {
-                    throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
-                }
+                            if (!response.ok) {
+                                throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
+                            }
 
-                const data = await response.json();
-                const articles = data.articles || [];
+                            const data = await response.json();
+                            const articles = data.articles || [];
 
-                console.log(`[${new Date().toISOString()}] Artículos cargados:`, articles.length);
+                            console.log(`[${new Date().toISOString()}] Artículos cargados:`, articles.length);
 
-                allArticles = articles;
+                            allArticles = articles;
 
-                if (articles.length === 0) {
-                    container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">📄 No hay artículos publicados aún. ¡Crea tu primer artículo!</p>';
-                    updateCategoryCounts([]);
-                    return;
-                }
+                            if (articles.length === 0) {
+                                container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">📄 No hay artículos publicados aún. ¡Crea tu primer artículo!</p>';
+                                updateCategoryCounts([]);
+                                return;
+                            }
 
-                updateCategoryCounts(articles);
-                setupFilters();
-                renderArticles(currentFilter === 'all' ? articles : articles.filter(a => a.category === currentFilter));
+                            updateCategoryCounts(articles);
+                            setupFilters();
+                            renderArticles(currentFilter === 'all' ? articles : articles.filter(a => a.category === currentFilter));
 
-            } catch (error) {
-                console.error(`[${new Date().toISOString()}] Error cargando artículos:`, error);
+                        } catch (error) {
+                            console.error(`[${new Date().toISOString()}] Error cargando artículos:`, error);
 
-                // Reintentar si no se alcanzó el máximo
-                if (retryCount < maxRetries) {
-                    console.log(`Reintentando en 2 segundos... (${retryCount + 1}/${maxRetries})`);
-                    setTimeout(() => loadArticles(retryCount + 1), 2000);
-                } else {
-                    // Mostrar error con botón de recarga manual
-                    container.innerHTML = `
+                            // Reintentar si no se alcanzó el máximo
+                            if (retryCount < maxRetries) {
+                                console.log(`Reintentando en 2 segundos... (${retryCount + 1}/${maxRetries})`);
+                                setTimeout(() => loadArticles(retryCount + 1), 2000);
+                            } else {
+                                // Mostrar error con botón de recarga manual
+                                container.innerHTML = `
                         <div style="text-align: center; padding: 40px;">
                             <p style="color: #ef4444; margin-bottom: 20px;">⚠️ <strong>Error al cargar artículos</strong></p>
                             <p style="color: #6b7280; font-size: 14px; margin-bottom: 20px;">
                                 ${error.name === 'AbortError' ?
-                            'El servidor no respondió a tiempo (timeout).' :
-                            `Error: ${error.message}`
-                        }
+                                        'El servidor no respondió a tiempo (timeout).' :
+                                        `Error: ${error.message}`
+                                    }
                             </p>
                             <button onclick="loadArticles(0)" style="
                                 background: #3b82f6;
@@ -990,38 +1037,38 @@
                             </p>
                         </div>
                     `;
-                }
-            }
-        }
+                            }
+                        }
+                    }
 
-        function renderArticles(articles) {
-            const container = document.getElementById('articlesList');
+                    function renderArticles(articles) {
+                        const container = document.getElementById('articlesList');
 
-            if (articles.length === 0) {
-                container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">No hay artículos en esta categoría.</p>';
-                return;
-            }
+                        if (articles.length === 0) {
+                            container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">No hay artículos en esta categoría.</p>';
+                            return;
+                        }
 
-            // Map categories to Font Awesome icons
-            const categoryIcons = {
-                'Análisis': 'fa-chart-line',
-                'Informe Mensual': 'fa-gem',
-                'Estrategia': 'fa-chess',
-                'Capacitación': 'fa-graduation-cap',
-                'Herramientas': 'fa-wrench',
-                'Otras': 'fa-folder-open'
-            };
+                        // Map categories to Font Awesome icons
+                        const categoryIcons = {
+                            'Análisis': 'fa-chart-line',
+                            'Informe Mensual': 'fa-gem',
+                            'Estrategia': 'fa-chess',
+                            'Capacitación': 'fa-graduation-cap',
+                            'Herramientas': 'fa-wrench',
+                            'Otras': 'fa-folder-open'
+                        };
 
-            container.innerHTML = articles.map((article, index) => {
-                const iconClass = categoryIcons[article.category] || 'fa-file-alt';
-                const tags = article.tags || [];
-                const tagsHtml = tags.length > 0 ? `
+                        container.innerHTML = articles.map((article, index) => {
+                            const iconClass = categoryIcons[article.category] || 'fa-file-alt';
+                            const tags = article.tags || [];
+                            const tagsHtml = tags.length > 0 ? `
                     <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px;">
                         ${tags.map(tag => `<span style="background: #e0e7ff; color: #3730a3; padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 600;"><i class="fa-solid fa-tag" style="font-size: 9px; margin-right: 4px;"></i>${tag}</span>`).join('')}
                     </div>
                 ` : '';
 
-                return `
+                            return `
                 <div class="article-card" data-category="${article.category}">
                     <div class="article-card-header">
                         <div>
@@ -1061,394 +1108,397 @@
                     </div>
                 </div>
             `}).join('');
-        }
-
-        // Copy URL function
-        function copyUrl(slug, filename) {
-            const url = `https://obs360.co/blog/${filename}`;
-            navigator.clipboard.writeText(url).then(() => {
-                // Visual feedback
-                const input = document.getElementById(`url-${slug}`);
-                const originalBg = input.style.background;
-                input.style.background = '#d1fae5';
-                input.style.borderColor = '#10b981';
-
-                // Show toast notification
-                showToast('✓ URL copiada al portapapeles');
-
-                setTimeout(() => {
-                    input.style.background = originalBg;
-                    input.style.borderColor = '#cbd5e1';
-                }, 1500);
-            }).catch(err => {
-                // Fallback for older browsers
-                const input = document.getElementById(`url-${slug}`);
-                input.select();
-                document.execCommand('copy');
-                showToast('✓ URL copiada');
-            });
-        }
-
-        function showToast(message) {
-            // Remove existing toast
-            const existing = document.querySelector('.copy-toast');
-            if (existing) existing.remove();
-
-            const toast = document.createElement('div');
-            toast.className = 'copy-toast';
-            toast.innerHTML = message;
-            toast.style.cssText = 'position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #10b981; color: white; padding: 12px 24px; border-radius: 10px; font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 9999; animation: slideUp 0.3s ease;';
-            document.body.appendChild(toast);
-
-            setTimeout(() => toast.remove(), 2500);
-        }
-
-        function updateCategoryCounts(articles) {
-            // Map category names to their HTML element IDs
-            const categoryMap = {
-                'Análisis': 'analisis',
-                'Informe Mensual': 'informe',
-                'Estrategia': 'estrategia',
-                'Capacitación': 'capacitacion',
-                'Herramientas': 'herramientas',
-                'Otras': 'otras'
-            };
-
-            // Initialize counts
-            const counts = {
-                'all': articles.length,
-                'Análisis': 0,
-                'Informe Mensual': 0,
-                'Estrategia': 0,
-                'Capacitación': 0,
-                'Herramientas': 0,
-                'Otras': 0
-            };
-
-            // Count articles per category
-            articles.forEach(article => {
-                if (counts.hasOwnProperty(article.category)) {
-                    counts[article.category]++;
-                } else {
-                    counts['Otras']++;
-                }
-            });
-
-            // Update count badges
-            const allCount = document.getElementById('count-all');
-            if (allCount) allCount.textContent = counts['all'];
-
-            // Update each category count
-            Object.entries(categoryMap).forEach(([categoryName, elementId]) => {
-                const countEl = document.getElementById(`count-${elementId}`);
-                if (countEl) countEl.textContent = counts[categoryName] || 0;
-            });
-        }
-
-        function setupFilters() {
-            const filterButtons = document.querySelectorAll('.filter-btn');
-
-            filterButtons.forEach(btn => {
-                btn.addEventListener('click', function () {
-                    // Remove active from all
-                    filterButtons.forEach(b => b.classList.remove('active'));
-                    // Add active to clicked
-                    this.classList.add('active');
-
-                    const category = this.getAttribute('data-category');
-                    currentFilter = category;
-
-                    if (category === 'all') {
-                        renderArticles(allArticles);
-                    } else {
-                        const filtered = allArticles.filter(a => a.category === category);
-                        renderArticles(filtered);
                     }
-                });
-            });
-        }
 
-        function getCategorySlug(category) {
-            const slugs = {
-                'Análisis': 'analisis',
-                'Informe Mensual': 'informe',
-                'Estrategia': 'estrategia',
-                'Capacitación': 'capacitacion',
-                'Herramientas': 'herramientas',
-                'Otras': 'otras'
-            };
-            return slugs[category] || 'analisis';
-        }
+                    // Copy URL function
+                    function copyUrl(slug, filename) {
+                        const url = `https://obs360.co/blog/${filename}`;
+                        navigator.clipboard.writeText(url).then(() => {
+                            // Visual feedback
+                            const input = document.getElementById(`url-${slug}`);
+                            const originalBg = input.style.background;
+                            input.style.background = '#d1fae5';
+                            input.style.borderColor = '#10b981';
 
-        function generateSlug(title) {
-            return title.toLowerCase()
-                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/^-+|-+$/g, '');
-        }
+                            // Show toast notification
+                            showToast('✓ URL copiada al portapapeles');
 
-        // Admin Search functionality
-        let adminSearchTimeout;
-        function handleAdminSearch(query) {
-            clearTimeout(adminSearchTimeout);
-            query = query.trim().toLowerCase();
+                            setTimeout(() => {
+                                input.style.background = originalBg;
+                                input.style.borderColor = '#cbd5e1';
+                            }, 1500);
+                        }).catch(err => {
+                            // Fallback for older browsers
+                            const input = document.getElementById(`url-${slug}`);
+                            input.select();
+                            document.execCommand('copy');
+                            showToast('✓ URL copiada');
+                        });
+                    }
 
-            // Show/hide clear button
-            document.getElementById('adminClearSearch').style.display = query ? 'block' : 'none';
+                    function showToast(message) {
+                        // Remove existing toast
+                        const existing = document.querySelector('.copy-toast');
+                        if (existing) existing.remove();
 
-            adminSearchTimeout = setTimeout(() => {
-                if (query.length === 0) {
-                    renderArticles(currentFilter === 'all' ? allArticles : allArticles.filter(a => a.category === currentFilter));
-                } else {
-                    const filtered = allArticles.filter(article => {
-                        const inTitle = article.title.toLowerCase().includes(query);
-                        const inExcerpt = article.excerpt.toLowerCase().includes(query);
-                        const inTags = (article.tags || []).some(tag => tag.toLowerCase().includes(query));
-                        const inCategory = article.category.toLowerCase().includes(query);
-                        const inSlug = article.slug.toLowerCase().includes(query);
-                        return inTitle || inExcerpt || inTags || inCategory || inSlug;
-                    });
-                    renderArticles(filtered);
-                }
-            }, 300);
-        }
+                        const toast = document.createElement('div');
+                        toast.className = 'copy-toast';
+                        toast.innerHTML = message;
+                        toast.style.cssText = 'position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #10b981; color: white; padding: 12px 24px; border-radius: 10px; font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 9999; animation: slideUp 0.3s ease;';
+                        document.body.appendChild(toast);
 
-        function clearAdminSearch() {
-            document.getElementById('adminSearchInput').value = '';
-            document.getElementById('adminClearSearch').style.display = 'none';
-            renderArticles(currentFilter === 'all' ? allArticles : allArticles.filter(a => a.category === currentFilter));
-        }
+                        setTimeout(() => toast.remove(), 2500);
+                    }
 
-        // Form Submission with API
-        document.getElementById('articleForm').addEventListener('submit', async function (e) {
-            e.preventDefault();
+                    function updateCategoryCounts(articles) {
+                        // Map category names to their HTML element IDs
+                        const categoryMap = {
+                            'Análisis': 'analisis',
+                            'Informe Mensual': 'informe',
+                            'Estrategia': 'estrategia',
+                            'Capacitación': 'capacitacion',
+                            'Herramientas': 'herramientas',
+                            'Otras': 'otras'
+                        };
 
-            // Get form values with validation
-            const titleInput = document.getElementById('articleTitle');
-            const dateInput = document.getElementById('articleDate');
-            const categoryInput = document.getElementById('articleCategory');
-            const excerptInput = document.getElementById('articleExcerpt');
-            const contentInput = document.getElementById('articleContent');
-            const tagsInput = document.getElementById('articleTags');
+                        // Initialize counts
+                        const counts = {
+                            'all': articles.length,
+                            'Análisis': 0,
+                            'Informe Mensual': 0,
+                            'Estrategia': 0,
+                            'Capacitación': 0,
+                            'Herramientas': 0,
+                            'Otras': 0
+                        };
 
-            // Validate required fields
-            if (!titleInput.value.trim()) {
-                alert('Por favor, ingresa un título para el artículo.');
-                titleInput.focus();
-                return;
-            }
+                        // Count articles per category
+                        articles.forEach(article => {
+                            if (counts.hasOwnProperty(article.category)) {
+                                counts[article.category]++;
+                            } else {
+                                counts['Otras']++;
+                            }
+                        });
 
-            if (!dateInput.value.trim()) {
-                alert('Por favor, ingresa una fecha de publicación.');
-                dateInput.focus();
-                return;
-            }
+                        // Update count badges
+                        const allCount = document.getElementById('count-all');
+                        if (allCount) allCount.textContent = counts['all'];
 
-            if (!categoryInput.value) {
-                alert('Por favor, selecciona una categoría.');
-                categoryInput.focus();
-                return;
-            }
+                        // Update each category count
+                        Object.entries(categoryMap).forEach(([categoryName, elementId]) => {
+                            const countEl = document.getElementById(`count-${elementId}`);
+                            if (countEl) countEl.textContent = counts[categoryName] || 0;
+                        });
+                    }
 
-            if (!excerptInput.value.trim()) {
-                alert('Por favor, ingresa una descripción breve.');
-                excerptInput.focus();
-                return;
-            }
+                    function setupFilters() {
+                        const filterButtons = document.querySelectorAll('.filter-btn');
 
-            if (!contentInput.value.trim()) {
-                alert('Por favor, ingresa el contenido del artículo.');
-                contentInput.focus();
-                return;
-            }
+                        filterButtons.forEach(btn => {
+                            btn.addEventListener('click', function () {
+                                // Remove active from all
+                                filterButtons.forEach(b => b.classList.remove('active'));
+                                // Add active to clicked
+                                this.classList.add('active');
 
-            // Parse tags from comma-separated input
-            const tags = tagsInput.value ?
-                tagsInput.value.split(',').map(t => t.trim().toLowerCase()).filter(t => t.length > 0) : [];
+                                const category = this.getAttribute('data-category');
+                                currentFilter = category;
 
-            const article = {
-                title: titleInput.value.trim(),
-                date: dateInput.value.trim(),
-                category: categoryInput.value,
-                excerpt: excerptInput.value.trim(),
-                content: contentInput.value,
-                tags: tags,
-                slug: generateSlug(titleInput.value.trim())
-            };
+                                if (category === 'all') {
+                                    renderArticles(allArticles);
+                                } else {
+                                    const filtered = allArticles.filter(a => a.category === category);
+                                    renderArticles(filtered);
+                                }
+                            });
+                        });
+                    }
 
-            // Disable submit button while saving
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
+                    function getCategorySlug(category) {
+                        const slugs = {
+                            'Análisis': 'analisis',
+                            'Informe Mensual': 'informe',
+                            'Estrategia': 'estrategia',
+                            'Capacitación': 'capacitacion',
+                            'Herramientas': 'herramientas',
+                            'Otras': 'otras'
+                        };
+                        return slugs[category] || 'analisis';
+                    }
 
-            try {
-                const response = await fetch(`${API_URL}/articles`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(article)
-                });
+                    function generateSlug(title) {
+                        return title.toLowerCase()
+                            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                            .replace(/[^a-z0-9]+/g, '-')
+                            .replace(/^-+|-+$/g, '');
+                    }
 
-                const result = await response.json();
+                    // Admin Search functionality
+                    let adminSearchTimeout;
+                    function handleAdminSearch(query) {
+                        clearTimeout(adminSearchTimeout);
+                        query = query.trim().toLowerCase();
 
-                // Re-enable button
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
+                        // Show/hide clear button
+                        document.getElementById('adminClearSearch').style.display = query ? 'block' : 'none';
 
-                if (response.ok) {
-                    document.getElementById('successMessage').style.display = 'block';
-                    setTimeout(() => {
-                        document.getElementById('successMessage').style.display = 'none';
-                    }, 3000);
+                        adminSearchTimeout = setTimeout(() => {
+                            if (query.length === 0) {
+                                renderArticles(currentFilter === 'all' ? allArticles : allArticles.filter(a => a.category === currentFilter));
+                            } else {
+                                const filtered = allArticles.filter(article => {
+                                    const inTitle = article.title.toLowerCase().includes(query);
+                                    const inExcerpt = article.excerpt.toLowerCase().includes(query);
+                                    const inTags = (article.tags || []).some(tag => tag.toLowerCase().includes(query));
+                                    const inCategory = article.category.toLowerCase().includes(query);
+                                    const inSlug = article.slug.toLowerCase().includes(query);
+                                    return inTitle || inExcerpt || inTags || inCategory || inSlug;
+                                });
+                                renderArticles(filtered);
+                            }
+                        }, 300);
+                    }
 
-                    this.reset();
-                    loadArticles();
-                    showPanel('articles');
-                } else {
-                    alert('Error al guardar artículo: ' + (result.error || 'Error desconocido'));
-                }
-            } catch (error) {
-                console.error('Error saving article:', error);
-                // Re-enable button on error
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
-                alert('Error al conectar con el servidor. Verifica que esté corriendo.');
-            }
-        });
+                    function clearAdminSearch() {
+                        document.getElementById('adminSearchInput').value = '';
+                        document.getElementById('adminClearSearch').style.display = 'none';
+                        renderArticles(currentFilter === 'all' ? allArticles : allArticles.filter(a => a.category === currentFilter));
+                    }
 
-        // Rebuild Index Button
-        document.getElementById('rebuildIndexBtn').addEventListener('click', async function () {
-            if (!confirm('¿Regenerar el índice de artículos? Esto escaneará todos los archivos HTML y actualizará la lista.')) {
-                return;
-            }
+                    // Form Submission with API
+                    document.getElementById('articleForm').addEventListener('submit', async function (e) {
+                        e.preventDefault();
 
-            const btn = this;
-            const originalHTML = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Regenerando...';
+                        // Get form values with validation
+                        const titleInput = document.getElementById('articleTitle');
+                        const dateInput = document.getElementById('articleDate');
+                        const categoryInput = document.getElementById('articleCategory');
+                        const excerptInput = document.getElementById('articleExcerpt');
+                        const contentInput = document.getElementById('articleContent');
+                        const tagsInput = document.getElementById('articleTags');
 
-            try {
-                const response = await fetch(`${API_URL}/rebuild-index`, {
-                    method: 'POST'
-                });
+                        // Validate required fields
+                        if (!titleInput.value.trim()) {
+                            alert('Por favor, ingresa un título para el artículo.');
+                            titleInput.focus();
+                            return;
+                        }
 
-                const result = await response.json();
+                        if (!dateInput.value.trim()) {
+                            alert('Por favor, ingresa una fecha de publicación.');
+                            dateInput.focus();
+                            return;
+                        }
 
-                if (response.ok) {
-                    alert(`✅ Índice regenerado exitosamente!\n\n📊 Total artículos: ${result.totalArticles}`);
-                    // Recargar artículos para mostrar los nuevos
-                    await loadArticles();
-                } else {
-                    alert('❌ Error: ' + (result.error || 'Error desconocido'));
-                }
-            } catch (error) {
-                console.error('Error regenerando índice:', error);
-                alert('❌ Error al conectar con el servidor');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalHTML;
-            }
-        });
+                        if (!categoryInput.value) {
+                            alert('Por favor, selecciona una categoría.');
+                            categoryInput.focus();
+                            return;
+                        }
 
-        async function editArticle(slug) {
-            try {
-                const response = await fetch(`${API_URL}/articles/${slug}`);
-                if (!response.ok) {
-                    throw new Error('Artículo no encontrado');
-                }
-                const article = await response.json();
+                        if (!excerptInput.value.trim()) {
+                            alert('Por favor, ingresa una descripción breve.');
+                            excerptInput.focus();
+                            return;
+                        }
 
-                document.getElementById('articleTitle').value = article.title || '';
-                document.getElementById('articleDate').value = article.date || 'Diciembre 2025';
-                document.getElementById('articleCategory').value = article.category || 'Otras';
-                document.getElementById('articleExcerpt').value = article.excerpt || '';
-                document.getElementById('articleContent').value = article.content || '';
-                document.getElementById('articleTags').value = (article.tags || []).join(', ');
+                        if (!contentInput.value.trim()) {
+                            alert('Por favor, ingresa el contenido del artículo.');
+                            contentInput.focus();
+                            return;
+                        }
 
-                showPanel('new');
-            } catch (error) {
-                console.error('Error loading article:', error);
-                alert('Error al cargar el artículo: ' + error.message);
-            }
-        }
+                        // Parse tags from comma-separated input
+                        const tags = tagsInput.value ?
+                            tagsInput.value.split(',').map(t => t.trim().toLowerCase()).filter(t => t.length > 0) : [];
 
-        async function deleteArticle(slug) {
-            if (confirm('¿Estás seguro de que deseas eliminar este artículo?')) {
-                try {
-                    const response = await fetch(`${API_URL}/articles/${slug}`, {
-                        method: 'DELETE'
+                        const article = {
+                            title: titleInput.value.trim(),
+                            date: dateInput.value.trim(),
+                            category: categoryInput.value,
+                            excerpt: excerptInput.value.trim(),
+                            content: contentInput.value,
+                            tags: tags,
+                            slug: generateSlug(titleInput.value.trim())
+                        };
+
+                        // Disable submit button while saving
+                        const submitBtn = this.querySelector('button[type="submit"]');
+                        const originalText = submitBtn.innerHTML;
+                        submitBtn.disabled = true;
+                        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
+
+                        try {
+                            const response = await fetch(`${API_URL}/articles`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify(article)
+                            });
+
+                            const result = await response.json();
+
+                            // Re-enable button
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalText;
+
+                            if (response.ok) {
+                                document.getElementById('successMessage').style.display = 'block';
+                                setTimeout(() => {
+                                    document.getElementById('successMessage').style.display = 'none';
+                                }, 3000);
+
+                                this.reset();
+                                loadArticles();
+                                showPanel('articles');
+                            } else {
+                                alert('Error al guardar artículo: ' + (result.error || 'Error desconocido'));
+                            }
+                        } catch (error) {
+                            console.error('Error saving article:', error);
+                            // Re-enable button on error
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalText;
+                            alert('Error al conectar con el servidor. Verifica que esté corriendo.');
+                        }
                     });
 
-                    if (response.ok) {
-                        loadArticles();
-                        alert('Artículo eliminado exitosamente');
-                    } else {
-                        const result = await response.json();
-                        alert('Error al eliminar: ' + (result.error || 'Error desconocido'));
+                    // Rebuild Index Button
+                    document.getElementById('rebuildIndexBtn').addEventListener('click', async function () {
+                        if (!confirm('¿Regenerar el índice de artículos? Esto escaneará todos los archivos HTML y actualizará la lista.')) {
+                            return;
+                        }
+
+                        const btn = this;
+                        const originalHTML = btn.innerHTML;
+                        btn.disabled = true;
+                        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Regenerando...';
+
+                        try {
+                            const response = await fetch(`${API_URL}/rebuild-index`, {
+                                method: 'POST'
+                            });
+
+                            const result = await response.json();
+
+                            if (response.ok) {
+                                alert(`✅ Índice regenerado exitosamente!\n\n📊 Total artículos: ${result.totalArticles}`);
+                                // Recargar artículos para mostrar los nuevos
+                                await loadArticles();
+                            } else {
+                                alert('❌ Error: ' + (result.error || 'Error desconocido'));
+                            }
+                        } catch (error) {
+                            console.error('Error regenerando índice:', error);
+                            alert('❌ Error al conectar con el servidor');
+                        } finally {
+                            btn.disabled = false;
+                            btn.innerHTML = originalHTML;
+                        }
+                    });
+
+                    async function editArticle(slug) {
+                        try {
+                            const response = await fetch(`${API_URL}/articles/${slug}`);
+                            if (!response.ok) {
+                                throw new Error('Artículo no encontrado');
+                            }
+                            const article = await response.json();
+
+                            document.getElementById('articleTitle').value = article.title || '';
+                            document.getElementById('articleDate').value = article.date || 'Diciembre 2025';
+                            document.getElementById('articleCategory').value = article.category || 'Otras';
+                            document.getElementById('articleExcerpt').value = article.excerpt || '';
+                            document.getElementById('articleContent').value = article.content || '';
+                            document.getElementById('articleTags').value = (article.tags || []).join(', ');
+
+                            showPanel('new');
+                        } catch (error) {
+                            console.error('Error loading article:', error);
+                            alert('Error al cargar el artículo: ' + error.message);
+                        }
                     }
-                } catch (error) {
-                    console.error('Error deleting article:', error);
-                    alert('Error al conectar con el servidor');
-                }
-            }
-        }
 
-        async function updateStats() {
-            try {
-                const response = await fetch(`${API_URL}/articles`);
-                const data = await response.json();
-                const articles = data.articles || [];
+                    async function deleteArticle(slug) {
+                        showConfirm(
+                            '¿Eliminar artículo?',
+                            '¿Estás seguro de que deseas eliminar este artículo? Esta acción no se puede deshacer.',
+                            async () => {
+                                try {
+                                    const response = await fetch(`${API_URL}/articles/${slug}`, {
+                                        method: 'DELETE'
+                                    });
 
-                document.getElementById('totalArticles').textContent = articles.length;
-                document.getElementById('totalCategories').textContent = categories.length;
-                document.getElementById('lastUpdate').textContent = new Date().toLocaleString('es-ES');
-            } catch (error) {
-                console.error('Error updating stats:', error);
-                document.getElementById('totalArticles').textContent = '?';
-                document.getElementById('lastUpdate').textContent = 'Error';
-            }
-        }
+                                    if (response.ok) {
+                                        loadArticles();
+                                        showAlert('✅ Éxito', 'Artículo eliminado exitosamente');
+                                    } else {
+                                        const result = await response.json();
+                                        showAlert('❌ Error', 'Error al eliminar: ' + (result.error || 'Error desconocido'));
+                                    }
+                                } catch (error) {
+                                    showAlert('❌ Error', 'Error al conectar con el servidor');
+                                }
+                            }
+                        );
+                    }
 
-        // ==================== CATEGORY MANAGEMENT (API) ====================
+                    async function updateStats() {
+                        try {
+                            const response = await fetch(`${API_URL}/articles`);
+                            const data = await response.json();
+                            const articles = data.articles || [];
 
-        // Categories array (loaded from server)
-        let categories = [];
+                            document.getElementById('totalArticles').textContent = articles.length;
+                            document.getElementById('totalCategories').textContent = categories.length;
+                            document.getElementById('lastUpdate').textContent = new Date().toLocaleString('es-ES');
+                        } catch (error) {
+                            console.error('Error updating stats:', error);
+                            document.getElementById('totalArticles').textContent = '?';
+                            document.getElementById('lastUpdate').textContent = 'Error';
+                        }
+                    }
 
-        // Load categories from API
-        async function loadCategoriesFromAPI() {
-            try {
-                const response = await fetch(`${API_URL}/categories`);
-                const data = await response.json();
-                categories = data.categories || [];
-                return categories;
-            } catch (error) {
-                console.error('Error loading categories:', error);
-                return [];
-            }
-        }
+                    // ==================== CATEGORY MANAGEMENT (API) ====================
 
-        // Load and display categories
-        async function loadCategories() {
-            const container = document.getElementById('categoriesList');
-            container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">Cargando categorías...</p>';
+                    // Categories array (loaded from server)
+                    let categories = [];
 
-            await loadCategoriesFromAPI();
+                    // Load categories from API
+                    async function loadCategoriesFromAPI() {
+                        try {
+                            const response = await fetch(`${API_URL}/categories`);
+                            const data = await response.json();
+                            categories = data.categories || [];
+                            return categories;
+                        } catch (error) {
+                            console.error('Error loading categories:', error);
+                            return [];
+                        }
+                    }
 
-            if (categories.length === 0) {
-                container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">No hay categorías. Crea tu primera categoría.</p>';
-                return;
-            }
+                    // Load and display categories
+                    async function loadCategories() {
+                        const container = document.getElementById('categoriesList');
+                        container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">Cargando categorías...</p>';
 
-            // Count articles per category
-            const articleCounts = {};
-            allArticles.forEach(article => {
-                const cat = article.category || 'Otras';
-                articleCounts[cat] = (articleCounts[cat] || 0) + 1;
-            });
+                        await loadCategoriesFromAPI();
 
-            container.innerHTML = categories.map(cat => `
+                        if (categories.length === 0) {
+                            container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">No hay categorías. Crea tu primera categoría.</p>';
+                            return;
+                        }
+
+                        // Count articles per category
+                        const articleCounts = {};
+                        allArticles.forEach(article => {
+                            const cat = article.category || 'Otras';
+                            articleCounts[cat] = (articleCounts[cat] || 0) + 1;
+                        });
+
+                        container.innerHTML = categories.map(cat => `
                 <div class="article-card" style="border-left: 4px solid ${cat.color};">
                     <div class="article-card-header">
                         <div>
@@ -1467,138 +1517,138 @@
                     </div>
                 </div>
             `).join('');
-        }
-
-        // Save category (create or update) via API
-        async function saveCategory() {
-            const name = document.getElementById('categoryName').value.trim();
-            const icon = document.getElementById('categoryIcon').value.trim();
-            const color = document.getElementById('categoryColor').value;
-            const textColor = document.getElementById('categoryTextColor').value;
-            const editingId = document.getElementById('editingCategoryId').value;
-
-            if (!name || !icon) {
-                alert('Por favor completa el nombre y el icono de la categoría.');
-                return;
-            }
-
-            try {
-                let response;
-                if (editingId) {
-                    // Update existing
-                    response = await fetch(`${API_URL}/categories/${editingId}`, {
-                        method: 'PUT',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name, icon, color, textColor })
-                    });
-                } else {
-                    // Create new
-                    response = await fetch(`${API_URL}/categories`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name, icon, color, textColor })
-                    });
-                }
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    cancelEditCategory();
-                    await loadCategories();
-                    await updateCategorySelect();
-                    await updateFilterButtons();
-                    alert(editingId ? 'Categoría actualizada exitosamente.' : 'Categoría creada exitosamente.');
-                } else {
-                    alert('Error: ' + (result.error || 'Error desconocido'));
-                }
-            } catch (error) {
-                console.error('Error saving category:', error);
-                alert('Error al conectar con el servidor.');
-            }
-        }
-
-        // Edit category
-        function editCategory(id) {
-            const cat = categories.find(c => c.id === id);
-            if (!cat) return;
-
-            document.getElementById('categoryName').value = cat.name;
-            document.getElementById('categoryIcon').value = cat.icon;
-            document.getElementById('categoryColor').value = cat.color;
-            document.getElementById('categoryTextColor').value = cat.textColor;
-            document.getElementById('editingCategoryId').value = id;
-            document.getElementById('cancelEditBtn').style.display = 'inline-block';
-        }
-
-        // Cancel edit
-        function cancelEditCategory() {
-            document.getElementById('categoryName').value = '';
-            document.getElementById('categoryIcon').value = '';
-            document.getElementById('categoryColor').value = '#e0e7ff';
-            document.getElementById('categoryTextColor').value = '#3730a3';
-            document.getElementById('editingCategoryId').value = '';
-            document.getElementById('cancelEditBtn').style.display = 'none';
-        }
-
-        // Delete category via API
-        async function deleteCategory(id) {
-            const cat = categories.find(c => c.id === id);
-            if (!cat) return;
-
-            if (cat.isDefault) {
-                alert('No puedes eliminar la categoría por defecto.');
-                return;
-            }
-
-            // Count articles in this category
-            const articleCount = allArticles.filter(a => a.category === cat.name).length;
-
-            let message = `¿Estás seguro de que deseas eliminar la categoría "${cat.name}"?`;
-            if (articleCount > 0) {
-                message += `\n\n⚠️ ${articleCount} artículo(s) serán movidos a la categoría "Otras".`;
-            }
-
-            if (confirm(message)) {
-                try {
-                    const response = await fetch(`${API_URL}/categories/${id}`, {
-                        method: 'DELETE'
-                    });
-
-                    const result = await response.json();
-
-                    if (response.ok) {
-                        await loadCategories();
-                        await updateCategorySelect();
-                        await updateFilterButtons();
-                        await loadArticles(); // Reload articles to reflect category changes
-                        alert(result.message || 'Categoría eliminada exitosamente.');
-                    } else {
-                        alert('Error: ' + (result.error || 'Error desconocido'));
                     }
-                } catch (error) {
-                    console.error('Error deleting category:', error);
-                    alert('Error al conectar con el servidor.');
-                }
-            }
-        }
 
-        // Update the category select in the article form
-        async function updateCategorySelect() {
-            if (categories.length === 0) {
-                await loadCategoriesFromAPI();
-            }
-            const select = document.getElementById('articleCategory');
-            select.innerHTML = '<option value="">Seleccionar categoría</option>' +
-                categories.map(cat => `<option value="${cat.name}">${cat.icon} ${cat.name}</option>`).join('');
-        }
+                    // Save category (create or update) via API
+                    async function saveCategory() {
+                        const name = document.getElementById('categoryName').value.trim();
+                        const icon = document.getElementById('categoryIcon').value.trim();
+                        const color = document.getElementById('categoryColor').value;
+                        const textColor = document.getElementById('categoryTextColor').value;
+                        const editingId = document.getElementById('editingCategoryId').value;
 
-        // Update filter buttons
-        async function updateFilterButtons() {
-            if (categories.length === 0) {
-                await loadCategoriesFromAPI();
-            }
-            const container = document.getElementById('categoryFilters');
-            container.innerHTML = `
+                        if (!name || !icon) {
+                            alert('Por favor completa el nombre y el icono de la categoría.');
+                            return;
+                        }
+
+                        try {
+                            let response;
+                            if (editingId) {
+                                // Update existing
+                                response = await fetch(`${API_URL}/categories/${editingId}`, {
+                                    method: 'PUT',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ name, icon, color, textColor })
+                                });
+                            } else {
+                                // Create new
+                                response = await fetch(`${API_URL}/categories`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ name, icon, color, textColor })
+                                });
+                            }
+
+                            const result = await response.json();
+
+                            if (response.ok) {
+                                cancelEditCategory();
+                                await loadCategories();
+                                await updateCategorySelect();
+                                await updateFilterButtons();
+                                alert(editingId ? 'Categoría actualizada exitosamente.' : 'Categoría creada exitosamente.');
+                            } else {
+                                alert('Error: ' + (result.error || 'Error desconocido'));
+                            }
+                        } catch (error) {
+                            console.error('Error saving category:', error);
+                            alert('Error al conectar con el servidor.');
+                        }
+                    }
+
+                    // Edit category
+                    function editCategory(id) {
+                        const cat = categories.find(c => c.id === id);
+                        if (!cat) return;
+
+                        document.getElementById('categoryName').value = cat.name;
+                        document.getElementById('categoryIcon').value = cat.icon;
+                        document.getElementById('categoryColor').value = cat.color;
+                        document.getElementById('categoryTextColor').value = cat.textColor;
+                        document.getElementById('editingCategoryId').value = id;
+                        document.getElementById('cancelEditBtn').style.display = 'inline-block';
+                    }
+
+                    // Cancel edit
+                    function cancelEditCategory() {
+                        document.getElementById('categoryName').value = '';
+                        document.getElementById('categoryIcon').value = '';
+                        document.getElementById('categoryColor').value = '#e0e7ff';
+                        document.getElementById('categoryTextColor').value = '#3730a3';
+                        document.getElementById('editingCategoryId').value = '';
+                        document.getElementById('cancelEditBtn').style.display = 'none';
+                    }
+
+                    // Delete category via API
+                    async function deleteCategory(id) {
+                        const cat = categories.find(c => c.id === id);
+                        if (!cat) return;
+
+                        if (cat.isDefault) {
+                            alert('No puedes eliminar la categoría por defecto.');
+                            return;
+                        }
+
+                        // Count articles in this category
+                        const articleCount = allArticles.filter(a => a.category === cat.name).length;
+
+                        let message = `¿Estás seguro de que deseas eliminar la categoría "${cat.name}"?`;
+                        if (articleCount > 0) {
+                            message += `\n\n⚠️ ${articleCount} artículo(s) serán movidos a la categoría "Otras".`;
+                        }
+
+                        if (confirm(message)) {
+                            try {
+                                const response = await fetch(`${API_URL}/categories/${id}`, {
+                                    method: 'DELETE'
+                                });
+
+                                const result = await response.json();
+
+                                if (response.ok) {
+                                    await loadCategories();
+                                    await updateCategorySelect();
+                                    await updateFilterButtons();
+                                    await loadArticles(); // Reload articles to reflect category changes
+                                    alert(result.message || 'Categoría eliminada exitosamente.');
+                                } else {
+                                    alert('Error: ' + (result.error || 'Error desconocido'));
+                                }
+                            } catch (error) {
+                                console.error('Error deleting category:', error);
+                                alert('Error al conectar con el servidor.');
+                            }
+                        }
+                    }
+
+                    // Update the category select in the article form
+                    async function updateCategorySelect() {
+                        if (categories.length === 0) {
+                            await loadCategoriesFromAPI();
+                        }
+                        const select = document.getElementById('articleCategory');
+                        select.innerHTML = '<option value="">Seleccionar categoría</option>' +
+                            categories.map(cat => `<option value="${cat.name}">${cat.icon} ${cat.name}</option>`).join('');
+                    }
+
+                    // Update filter buttons
+                    async function updateFilterButtons() {
+                        if (categories.length === 0) {
+                            await loadCategoriesFromAPI();
+                        }
+                        const container = document.getElementById('categoryFilters');
+                        container.innerHTML = `
                 <button class="filter-btn active" data-category="all">
                     📚 Todos <span class="filter-count" id="count-all">0</span>
                 </button>
@@ -1607,12 +1657,12 @@
                     ${cat.icon} ${cat.name.split(' ')[0]} <span class="filter-count" id="count-${cat.id}">0</span>
                 </button>
             `).join('');
-            setupFilters();
-        }
+                        setupFilters();
+                    }
 
-        // Initialize categories on load
-        loadCategoriesFromAPI();
-    </script>
+                    // Initialize categories on load
+                    loadCategoriesFromAPI();
+                </script>
 </body>
 
 </html>
