@@ -8,7 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ==================== MONGODB CONNECTION ====================
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://obs360admin:obs360admin@obs360-blog.jbttdnt.mongodb.net/?appName=obs360-blog';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://obs360admin:obs360admin@obs360-blog.jbttdnt.mongodb.net/obs360blog?retryWrites=true&w=majority';
 const DB_NAME = 'obs360blog';
 
 let cachedClient = null;
