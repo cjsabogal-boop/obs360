@@ -1454,7 +1454,9 @@
                             }
                             const article = await response.json();
 
-                            document.getElementById('currentSlug').value = article.slug || slug; // Setear slug para update
+                            // USAR ID REAL (r-xxxxx) para actualizaciones
+                            document.getElementById('currentSlug').value = article.id || article.filename.replace('.html', '') || slug;
+
                             document.getElementById('articleTitle').value = article.title || '';
                             document.getElementById('articleDate').value = article.date || 'Diciembre 2025';
                             document.getElementById('articleCategory').value = article.category || 'Otras';

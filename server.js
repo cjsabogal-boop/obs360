@@ -625,26 +625,63 @@ async function rebuildArticlesIndex() {
 app.get('/api/articles/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
-        const filePath = path.join(BLOG_DIR, `${slug}.html`);
+        let filename = `${slug}.html`;
+        let realId = slug;
+
+        // Verificar si es un slug legible y buscar en el mapeo
+        const mapping = await loadUrlMapping();
+        const readableKey = `${slug}.html`;
+
+        if (mapping[readableKey]) {
+            filename = mapping[readableKey];
+            realId = filename.replace('.html', '');
+        }
+
+        const filePath = path.join(BLOG_DIR, filename);
 
         if (!await fs.pathExists(filePath)) {
-            return res.status(404).json({ error: 'Artículo no encontrado' });
+            // Intentar buscar directo por si es un ID 'r-xxxx'
+            if (!slug.startsWith('r-')) {
+                return res.status(404).json({ error: 'Artículo no encontrado' });
+            }
         }
 
         const content = await fs.readFile(filePath, 'utf-8');
         const $ = cheerio.load(content);
+        // Extraer título del HTML si no hay metadata
+        const titleContent = $('title').text().split('|')[0].trim();
 
-        const title = $('title').text().split('|')[0].trim();
+        // Obtener metadatos enriquecidos
+        const articlesMetaPath = path.join(BLOG_DIR, 'articles-meta.json');
+        let articlesMeta = {};
+        if (await fs.pathExists(articlesMetaPath)) {
+            try {
+                articlesMeta = JSON.parse(await fs.readFile(articlesMetaPath, 'utf-8'));
+            } catch (e) { }
+        }
+
+        // Si no tenemos realId porque entramos directo, deducirlo
+        if (!realId.startsWith('r-') && filename.startsWith('r-')) {
+            realId = filename.replace('.html', '');
+        }
+
+        const meta = articlesMeta[realId] || {};
 
         res.json({
-            slug,
-            title,
-            content,
-            filename: `${slug}.html`
+            slug: slug,         // Slug solicitado (legible)
+            filename: filename, // Nombre real archivo
+            id: realId,         // ID único (r-xxxxx) - CLAVE PARA UPDATE
+            title: meta.title || titleContent,
+            date: meta.date || 'Diciembre 2025',
+            category: meta.category || 'Otras',
+            excerpt: meta.excerpt || '',
+            tags: meta.tags || [],
+            content: content // Contenido HTML completo
         });
+
     } catch (error) {
         console.error('Error al leer artículo:', error);
-        res.status(500).json({ error: 'Error al leer artículo' });
+        res.status(500).json({ error: 'Error al leer artículo: ' + error.message });
     }
 });
 
