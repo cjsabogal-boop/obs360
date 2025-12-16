@@ -539,9 +539,7 @@
             const grid = document.getElementById('articlesGrid');
 
             try {
-                const API_URL = window.location.hostname === 'localhost'
-                    ? 'http://localhost:3000/api'
-                    : 'https://obs360.co/api';
+                const API_URL = 'https://obs360.vercel.app/api';
 
                 const response = await fetch(`${API_URL}/articles`);
                 const data = await response.json();
