@@ -1,71 +1,81 @@
 <?php
-// DEPLOY NUCLEAR v4.0 - Autoarranque y Diagnóstico
+// DEPLOY OBS360 - Sincronización de archivos estáticos
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 echo "<html><body style='font-family: sans-serif; background: #121212; color: #e0e0e0; padding: 20px;'>";
-echo "<h1>🚀 DEPLOY NUCLEAR v4.0 (Fix 404)</h1>";
+echo "<h1>🚀 Deploy OBS360 Blog</h1>";
 echo "<pre style='background: #1e1e1e; padding: 15px; border-radius: 8px;'>";
 
 function run($cmd)
 {
     echo "<span style='color: #4caf50;'>$ $cmd</span>\n";
     $output = shell_exec($cmd . " 2>&1");
-    echo htmlspecialchars($output) . "\n";
-    return $output;
+    echo htmlspecialchars($output ?? '') . "\n";
+    return $output ?? '';
 }
 
-// 1. Desbloquear GIT (Reset Hard)
+// 1. Sincronizar con GitHub
 echo "<h3>📦 1. Sincronizando con GitHub...</h3>";
-run("export GIT_SSL_NO_VERIFY=1");
 run("git fetch --all");
-run("git reset --hard origin/main"); // Esto borra cambios locales conflictivos
+run("git reset --hard origin/main");
 run("git pull origin main");
 
-// 2. Verificar archivos críticos
-echo "\n<h3>🔍 2. Verificando Archivos...</h3>";
-$critical_files = ['server.js', 'admin/index.html', 'package.json'];
+// 2. Verificar archivos del frontend
+echo "\n<h3>🔍 2. Verificando Archivos Frontend...</h3>";
+$frontend_files = ['index.html', 'article.html', 'admin/index.html'];
 $files_ok = true;
 
-foreach ($critical_files as $file) {
+foreach ($frontend_files as $file) {
     if (file_exists($file)) {
-        echo "✅ $file existe (" . filesize($file) . " bytes)\n";
-
-        // Verificar contenido clave en server.js
-        if ($file === 'server.js') {
-            $content = file_get_contents($file);
-            if (strpos($content, 'FIX CPanel') !== false) {
-                echo "   ✨ server.js tiene el PARCHE CPanel (Correcto)\n";
-            } else {
-                echo "   ❌ server.js NO tiene el parche. Git pull falló.\n";
-                $files_ok = false;
-            }
-        }
+        $size = filesize($file);
+        echo "✅ $file existe (" . number_format($size) . " bytes)\n";
     } else {
         echo "❌ FALTA: $file\n";
         $files_ok = false;
     }
 }
 
-// 3. Resultado
-echo "</pre>";
+// 3. Verificar conexión con API (Vercel)
+echo "\n<h3>🌐 3. Verificando API en Vercel...</h3>";
+$api_url = 'https://obs360.vercel.app/api/version/check';
+$context = stream_context_create(['http' => ['timeout' => 5]]);
+$api_response = @file_get_contents($api_url, false, $context);
 
-if ($files_ok) {
-    echo "<h2 style='color: #4caf50;'>✅ TODO CORRECTO (Nivel Archivos)</h2>";
-    echo "<p>El código en el servidor ya está actualizado y arreglado.</p>";
-    echo "<div style='border: 2px solid #f44336; padding: 20px; border-radius: 10px; background: #3e1212;'>";
-    echo "<h3 style='margin-top:0'>⚠️ ÚLTIMO PASO OBLIGATORIO:</h3>";
-    echo "<ol style='font-size: 18px; line-height: 1.6;'>";
-    echo "<li>Ve a <strong>cPanel</strong> &rarr; <strong>Setup Node.js App</strong></li>";
-    echo "<li>Haz clic en el botón <strong>RESTART</strong> (Reiniciar)</li>";
-    echo "<li>Espera 10 segundos.</li>";
-    echo "<li><a href='admin/index.html' target='_blank' style='color: #80d8ff; font-weight: bold;'>👉 ENTRAR AL ADMIN</a></li>";
-    echo "</ol>";
-    echo "</div>";
+if ($api_response) {
+    $data = json_decode($api_response, true);
+    echo "✅ API Online\n";
+    echo "   📊 Versión: " . ($data['version'] ?? 'N/A') . "\n";
+    echo "   💾 Base de datos: " . ($data['database'] ?? 'N/A') . "\n";
+    echo "   📝 Artículos: " . ($data['articles_count'] ?? 'N/A') . "\n";
 } else {
-    echo "<h2 style='color: #f44336;'>❌ AÚN HAY ERRORES</h2>";
-    echo "<p>Git no pudo descargar los archivos. Contacta al soporte técnico o intenta subir 'server.js' manualmente.</p>";
+    echo "⚠️ No se pudo conectar con la API (puede ser temporal)\n";
 }
 
+echo "</pre>";
+
+// 4. Resultado
+if ($files_ok) {
+    echo "<h2 style='color: #4caf50;'>✅ DEPLOY EXITOSO</h2>";
+    echo "<div style='background: #1e3a1e; padding: 20px; border-radius: 10px; border: 2px solid #4caf50;'>";
+    echo "<h3 style='margin-top:0'>📋 Arquitectura Actual:</h3>";
+    echo "<ul style='font-size: 16px; line-height: 1.8;'>";
+    echo "<li><strong>Frontend:</strong> cPanel (obs360.co/blog/)</li>";
+    echo "<li><strong>API:</strong> Vercel (obs360.vercel.app/api)</li>";
+    echo "<li><strong>Base de datos:</strong> MongoDB Atlas</li>";
+    echo "</ul>";
+    echo "<h3>🔗 Enlaces:</h3>";
+    echo "<ul style='font-size: 16px; line-height: 1.8;'>";
+    echo "<li><a href='index.html' style='color: #80d8ff;'>📖 Ver Blog</a></li>";
+    echo "<li><a href='admin/index.html' style='color: #80d8ff;'>⚙️ Panel Admin</a></li>";
+    echo "<li><a href='https://obs360.vercel.app/api/articles' target='_blank' style='color: #80d8ff;'>🔌 Ver API</a></li>";
+    echo "</ul>";
+    echo "</div>";
+} else {
+    echo "<h2 style='color: #f44336;'>❌ HAY ARCHIVOS FALTANTES</h2>";
+    echo "<p>Git pull no descargó todos los archivos. Intenta de nuevo o sube manualmente.</p>";
+}
+
+echo "<p style='margin-top: 30px; color: #888; font-size: 12px;'>Última actualización: " . date('Y-m-d H:i:s') . "</p>";
 echo "</body></html>";
 ?>
