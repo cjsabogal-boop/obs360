@@ -12,11 +12,13 @@ putenv("HOME=" . __DIR__);
 
 // Comandos para resetear y traer todo nuevo
 $commands = [
-    'git fetch --all',
-    'git reset --hard origin/main',
-    'git clean -fd', // Borrar archivos no trackeados (opcional, cuidado)
+    'git remote update',      // Actualizar referencias remotas
+    'git fetch origin',       // Traer cambios
+    'git reset --hard origin/main', // Resetear a lo nuevo
+    'git pull origin main',   // Asegurar pull
+    'git clean -fd',          // Limpiar basura
     'git status',
-    'ls -la admin/' // Verificar que admin se descargó
+    'git log -1'              // Mostrar último commit para verificar
 ];
 
 foreach ($commands as $cmd) {
