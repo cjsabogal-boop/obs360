@@ -1,3 +1,9 @@
-# Redirigir todas las peticiones a /api al servidor Node.js
+# Configuración de archivos index por defecto
+DirectoryIndex index.html index.php
+
+# Redirección de /admin/ a /blog/admin/
 RewriteEngine On
+RewriteRule ^admin/?$ /blog/admin/ [R=301,L]
+
+# Redirigir todas las peticiones a /api al servidor Node.js
 RewriteRule ^api/(.*)$ http://localhost:3000/$1 [P,L]
