@@ -324,6 +324,233 @@
             filter: brightness(0) invert(1);
         }
 
+        /* Search Bar */
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 25px;
+            position: relative;
+        }
+
+        .search-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            color: #6b7280;
+            font-size: 1.1rem;
+            pointer-events: none;
+            transition: color 0.3s ease;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 16px 50px 16px 50px;
+            border: 2px solid #e5e7eb;
+            border-radius: 50px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            background: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #28529a;
+            box-shadow: 0 4px 20px rgba(40, 82, 154, 0.15);
+        }
+
+        .search-input:focus+.search-icon,
+        .search-input:not(:placeholder-shown)+.search-icon {
+            color: #28529a;
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 18px;
+            background: none;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .search-clear:hover {
+            color: #ef4444;
+            background: #fee2e2;
+        }
+
+        .search-clear.visible {
+            display: block;
+        }
+
+        /* Tags Section */
+        .tags-section {
+            margin-bottom: 25px;
+        }
+
+        .tags-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .tags-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            padding: 0 10px;
+        }
+
+        .tag-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, rgba(40, 82, 154, 0.08), rgba(132, 204, 22, 0.08));
+            border: 2px solid transparent;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: capitalize;
+        }
+
+        .tag-pill:hover {
+            background: linear-gradient(135deg, rgba(40, 82, 154, 0.15), rgba(132, 204, 22, 0.15));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 82, 154, 0.15);
+        }
+
+        .tag-pill.active {
+            background: linear-gradient(135deg, #28529a, #84cc16);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(40, 82, 154, 0.3);
+        }
+
+        .tag-count {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .tag-pill.active .tag-count {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* Search Results Info */
+        .search-results-info {
+            text-align: center;
+            padding: 15px;
+            color: #6b7280;
+            font-size: 14px;
+            display: none;
+        }
+
+        .search-results-info.visible {
+            display: block;
+        }
+
+        .search-results-info strong {
+            color: #28529a;
+            font-weight: 700;
+        }
+
+        .clear-filters-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: 10px;
+            padding: 6px 14px;
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clear-filters-btn:hover {
+            background: #fecaca;
+        }
+
+        /* No Results Message */
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+
+        .no-results-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .no-results h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.25rem;
+            color: #374151;
+            margin-bottom: 10px;
+        }
+
+        .no-results p {
+            font-size: 14px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Article Tags */
+        .article-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .article-tag {
+            font-size: 11px;
+            padding: 3px 10px;
+            background: linear-gradient(135deg, rgba(40, 82, 154, 0.1), rgba(132, 204, 22, 0.1));
+            border-radius: 15px;
+            color: #28529a;
+            font-weight: 600;
+        }
+
+        /* Highlight Search Match */
+        .highlight {
+            background: linear-gradient(135deg, rgba(132, 204, 22, 0.3), rgba(132, 204, 22, 0.5));
+            padding: 1px 4px;
+            border-radius: 3px;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .blog-hero h1 {
@@ -347,6 +574,20 @@
             .logo-section {
                 flex-direction: column;
                 gap: 10px;
+            }
+
+            .search-input {
+                padding: 14px 45px;
+                font-size: 14px;
+            }
+
+            .tags-container {
+                gap: 8px;
+            }
+
+            .tag-pill {
+                padding: 6px 12px;
+                font-size: 12px;
             }
         }
     </style>
@@ -417,6 +658,25 @@
         <div class="container">
             <h2 class="section-title">Recursos Disponibles</h2>
 
+            <!-- Search Bar -->
+            <div class="search-container">
+                <div class="search-wrapper">
+                    <input type="text" id="searchInput" class="search-input"
+                        placeholder="🔍 Buscar por título, contenido o tags..." autocomplete="off">
+                    <button id="searchClear" class="search-clear" title="Limpiar búsqueda">✕</button>
+                </div>
+            </div>
+
+            <!-- Tags Section -->
+            <div class="tags-section" id="tagsSection">
+                <div class="tags-header">
+                    <span class="tags-title">🏷️ Tags Populares</span>
+                </div>
+                <div class="tags-container" id="tagsContainer">
+                    <!-- Tags will be loaded dynamically -->
+                </div>
+            </div>
+
             <!-- Category Filters -->
             <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 25px; flex-wrap: wrap;">
                 <button class="category-filter active" data-category="all"
@@ -445,6 +705,11 @@
                 </button>
             </div>
 
+            <!-- Search Results Info -->
+            <div class="search-results-info" id="searchResultsInfo">
+                <!-- Results info will be shown here -->
+            </div>
+
             <div class="articles-grid" id="articlesGrid">
                 <!-- Articles will be loaded dynamically -->
                 <p style="text-align: center; color: #6b7280; padding: 40px;">Cargando artículos...</p>
@@ -463,6 +728,10 @@
 
         let allArticles = [];
         let currentFilter = 'all';
+        let currentSearchQuery = '';
+        let currentTag = null;
+        let allTags = {};
+        let searchTimeout = null;
 
         // Check if already logged in
         if (sessionStorage.getItem('blog_logged_in') === 'true') {
@@ -489,12 +758,267 @@
         function showArticles() {
             document.getElementById('articlesSection').style.display = 'block';
             loadArticles();
+            setupSearch();
+        }
+
+        // Setup search functionality
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const searchClear = document.getElementById('searchClear');
+
+            searchInput.addEventListener('input', function () {
+                const query = this.value.trim();
+
+                // Show/hide clear button
+                if (query.length > 0) {
+                    searchClear.classList.add('visible');
+                } else {
+                    searchClear.classList.remove('visible');
+                }
+
+                // Debounce search
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    currentSearchQuery = query;
+                    applyFilters();
+                }, 300);
+            });
+
+            searchClear.addEventListener('click', function () {
+                searchInput.value = '';
+                searchClear.classList.remove('visible');
+                currentSearchQuery = '';
+                applyFilters();
+                searchInput.focus();
+            });
+
+            // Handle Enter key
+            searchInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    currentSearchQuery = this.value.trim();
+                    applyFilters();
+                }
+            });
+        }
+
+        // Extract tags from articles
+        function extractTags(articles) {
+            const tagsMap = {};
+
+            articles.forEach(article => {
+                // Get tags from article.tags if exists
+                let articleTags = [];
+
+                if (article.tags && Array.isArray(article.tags)) {
+                    articleTags = article.tags;
+                } else if (article.tags && typeof article.tags === 'string') {
+                    articleTags = article.tags.split(',').map(t => t.trim()).filter(t => t);
+                }
+
+                // Also extract keywords from title
+                const titleWords = extractKeywords(article.title);
+                articleTags = [...articleTags, ...titleWords];
+
+                // Count tags
+                articleTags.forEach(tag => {
+                    const normalizedTag = tag.toLowerCase().trim();
+                    if (normalizedTag.length > 2) { // Ignore short tags
+                        tagsMap[normalizedTag] = (tagsMap[normalizedTag] || 0) + 1;
+                    }
+                });
+            });
+
+            return tagsMap;
+        }
+
+        // Extract keywords from title
+        function extractKeywords(title) {
+            const stopWords = ['de', 'la', 'el', 'los', 'las', 'un', 'una', 'y', 'o', 'en', 'para', 'por', 'con', 'del', 'al', 'a', 'que', 'es', 'se', 'no', 'su', 'como'];
+            const words = title.toLowerCase()
+                .replace(/[^\w\sáéíóúñ]/g, ' ')
+                .split(/\s+/)
+                .filter(word => word.length > 3 && !stopWords.includes(word));
+            return words.slice(0, 3); // Max 3 keywords per title
+        }
+
+        // Render tags
+        function renderTags() {
+            const container = document.getElementById('tagsContainer');
+            const tagsSection = document.getElementById('tagsSection');
+
+            // Sort tags by count and get top ones
+            const sortedTags = Object.entries(allTags)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 12); // Show top 12 tags
+
+            if (sortedTags.length === 0) {
+                tagsSection.style.display = 'none';
+                return;
+            }
+
+            tagsSection.style.display = 'block';
+
+            container.innerHTML = sortedTags.map(([tag, count]) => `
+                <button class="tag-pill ${currentTag === tag ? 'active' : ''}" data-tag="${tag}">
+                    ${tag}
+                    <span class="tag-count">${count}</span>
+                </button>
+            `).join('');
+
+            // Add click handlers
+            container.querySelectorAll('.tag-pill').forEach(pill => {
+                pill.addEventListener('click', function () {
+                    const tag = this.getAttribute('data-tag');
+
+                    if (currentTag === tag) {
+                        // Deselect if already selected
+                        currentTag = null;
+                        this.classList.remove('active');
+                    } else {
+                        // Select new tag
+                        container.querySelectorAll('.tag-pill').forEach(p => p.classList.remove('active'));
+                        currentTag = tag;
+                        this.classList.add('active');
+                    }
+
+                    applyFilters();
+                });
+            });
+        }
+
+        // Apply all filters (category, search, tag)
+        function applyFilters() {
+            let filteredArticles = [...allArticles];
+
+            // Apply category filter
+            if (currentFilter !== 'all') {
+                filteredArticles = filteredArticles.filter(article => article.category === currentFilter);
+            }
+
+            // Apply tag filter
+            if (currentTag) {
+                filteredArticles = filteredArticles.filter(article => {
+                    const articleTags = getArticleTags(article);
+                    return articleTags.some(t => t.toLowerCase().includes(currentTag));
+                });
+            }
+
+            // Apply search filter
+            if (currentSearchQuery) {
+                const query = currentSearchQuery.toLowerCase();
+                filteredArticles = filteredArticles.filter(article => {
+                    const searchableText = [
+                        article.title,
+                        article.excerpt || '',
+                        article.category || '',
+                        ...(getArticleTags(article))
+                    ].join(' ').toLowerCase();
+
+                    return searchableText.includes(query);
+                });
+            }
+
+            // Update results info
+            updateResultsInfo(filteredArticles.length);
+
+            // Render filtered articles
+            if (filteredArticles.length === 0) {
+                renderNoResults();
+            } else {
+                renderArticles(filteredArticles);
+            }
+        }
+
+        // Get tags from article
+        function getArticleTags(article) {
+            let tags = [];
+
+            if (article.tags && Array.isArray(article.tags)) {
+                tags = article.tags;
+            } else if (article.tags && typeof article.tags === 'string') {
+                tags = article.tags.split(',').map(t => t.trim()).filter(t => t);
+            }
+
+            // Include title keywords
+            tags = [...tags, ...extractKeywords(article.title)];
+
+            return tags;
+        }
+
+        // Update results info
+        function updateResultsInfo(count) {
+            const infoDiv = document.getElementById('searchResultsInfo');
+
+            const hasFilters = currentSearchQuery || currentTag || currentFilter !== 'all';
+
+            if (!hasFilters) {
+                infoDiv.classList.remove('visible');
+                return;
+            }
+
+            let message = `Mostrando <strong>${count}</strong> resultado${count !== 1 ? 's' : ''}`;
+
+            const filters = [];
+            if (currentSearchQuery) filters.push(`búsqueda: "${currentSearchQuery}"`);
+            if (currentTag) filters.push(`tag: "${currentTag}"`);
+            if (currentFilter !== 'all') filters.push(`categoría: "${currentFilter}"`);
+
+            if (filters.length > 0) {
+                message += ` para ${filters.join(', ')}`;
+            }
+
+            message += ` <button class="clear-filters-btn" onclick="clearAllFilters()">✕ Limpiar filtros</button>`;
+
+            infoDiv.innerHTML = message;
+            infoDiv.classList.add('visible');
+        }
+
+        // Clear all filters
+        function clearAllFilters() {
+            currentSearchQuery = '';
+            currentTag = null;
+            currentFilter = 'all';
+
+            // Reset UI
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchClear').classList.remove('visible');
+            document.getElementById('searchResultsInfo').classList.remove('visible');
+
+            // Reset category buttons
+            document.querySelectorAll('.category-filter').forEach(btn => {
+                const isAll = btn.getAttribute('data-category') === 'all';
+                btn.style.background = isAll ? '#28529a' : 'white';
+                btn.style.color = isAll ? 'white' : '#374151';
+                btn.style.borderColor = isAll ? '#28529a' : '#e5e7eb';
+                btn.classList.toggle('active', isAll);
+            });
+
+            // Reset tag pills
+            document.querySelectorAll('.tag-pill').forEach(p => p.classList.remove('active'));
+
+            // Re-render all articles
+            renderArticles(allArticles);
+        }
+
+        // Render no results message
+        function renderNoResults() {
+            const grid = document.getElementById('articlesGrid');
+            grid.innerHTML = `
+                <div class="no-results" style="grid-column: 1 / -1;">
+                    <div class="no-results-icon">🔍</div>
+                    <h3>No se encontraron resultados</h3>
+                    <p>Prueba con otros términos de búsqueda, tags o categorías.</p>
+                    <button onclick="clearAllFilters()" style="margin-top: 20px; padding: 10px 25px; background: linear-gradient(135deg, #28529a, #84cc16); color: white; border: none; border-radius: 25px; font-weight: 600; cursor: pointer;">
+                        Ver todos los recursos
+                    </button>
+                </div>
+            `;
         }
 
         // Categorize articles automatically
         function categorizeArticle(title, filename) {
             const titleLower = title.toLowerCase();
-            const filenameLower = filename.toLowerCase();
+            const filenameLower = (filename || '').toLowerCase();
 
             // Capacitación keywords
             if (titleLower.includes('guide') || titleLower.includes('guía') ||
@@ -581,12 +1105,24 @@
                 });
 
                 allArticles = articles;
+
+                // Extract and render tags
+                allTags = extractTags(articles);
+                renderTags();
+
                 renderArticles(articles);
                 setupFilters();
             } catch (error) {
                 console.error('Error loading articles:', error);
                 grid.innerHTML = '<p style="text-align: center; color: #ef4444; padding: 40px;">⚠️ Error al cargar artículos. Por favor, recarga la página.</p>';
             }
+        }
+
+        // Highlight search matches in text
+        function highlightMatch(text, query) {
+            if (!query || !text) return text;
+            const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
         }
 
         // Render articles
@@ -604,6 +1140,22 @@
 
             grid.innerHTML = articles.map(article => {
                 const colorClass = categoryColors[article.category] || 'cpc';
+                const articleTags = getArticleTags(article).slice(0, 4); // Max 4 tags per article
+
+                // Highlight search matches
+                const displayTitle = currentSearchQuery
+                    ? highlightMatch(article.title, currentSearchQuery)
+                    : article.title;
+                const displayExcerpt = currentSearchQuery
+                    ? highlightMatch(article.excerpt, currentSearchQuery)
+                    : article.excerpt;
+
+                const tagsHTML = articleTags.length > 0
+                    ? `<div class="article-tags">
+                        ${articleTags.map(tag => `<span class="article-tag">${tag}</span>`).join('')}
+                       </div>`
+                    : '';
+
                 return `
                     <a href="article.html?id=${article.id}" class="article-card">
                         <div class="article-thumbnail ${colorClass}">
@@ -612,8 +1164,9 @@
                         </div>
                         <div class="article-content">
                             <span class="article-date">${article.date}</span>
-                            <h3 class="article-title">${article.title}</h3>
-                            <p class="article-excerpt">${article.excerpt}</p>
+                            <h3 class="article-title">${displayTitle}</h3>
+                            <p class="article-excerpt">${displayExcerpt}</p>
+                            ${tagsHTML}
                             <span class="article-read-more">
                                 Ver completo →
                             </span>
@@ -643,16 +1196,9 @@
                     this.style.borderColor = '#28529a';
                     this.classList.add('active');
 
-                    // Filter articles
-                    const category = this.getAttribute('data-category');
-                    currentFilter = category;
-
-                    if (category === 'all') {
-                        renderArticles(allArticles);
-                    } else {
-                        const filtered = allArticles.filter(article => article.category === category);
-                        renderArticles(filtered);
-                    }
+                    // Update filter and apply
+                    currentFilter = this.getAttribute('data-category');
+                    applyFilters();
                 });
             });
         }
