@@ -11,20 +11,32 @@ const PORT = process.env.PORT || 3000;
 
 // ==================== AUTO-DESCUBRIMIENTO DE RUTA ====================
 const findBlogRoot = () => {
-    // 1. Directorio ACTUAL (Prioritario si server.js está junto a los .html)
+    // 1. Variable de entorno (máxima prioridad)
+    if (process.env.BLOG_DIR && fs.existsSync(process.env.BLOG_DIR)) {
+        console.log(`✅ BLOG_DIR desde variable de entorno: ${process.env.BLOG_DIR}`);
+        return process.env.BLOG_DIR;
+    }
+
+    // 2. Verificar subdirectorio blog/ (donde están los artículos)
+    const blogSubdir = path.join(__dirname, 'blog');
+    const hasArticlesInSubdir = fs.existsSync(blogSubdir) &&
+        fs.readdirSync(blogSubdir).some(f => f.startsWith('r-') && f.endsWith('.html'));
+
+    if (hasArticlesInSubdir) {
+        console.log(`✅ Artículos encontrados en subdirectorio: ${blogSubdir}`);
+        return blogSubdir;
+    }
+
+    // 3. Directorio ACTUAL (si server.js está junto a los .html)
     if (fs.existsSync(path.join(__dirname, 'index.html')) ||
         fs.existsSync(path.join(__dirname, 'articles.json'))) {
         console.log(`✅ Ruta actual confirmada: ${__dirname}`);
         return __dirname;
     }
 
-    // 2. Variable de entorno
-    if (process.env.BLOG_DIR && fs.existsSync(process.env.BLOG_DIR)) {
-        return process.env.BLOG_DIR;
-    }
-
-    // 3. Un nivel arriba (si server.js está en /server/)
-    return path.join(__dirname, '../');
+    // 4. Fallback: asumir subdirectorio blog/
+    console.log(`⚠️ Usando fallback: ${blogSubdir}`);
+    return blogSubdir;
 };
 
 const BLOG_DIR = findBlogRoot();
