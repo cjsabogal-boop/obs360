@@ -1,6 +1,3 @@
-# Redirigir /admin a /blog/admin
-RewriteEngine On
-RewriteRule ^admin/?$ /blog/admin/ [R=301,L]
-
 # Redirigir todas las peticiones a /api al servidor Node.js
+RewriteEngine On
 RewriteRule ^api/(.*)$ http://localhost:3000/$1 [P,L]
