@@ -549,7 +549,7 @@
                 <button class="sidebar-btn active" onclick="showPanel('articles')">
                     📚 Mis Artículos
                 </button>
-                <button class="sidebar-btn" onclick="showPanel('new')">
+                <button class="sidebar-btn" onclick="prepareNewArticle()">
                     ✏️ Nuevo Artículo
                 </button>
                 <button class="sidebar-btn" onclick="showPanel('categories')">
@@ -997,6 +997,18 @@
                             updateStats();
                         }
                     }
+
+                    // Función helper para limpiar antes de crear nuevo
+                    function prepareNewArticle() {
+                        const form = document.getElementById('articleForm');
+                        if (form) {
+                            form.reset();
+                            document.getElementById('currentSlug').value = ''; // Limpiar slug oculto
+                            document.getElementById('articleContent').value = '';
+                        }
+                        showPanel('new');
+                    }
+
 
                     // Article Management with API
                     let allArticles = [];
