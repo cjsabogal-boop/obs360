@@ -682,42 +682,55 @@ async function saveUrlMapping(mapping) {
 }
 
 // Crear nuevo artículo
+// Crear o Actualizar artículo
 app.post('/api/articles', async (req, res) => {
     try {
-        const { title, content, date, category, icon, excerpt, tags } = req.body;
+        const { title, content, date, category, icon, excerpt, tags, currentSlug } = req.body;
 
         if (!title || !content) {
             return res.status(400).json({ error: 'Título y contenido son requeridos' });
         }
 
-        // Generar ID ofuscado
-        const obfuscatedId = generateObfuscatedId();
-        const filename = `${obfuscatedId}.html`;
-        const filePath = path.join(BLOG_DIR, filename);
+        let filename;
+        let obfuscatedId;
+        let isUpdate = false;
 
-        // Verificar que el ID no exista (muy improbable, pero por seguridad)
-        if (await fs.pathExists(filePath)) {
-            // Generar otro ID
-            return res.status(500).json({ error: 'Error generando ID único, intenta de nuevo' });
+        // Verificar si es actualización (currentSlug debe ser el ID ofuscado 'r-xxxxx')
+        if (currentSlug && currentSlug.startsWith('r-')) {
+            filename = currentSlug.endsWith('.html') ? currentSlug : `${currentSlug}.html`;
+            if (await fs.pathExists(path.join(BLOG_DIR, filename))) {
+                isUpdate = true;
+                obfuscatedId = filename.replace('.html', '');
+                console.log(`📝 Actualizando artículo existente: ${filename}`);
+            }
         }
 
-        // Aplicar template OBS360 (header, footer, meta noindex)
+        if (!isUpdate) {
+            // Generar nuevo ID ofuscado
+            obfuscatedId = generateObfuscatedId();
+            filename = `${obfuscatedId}.html`;
+        }
+
+        const filePath = path.join(BLOG_DIR, filename);
+
+        // Aplicar template OBS360
         const wrappedContent = wrapWithOBS360Template(content);
 
-        // Guardar archivo con template aplicado
+        // Guardar archivo
         await fs.writeFile(filePath, wrappedContent, 'utf-8');
 
-        // Actualizar mapeo de URLs
+        // Actualizar mapeo de URLs (slug legible -> ID ofuscado)
         const mapping = await loadUrlMapping();
-        const originalSlug = title.toLowerCase()
+        const readableSlug = title.toLowerCase()
             .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
             .replace(/[^a-z0-9]+/g, '-')
             .replace(/^-+|-+$/g, '');
 
-        mapping[`${originalSlug}.html`] = filename;
+        // Si el título cambió, actualiza el mapeo. Si es update, mantenemos el ID.
+        mapping[`${readableSlug}.html`] = filename;
         await saveUrlMapping(mapping);
 
-        // Guardar metadatos del artículo (incluyendo tags)
+        // Guardar metadatos
         const articlesMetaPath = path.join(BLOG_DIR, 'articles-meta.json');
         let articlesMeta = {};
         try {
@@ -726,34 +739,41 @@ app.post('/api/articles', async (req, res) => {
             }
         } catch (e) { }
 
+        // Preservar fecha de creación si es update
+        const createdAt = (isUpdate && articlesMeta[obfuscatedId])
+            ? articlesMeta[obfuscatedId].createdAt
+            : new Date().toISOString();
+
         articlesMeta[obfuscatedId] = {
             title,
             date,
             category,
             excerpt,
             tags: tags || [],
-            createdAt: new Date().toISOString()
+            createdAt: createdAt,
+            updatedAt: new Date().toISOString()
         };
 
         await fs.writeFile(articlesMetaPath, JSON.stringify(articlesMeta, null, 2), 'utf-8');
 
-        // Actualizar índice del blog
+        // Actualizar índices
         await updateBlogIndex();
-        // Regenerar índice de artículos
         await rebuildArticlesIndex();
 
         res.json({
             success: true,
-            message: 'Artículo creado exitosamente',
+            message: isUpdate ? 'Artículo actualizado exitosamente' : 'Artículo creado exitosamente',
             slug: obfuscatedId,
             filename,
             obfuscatedUrl: filename
         });
+
     } catch (error) {
-        console.error('Error al crear artículo:', error);
-        res.status(500).json({ error: 'Error al crear artículo' });
+        console.error('Error saving article:', error);
+        res.status(500).json({ error: 'Error interno del servidor al guardar' });
     }
 });
+
 
 // Actualizar artículo existente
 app.put('/api/articles/:slug', async (req, res) => {

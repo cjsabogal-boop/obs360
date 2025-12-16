@@ -620,6 +620,8 @@
                         ✓ Artículo guardado exitosamente
                     </div>
                     <form class="article-form" id="articleForm">
+                        <input type="hidden" id="currentSlug" value="">
+
                         <div class="form-row">
                             <div class="form-field">
                                 <label for="articleTitle">Título del Artículo *</label>
@@ -1335,7 +1337,7 @@
                             excerpt: excerptInput.value.trim(),
                             content: contentInput.value,
                             tags: tags,
-                            slug: generateSlug(titleInput.value.trim())
+                            currentSlug: document.getElementById('currentSlug').value // Enviar slug actual para update
                         };
 
                         // Disable submit button while saving
@@ -1366,6 +1368,7 @@
                                 }, 3000);
 
                                 this.reset();
+                                document.getElementById('currentSlug').value = ''; // Limpiar slug
                                 loadArticles();
                                 showPanel('articles');
                             } else {
@@ -1422,6 +1425,7 @@
                             }
                             const article = await response.json();
 
+                            document.getElementById('currentSlug').value = article.slug || slug; // Setear slug para update
                             document.getElementById('articleTitle').value = article.title || '';
                             document.getElementById('articleDate').value = article.date || 'Diciembre 2025';
                             document.getElementById('articleCategory').value = article.category || 'Otras';
