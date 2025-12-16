@@ -1,9 +1,7 @@
-# Configuración de archivos index por defecto
+# Configuración básica para archivos estáticos si Node.js falla
 DirectoryIndex index.html index.php
 
-# Redirección de /admin/ a /blog/admin/
-RewriteEngine On
-RewriteRule ^admin/?$ /blog/admin/ [R=301,L]
-
-# Redirigir todas las peticiones a /api al servidor Node.js
-RewriteRule ^api/(.*)$ http://localhost:3000/$1 [P,L]
+# NOTA: En cPanel con "Node.js App", NO necesitas reglas de proxy a localhost:3000.
+# cPanel maneja eso automáticamente.
+# Si subes un .htaccess que sobrescribe el de cPanel, la app se rompe.
+# MANTÉN ESTE ARCHIVO SIMPLE O VACÍO.
