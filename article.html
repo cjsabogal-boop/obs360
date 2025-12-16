@@ -273,6 +273,17 @@
                 // Si el contenido tiene estructura HTML completa
                 let htmlContent = article.content;
 
+                // EN MÓVIL: Eliminar scripts para deshabilitar JavaScript de presentaciones
+                if (isMobile) {
+                    // Eliminar todos los tags <script>
+                    htmlContent = htmlContent.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '<!-- Script removido para móvil -->');
+
+                    // También eliminar event handlers inline
+                    htmlContent = htmlContent.replace(/\s*onclick\s*=\s*["'][^"']*["']/gi, '');
+                    htmlContent = htmlContent.replace(/\s*onmouseover\s*=\s*["'][^"']*["']/gi, '');
+                    htmlContent = htmlContent.replace(/\s*onmouseout\s*=\s*["'][^"']*["']/gi, '');
+                }
+
                 if (htmlContent.includes('<!DOCTYPE') || htmlContent.includes('<html')) {
                     // INYECTAR CSS al inicio del <head>
                     if (htmlContent.includes('<head>')) {
