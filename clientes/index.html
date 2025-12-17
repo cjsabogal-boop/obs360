@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portal de Clientes - OBS360</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="Portal exclusivo para clientes de OBS360. Acceda a sus recursos personalizados." />
+    <meta name="robots" content="noindex, nofollow" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/webp" href="../Logo-Obs360.co_.webp" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9fafb;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 50px;
+            width: auto;
+        }
+
+        .portal-badge {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .user-company {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .logout-btn {
+            padding: 8px 16px;
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #fecaca;
+        }
+
+        /* Hero Section */
+        .portal-hero {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            padding: 30px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .portal-hero::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            animation: pulse 8s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        .portal-hero h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .portal-hero p {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-message {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 8px 20px;
+            border-radius: 30px;
+            margin-bottom: 15px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Articles Grid */
+        .articles-section {
+            padding: 40px 0;
+        }
+
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #23272a;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .articles-count {
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            padding: 0 10px;
+        }
+
+        .article-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            border: 2px solid transparent;
+        }
+
+        .article-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(5, 150, 105, 0.15);
+            border-color: #10b981;
+        }
+
+        .article-thumbnail {
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        }
+
+        .article-category {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #059669;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .article-icon {
+            font-size: 4rem;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+        }
+
+        .article-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .article-date {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .article-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .article-excerpt {
+            font-size: 14px;
+            color: #374151;
+            line-height: 1.5;
+            flex-grow: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .article-read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #059669;
+            font-weight: 600;
+            font-size: 13px;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .article-card:hover .article-read-more {
+            color: #047857;
+            gap: 12px;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .login-logo {
+            margin-bottom: 20px;
+        }
+
+        .login-logo img {
+            height: 60px;
+        }
+
+        .login-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitle {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .login-error {
+            display: none;
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .login-form {
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #374151;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #059669;
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(5, 150, 105, 0.3);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.25rem;
+            color: #374151;
+            margin-bottom: 10px;
+        }
+
+        /* Footer */
+        .portal-footer {
+            background: #1f2937;
+            padding: 25px 0;
+            text-align: center;
+        }
+
+        .portal-footer p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+
+        .portal-footer img {
+            height: 40px;
+            margin-bottom: 15px;
+            filter: brightness(0) invert(1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+
+            .portal-hero h1 {
+                font-size: 1.75rem;
+            }
+
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .login-box {
+                padding: 30px 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo">
+                        <a href="../index.html" aria-label="OBS360 Home">
+                            <img src="../Logo-Obs360.co_.webp" alt="OBS360 Logo" />
+                        </a>
+                    </div>
+                    <span class="portal-badge">PORTAL CLIENTES</span>
+                </div>
+                <div class="user-info" id="userInfo" style="display: none;">
+                    <div>
+                        <div class="user-name" id="userName"></div>
+                        <div class="user-company" id="userCompany"></div>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-box">
+            <div class="login-logo">
+                <img src="../Logo-Obs360.co_.webp" alt="OBS360" />
+            </div>
+            <h2 class="login-title">Portal de Clientes</h2>
+            <p class="login-subtitle">Ingresa tus credenciales para acceder a tus recursos</p>
+
+            <div class="login-error" id="loginError">
+                Usuario o contraseña incorrectos
+            </div>
+
+            <form class="login-form" id="loginForm">
+                <div class="form-group">
+                    <label for="username">Usuario</label>
+                    <input type="text" id="username" placeholder="Tu usuario" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" placeholder="Tu contraseña" required>
+                </div>
+                <button type="submit" class="login-btn">Acceder al Portal</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Portal Content (hidden until login) -->
+    <div id="portalContent" style="display: none;">
+        <!-- Hero Section -->
+        <section class="portal-hero">
+            <div class="container">
+                <div class="welcome-message">
+                    👋 Bienvenido, <span id="welcomeName"></span>
+                </div>
+                <h1>Tus Recursos Exclusivos</h1>
+                <p>Accede a los análisis, informes y estrategias preparados especialmente para ti.</p>
+            </div>
+        </section>
+
+        <!-- Articles Section -->
+        <section class="articles-section">
+            <div class="container">
+                <h2 class="section-title">Recursos Disponibles</h2>
+                <div class="articles-count" id="articlesCount"></div>
+
+                <div class="articles-grid" id="articlesGrid">
+                    <p style="text-align: center; color: #6b7280; padding: 40px; grid-column: 1 / -1;">
+                        Cargando recursos...
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="portal-footer">
+        <div class="container">
+            <img src="../Logo-Obs360.co_.webp" alt="OBS360" />
+            <p>© 2025 OBS360. Recursos exclusivos para clientes.</p>
+        </div>
+    </footer>
+
+    <script>
+        const API_URL = 'https://obs360.vercel.app/api';
+
+        let currentClient = null;
+
+        // Check if already logged in
+        const savedClient = sessionStorage.getItem('client_data');
+        if (savedClient) {
+            currentClient = JSON.parse(savedClient);
+            showPortal();
+        }
+
+        // Login form handler
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorEl = document.getElementById('loginError');
+
+            errorEl.style.display = 'none';
+
+            try {
+                const response = await fetch(`${API_URL}/auth/client`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentClient = data.client;
+                    sessionStorage.setItem('client_data', JSON.stringify(currentClient));
+                    showPortal();
+                } else {
+                    errorEl.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                errorEl.textContent = 'Error de conexión. Intenta de nuevo.';
+                errorEl.style.display = 'block';
+            }
+        });
+
+        function showPortal() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('portalContent').style.display = 'block';
+            document.getElementById('userInfo').style.display = 'flex';
+
+            // Set user info
+            document.getElementById('userName').textContent = currentClient.name;
+            document.getElementById('userCompany').textContent = currentClient.company || '';
+            document.getElementById('welcomeName').textContent = currentClient.name;
+
+            loadArticles();
+        }
+
+        function logout() {
+            sessionStorage.removeItem('client_data');
+            currentClient = null;
+            location.reload();
+        }
+
+        async function loadArticles() {
+            const grid = document.getElementById('articlesGrid');
+            const countEl = document.getElementById('articlesCount');
+
+            try {
+                const response = await fetch(`${API_URL}/clients/${currentClient.id}/articles`);
+                const data = await response.json();
+                const articles = data.articles || [];
+
+                countEl.textContent = `${articles.length} recurso${articles.length !== 1 ? 's' : ''} disponible${articles.length !== 1 ? 's' : ''}`;
+
+                if (articles.length === 0) {
+                    grid.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1 / -1;">
+                            <div class="empty-state-icon">📭</div>
+                            <h3>No tienes recursos asignados aún</h3>
+                            <p>Contacta a tu asesor de OBS360 para más información.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                grid.innerHTML = articles.map(article => `
+                    <a href="article.html?id=${article.id}" class="article-card">
+                        <div class="article-thumbnail">
+                            <span class="article-category">${article.category || 'Recurso'}</span>
+                            <span class="article-icon">${article.icon || '📄'}</span>
+                        </div>
+                        <div class="article-content">
+                            <span class="article-date">${article.date || ''}</span>
+                            <h3 class="article-title">${article.title}</h3>
+                            <p class="article-excerpt">${article.excerpt || ''}</p>
+                            <span class="article-read-more">
+                                Ver recurso →
+                            </span>
+                        </div>
+                    </a>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading articles:', error);
+                grid.innerHTML = `
+                    <p style="text-align: center; color: #ef4444; padding: 40px; grid-column: 1 / -1;">
+                        ⚠️ Error al cargar recursos. Por favor, recarga la página.
+                    </p>
+                `;
+            }
+        }
+    </script>
+</body>
+
+</html>

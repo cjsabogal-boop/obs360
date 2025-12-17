@@ -406,6 +406,309 @@ app.delete('/api/articles/:slug', async (req, res) => {
     }
 });
 
+// ==================== CLIENTES ====================
+
+// GET - Listar todos los clientes (para admin)
+app.get('/api/clients', async (req, res) => {
+    try {
+        const { db } = await connectToDatabase();
+        const clients = await db.collection('clients')
+            .find({})
+            .sort({ createdAt: -1 })
+            .toArray();
+
+        const formattedClients = clients.map(client => ({
+            id: client._id.toString(),
+            username: client.username,
+            name: client.name,
+            company: client.company || '',
+            email: client.email || '',
+            assignedArticles: client.assignedArticles || [],
+            createdAt: client.createdAt,
+            lastLogin: client.lastLogin
+        }));
+
+        res.json({ clients: formattedClients });
+    } catch (error) {
+        console.error('Error getting clients:', error);
+        res.status(500).json({ error: 'Error al obtener clientes' });
+    }
+});
+
+// GET - Obtener un cliente específico
+app.get('/api/clients/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { db } = await connectToDatabase();
+
+        let client;
+        if (ObjectId.isValid(id)) {
+            client = await db.collection('clients').findOne({ _id: new ObjectId(id) });
+        }
+
+        if (!client) {
+            return res.status(404).json({ error: 'Cliente no encontrado' });
+        }
+
+        res.json({
+            id: client._id.toString(),
+            username: client.username,
+            name: client.name,
+            company: client.company || '',
+            email: client.email || '',
+            assignedArticles: client.assignedArticles || [],
+            createdAt: client.createdAt
+        });
+    } catch (error) {
+        console.error('Error getting client:', error);
+        res.status(500).json({ error: 'Error al obtener cliente' });
+    }
+});
+
+// POST - Crear cliente
+app.post('/api/clients', async (req, res) => {
+    try {
+        const { username, password, name, company, email } = req.body;
+
+        if (!username || !password || !name) {
+            return res.status(400).json({ error: 'Usuario, contraseña y nombre son requeridos' });
+        }
+
+        const { db } = await connectToDatabase();
+
+        // Verificar si el username ya existe
+        const existingClient = await db.collection('clients').findOne({ username: username.toLowerCase() });
+        if (existingClient) {
+            return res.status(400).json({ error: 'El usuario ya existe' });
+        }
+
+        const newClient = {
+            username: username.toLowerCase(),
+            password: password, // En producción usar bcrypt
+            name,
+            company: company || '',
+            email: email || '',
+            assignedArticles: [],
+            createdAt: new Date(),
+            lastLogin: null
+        };
+
+        const result = await db.collection('clients').insertOne(newClient);
+
+        res.json({
+            success: true,
+            message: 'Cliente creado exitosamente',
+            client: {
+                id: result.insertedId.toString(),
+                username: newClient.username,
+                name: newClient.name,
+                company: newClient.company
+            }
+        });
+    } catch (error) {
+        console.error('Error creating client:', error);
+        res.status(500).json({ error: 'Error al crear cliente' });
+    }
+});
+
+// PUT - Actualizar cliente
+app.put('/api/clients/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { username, password, name, company, email, assignedArticles } = req.body;
+
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).json({ error: 'ID de cliente inválido' });
+        }
+
+        const { db } = await connectToDatabase();
+
+        const updateData = {
+            name,
+            company: company || '',
+            email: email || '',
+            updatedAt: new Date()
+        };
+
+        // Solo actualizar username si se proporciona
+        if (username) {
+            updateData.username = username.toLowerCase();
+        }
+
+        // Solo actualizar password si se proporciona
+        if (password) {
+            updateData.password = password;
+        }
+
+        // Actualizar artículos asignados si se proporcionan
+        if (assignedArticles !== undefined) {
+            updateData.assignedArticles = assignedArticles;
+        }
+
+        const result = await db.collection('clients').updateOne(
+            { _id: new ObjectId(id) },
+            { $set: updateData }
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ error: 'Cliente no encontrado' });
+        }
+
+        res.json({ success: true, message: 'Cliente actualizado exitosamente' });
+    } catch (error) {
+        console.error('Error updating client:', error);
+        res.status(500).json({ error: 'Error al actualizar cliente' });
+    }
+});
+
+// DELETE - Eliminar cliente
+app.delete('/api/clients/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { db } = await connectToDatabase();
+
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).json({ error: 'ID de cliente inválido' });
+        }
+
+        const result = await db.collection('clients').deleteOne({ _id: new ObjectId(id) });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ error: 'Cliente no encontrado' });
+        }
+
+        res.json({ success: true, message: 'Cliente eliminado exitosamente' });
+    } catch (error) {
+        console.error('Error deleting client:', error);
+        res.status(500).json({ error: 'Error al eliminar cliente' });
+    }
+});
+
+// POST - Login de cliente
+app.post('/api/auth/client', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+
+        if (!username || !password) {
+            return res.status(400).json({ error: 'Usuario y contraseña son requeridos' });
+        }
+
+        const { db } = await connectToDatabase();
+
+        const client = await db.collection('clients').findOne({
+            username: username.toLowerCase(),
+            password: password
+        });
+
+        if (!client) {
+            return res.status(401).json({ success: false, error: 'Credenciales inválidas' });
+        }
+
+        // Actualizar último login
+        await db.collection('clients').updateOne(
+            { _id: client._id },
+            { $set: { lastLogin: new Date() } }
+        );
+
+        res.json({
+            success: true,
+            message: 'Login exitoso',
+            client: {
+                id: client._id.toString(),
+                name: client.name,
+                company: client.company,
+                assignedArticles: client.assignedArticles || []
+            }
+        });
+    } catch (error) {
+        console.error('Error client login:', error);
+        res.status(500).json({ error: 'Error en el login' });
+    }
+});
+
+// GET - Obtener artículos asignados a un cliente
+app.get('/api/clients/:id/articles', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { db } = await connectToDatabase();
+
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).json({ error: 'ID de cliente inválido' });
+        }
+
+        const client = await db.collection('clients').findOne({ _id: new ObjectId(id) });
+
+        if (!client) {
+            return res.status(404).json({ error: 'Cliente no encontrado' });
+        }
+
+        const assignedArticleIds = client.assignedArticles || [];
+
+        if (assignedArticleIds.length === 0) {
+            return res.json({ articles: [] });
+        }
+
+        // Convertir IDs a ObjectId
+        const objectIds = assignedArticleIds
+            .filter(id => ObjectId.isValid(id))
+            .map(id => new ObjectId(id));
+
+        const articles = await db.collection('articles')
+            .find({ _id: { $in: objectIds } })
+            .sort({ createdAt: -1 })
+            .toArray();
+
+        const formattedArticles = articles.map(article => ({
+            id: article._id.toString(),
+            slug: article.slug || article._id.toString(),
+            title: article.title,
+            date: article.date,
+            category: article.category,
+            icon: article.icon || '📄',
+            excerpt: article.excerpt,
+            tags: article.tags || [],
+            filename: `${article.slug || article._id}.html`
+        }));
+
+        res.json({ articles: formattedArticles });
+    } catch (error) {
+        console.error('Error getting client articles:', error);
+        res.status(500).json({ error: 'Error al obtener artículos del cliente' });
+    }
+});
+
+// POST - Asignar artículos a un cliente
+app.post('/api/clients/:id/articles', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { articleIds } = req.body;
+
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).json({ error: 'ID de cliente inválido' });
+        }
+
+        if (!Array.isArray(articleIds)) {
+            return res.status(400).json({ error: 'articleIds debe ser un array' });
+        }
+
+        const { db } = await connectToDatabase();
+
+        const result = await db.collection('clients').updateOne(
+            { _id: new ObjectId(id) },
+            { $set: { assignedArticles: articleIds, updatedAt: new Date() } }
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ error: 'Cliente no encontrado' });
+        }
+
+        res.json({ success: true, message: 'Artículos asignados exitosamente' });
+    } catch (error) {
+        console.error('Error assigning articles:', error);
+        res.status(500).json({ error: 'Error al asignar artículos' });
+    }
+});
+
 // ==================== INICIAR SERVIDOR ====================
 
 // Para desarrollo local

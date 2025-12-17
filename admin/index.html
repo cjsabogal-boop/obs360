@@ -555,6 +555,16 @@
                 <button class="sidebar-btn" onclick="showPanel('categories')">
                     🏷️ Categorías
                 </button>
+                <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 15px 0;">
+                <button class="sidebar-btn" onclick="showPanel('clients')"
+                    style="background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(16, 185, 129, 0.1)); border-color: #10b981;">
+                    👥 Clientes
+                </button>
+                <button class="sidebar-btn" onclick="showPanel('assign')"
+                    style="background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(16, 185, 129, 0.1)); border-color: #10b981;">
+                    📤 Asignar Recursos
+                </button>
+                <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 15px 0;">
                 <button class="sidebar-btn" onclick="showPanel('settings')">
                     ⚙️ Configuración
                 </button>
@@ -727,6 +737,111 @@
                         style="margin-top: 20px; padding: 15px; background: #fef3c7; border-radius: 10px; font-size: 14px;">
                         <strong>⚠️ Nota:</strong> Si eliminas una categoría que tiene artículos, estos se moverán
                         automáticamente a la categoría "Otras".
+                    </div>
+                </div>
+
+                <!-- Clients Panel -->
+                <div class="panel-section" id="clientsPanel">
+                    <h2 class="section-title" style="color: #059669;">👥 Gestión de Clientes</h2>
+
+                    <!-- Create/Edit Client Form -->
+                    <div class="article-form" style="margin-bottom: 30px; border: 2px solid #10b981;">
+                        <h3 style="margin-bottom: 20px; color: #059669;">➕ Nuevo Cliente</h3>
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="clientName">Nombre del Cliente *</label>
+                                <input type="text" id="clientName" required placeholder="Ej: Juan Pérez">
+                            </div>
+                            <div class="form-field">
+                                <label for="clientCompany">Empresa</label>
+                                <input type="text" id="clientCompany" placeholder="Ej: Porcelana Fina S.A.">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="clientUsername">Usuario de Acceso *</label>
+                                <input type="text" id="clientUsername" required placeholder="Ej: porcelana2024"
+                                    style="text-transform: lowercase;">
+                            </div>
+                            <div class="form-field">
+                                <label for="clientPassword">Contraseña *</label>
+                                <div style="display: flex; gap: 10px;">
+                                    <input type="text" id="clientPassword" required placeholder="Contraseña"
+                                        style="flex: 1;">
+                                    <button type="button" onclick="generatePassword()"
+                                        style="padding: 10px 15px; background: #e5e7eb; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">🔄</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label for="clientEmail">Email (opcional)</label>
+                            <input type="email" id="clientEmail" placeholder="cliente@empresa.com">
+                        </div>
+                        <input type="hidden" id="editingClientId" value="">
+                        <button type="button" class="btn-primary" onclick="saveClient()"
+                            style="background: linear-gradient(135deg, #059669, #10b981);">
+                            💾 Guardar Cliente
+                        </button>
+                        <button type="button" class="btn-edit" onclick="cancelEditClient()" style="display: none;"
+                            id="cancelClientBtn">Cancelar</button>
+                    </div>
+
+                    <!-- Clients List -->
+                    <h3 style="margin-bottom: 20px; color: #374151;">📋 Clientes Registrados</h3>
+                    <div class="articles-list" id="clientsList">
+                        <p style="text-align: center; color: #6b7280; padding: 40px;">Cargando clientes...</p>
+                    </div>
+
+                    <div
+                        style="margin-top: 20px; padding: 15px; background: #d1fae5; border-radius: 10px; font-size: 14px; color: #065f46;">
+                        <strong>💡 Tip:</strong> Los clientes acceden al portal desde: <a href="../clientes/"
+                            target="_blank" style="color: #059669; font-weight: 600;">obs360.co/clientes/</a>
+                    </div>
+                </div>
+
+                <!-- Assign Resources Panel -->
+                <div class="panel-section" id="assignPanel">
+                    <h2 class="section-title" style="color: #059669;">📤 Asignar Recursos a Clientes</h2>
+
+                    <div class="article-form" style="border: 2px solid #10b981;">
+                        <!-- Client Selector -->
+                        <div class="form-field">
+                            <label for="assignClientSelect">Seleccionar Cliente</label>
+                            <select id="assignClientSelect" onchange="loadClientArticles()"
+                                style="width: 100%; padding: 14px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 15px;">
+                                <option value="">-- Selecciona un cliente --</option>
+                            </select>
+                        </div>
+
+                        <!-- Articles Checklist -->
+                        <div id="assignArticlesList" style="display: none;">
+                            <h3 style="margin: 25px 0 15px; color: #374151;">📚 Artículos Disponibles</h3>
+                            <p style="font-size: 13px; color: #6b7280; margin-bottom: 15px;">Marca los artículos que
+                                este cliente podrá ver en su portal.</p>
+
+                            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                                <button type="button" onclick="selectAllArticles()"
+                                    style="padding: 8px 16px; background: #e5e7eb; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600;">✅
+                                    Seleccionar todos</button>
+                                <button type="button" onclick="deselectAllArticles()"
+                                    style="padding: 8px 16px; background: #fee2e2; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; color: #dc2626;">❌
+                                    Quitar todos</button>
+                            </div>
+
+                            <div id="articlesCheckboxList"
+                                style="max-height: 400px; overflow-y: auto; border: 1px solid #e5e7eb; border-radius: 10px; padding: 15px;">
+                                <!-- Checkboxes will be loaded here -->
+                            </div>
+
+                            <button type="button" class="btn-primary" onclick="saveClientArticles()"
+                                style="margin-top: 20px; background: linear-gradient(135deg, #059669, #10b981);">
+                                💾 Guardar Asignaciones
+                            </button>
+
+                            <div id="assignStatus"
+                                style="margin-top: 15px; padding: 12px; border-radius: 8px; font-size: 14px; display: none;">
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1732,6 +1847,297 @@
 
                     // Initialize categories on load
                     loadCategoriesFromAPI();
+
+                    // ==================== CLIENTS MANAGEMENT ====================
+                    let allClients = [];
+                    let selectedClientId = null;
+
+                    // Load all clients
+                    async function loadClients() {
+                        const list = document.getElementById('clientsList');
+                        try {
+                            const response = await fetch(`${API_URL}/clients`);
+                            const data = await response.json();
+                            allClients = data.clients || [];
+
+                            if (allClients.length === 0) {
+                                list.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 40px;">No hay clientes registrados aún.</p>';
+                                return;
+                            }
+
+                            list.innerHTML = allClients.map(client => `
+                                <div class="article-card" style="border-left: 4px solid #10b981;">
+                                    <div class="article-card-header">
+                                        <div>
+                                            <h3 class="article-card-title" style="color: #059669;">${client.name}</h3>
+                                            <p class="article-card-meta">
+                                                🏢 ${client.company || 'Sin empresa'} | 
+                                                👤 <code style="background: #f3f4f6; padding: 2px 6px; border-radius: 4px;">${client.username}</code>
+                                            </p>
+                                            <p style="font-size: 13px; color: #6b7280;">
+                                                📧 ${client.email || 'Sin email'} | 
+                                                📚 ${client.assignedArticles?.length || 0} artículos asignados
+                                                ${client.lastLogin ? ` | 🕐 Último acceso: ${new Date(client.lastLogin).toLocaleDateString('es-ES')}` : ''}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="article-actions">
+                                        <button class="btn-edit" onclick="editClient('${client.id}')">✏️ Editar</button>
+                                        <button class="btn-primary" onclick="showPanel('assign'); document.getElementById('assignClientSelect').value='${client.id}'; loadClientArticles();" style="background: linear-gradient(135deg, #059669, #10b981); padding: 8px 16px; font-size: 13px;">
+                                            📤 Asignar Artículos
+                                        </button>
+                                        <button class="btn-delete" onclick="deleteClient('${client.id}')">🗑️ Eliminar</button>
+                                    </div>
+                                </div>
+                            `).join('');
+
+                            // Also update the select dropdown for assign panel
+                            updateClientSelect();
+                        } catch (error) {
+                            console.error('Error loading clients:', error);
+                            list.innerHTML = '<p style="text-align: center; color: #ef4444; padding: 40px;">Error al cargar clientes</p>';
+                        }
+                    }
+
+                    // Update client select dropdown
+                    function updateClientSelect() {
+                        const select = document.getElementById('assignClientSelect');
+                        select.innerHTML = '<option value="">-- Selecciona un cliente --</option>' +
+                            allClients.map(client => `<option value="${client.id}">${client.name} (${client.company || client.username})</option>`).join('');
+                    }
+
+                    // Generate random password
+                    function generatePassword() {
+                        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+                        let password = '';
+                        for (let i = 0; i < 8; i++) {
+                            password += chars.charAt(Math.floor(Math.random() * chars.length));
+                        }
+                        document.getElementById('clientPassword').value = password;
+                    }
+
+                    // Save client (create or update)
+                    async function saveClient() {
+                        const name = document.getElementById('clientName').value.trim();
+                        const company = document.getElementById('clientCompany').value.trim();
+                        const username = document.getElementById('clientUsername').value.trim().toLowerCase();
+                        const password = document.getElementById('clientPassword').value;
+                        const email = document.getElementById('clientEmail').value.trim();
+                        const editingId = document.getElementById('editingClientId').value;
+
+                        if (!name || !username || !password) {
+                            showAlert('Error', 'Por favor completa todos los campos obligatorios.');
+                            return;
+                        }
+
+                        try {
+                            let response;
+                            if (editingId) {
+                                // Update
+                                response = await fetch(`${API_URL}/clients/${editingId}`, {
+                                    method: 'PUT',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ name, company, username, password, email })
+                                });
+                            } else {
+                                // Create
+                                response = await fetch(`${API_URL}/clients`, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ name, company, username, password, email })
+                                });
+                            }
+
+                            const data = await response.json();
+
+                            if (response.ok) {
+                                showAlert('✅ Éxito', editingId ? 'Cliente actualizado correctamente.' : 'Cliente creado correctamente.');
+                                clearClientForm();
+                                loadClients();
+                            } else {
+                                showAlert('Error', data.error || 'Error al guardar cliente.');
+                            }
+                        } catch (error) {
+                            console.error('Error saving client:', error);
+                            showAlert('Error', 'Error de conexión al guardar cliente.');
+                        }
+                    }
+
+                    // Edit client
+                    function editClient(id) {
+                        const client = allClients.find(c => c.id === id);
+                        if (!client) return;
+
+                        document.getElementById('clientName').value = client.name;
+                        document.getElementById('clientCompany').value = client.company || '';
+                        document.getElementById('clientUsername').value = client.username;
+                        document.getElementById('clientPassword').value = '';
+                        document.getElementById('clientPassword').placeholder = 'Dejar vacío para mantener';
+                        document.getElementById('clientEmail').value = client.email || '';
+                        document.getElementById('editingClientId').value = id;
+                        document.getElementById('cancelClientBtn').style.display = 'inline-block';
+
+                        // Scroll to form
+                        document.querySelector('#clientsPanel .article-form').scrollIntoView({ behavior: 'smooth' });
+                    }
+
+                    // Cancel edit client
+                    function cancelEditClient() {
+                        clearClientForm();
+                    }
+
+                    // Clear client form
+                    function clearClientForm() {
+                        document.getElementById('clientName').value = '';
+                        document.getElementById('clientCompany').value = '';
+                        document.getElementById('clientUsername').value = '';
+                        document.getElementById('clientPassword').value = '';
+                        document.getElementById('clientPassword').placeholder = 'Contraseña';
+                        document.getElementById('clientEmail').value = '';
+                        document.getElementById('editingClientId').value = '';
+                        document.getElementById('cancelClientBtn').style.display = 'none';
+                    }
+
+                    // Delete client
+                    async function deleteClient(id) {
+                        const client = allClients.find(c => c.id === id);
+                        if (!client) return;
+
+                        showConfirm(
+                            '¿Eliminar cliente?',
+                            `¿Estás seguro de eliminar a "${client.name}"? Esta acción no se puede deshacer.`,
+                            async () => {
+                                try {
+                                    const response = await fetch(`${API_URL}/clients/${id}`, { method: 'DELETE' });
+                                    const data = await response.json();
+
+                                    if (response.ok) {
+                                        loadClients();
+                                    } else {
+                                        showAlert('Error', data.error || 'Error al eliminar cliente.');
+                                    }
+                                } catch (error) {
+                                    console.error('Error deleting client:', error);
+                                    showAlert('Error', 'Error de conexión.');
+                                }
+                            }
+                        );
+                    }
+
+                    // Load articles for assignment
+                    async function loadClientArticles() {
+                        const clientId = document.getElementById('assignClientSelect').value;
+                        const container = document.getElementById('assignArticlesList');
+                        const checkboxList = document.getElementById('articlesCheckboxList');
+
+                        if (!clientId) {
+                            container.style.display = 'none';
+                            return;
+                        }
+
+                        selectedClientId = clientId;
+                        container.style.display = 'block';
+
+                        // Get client's currently assigned articles
+                        const client = allClients.find(c => c.id === clientId);
+                        const assignedIds = client?.assignedArticles || [];
+
+                        // Render checkboxes for all articles
+                        if (allArticles.length === 0) {
+                            checkboxList.innerHTML = '<p style="text-align: center; color: #6b7280;">No hay artículos disponibles.</p>';
+                            return;
+                        }
+
+                        checkboxList.innerHTML = allArticles.map(article => `
+                            <label style="display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid #f3f4f6; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='transparent'">
+                                <input type="checkbox" name="articleCheck" value="${article.id}" ${assignedIds.includes(article.id) ? 'checked' : ''} style="width: 20px; height: 20px; accent-color: #059669;">
+                                <div style="flex: 1;">
+                                    <strong style="color: #1f2937;">${article.title}</strong>
+                                    <p style="font-size: 12px; color: #6b7280; margin: 4px 0 0;">
+                                        📁 ${article.category || 'Sin categoría'} | 📅 ${article.date || 'Sin fecha'}
+                                    </p>
+                                </div>
+                            </label>
+                        `).join('');
+                    }
+
+                    // Select all articles
+                    function selectAllArticles() {
+                        document.querySelectorAll('input[name="articleCheck"]').forEach(cb => cb.checked = true);
+                    }
+
+                    // Deselect all articles
+                    function deselectAllArticles() {
+                        document.querySelectorAll('input[name="articleCheck"]').forEach(cb => cb.checked = false);
+                    }
+
+                    // Save article assignments
+                    async function saveClientArticles() {
+                        if (!selectedClientId) return;
+
+                        const checkboxes = document.querySelectorAll('input[name="articleCheck"]:checked');
+                        const articleIds = Array.from(checkboxes).map(cb => cb.value);
+
+                        const status = document.getElementById('assignStatus');
+                        status.style.display = 'none';
+
+                        try {
+                            const response = await fetch(`${API_URL}/clients/${selectedClientId}/articles`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ articleIds })
+                            });
+
+                            const data = await response.json();
+
+                            if (response.ok) {
+                                status.style.display = 'block';
+                                status.style.background = '#d1fae5';
+                                status.style.color = '#065f46';
+                                status.innerHTML = `✅ <strong>${articleIds.length} artículo(s)</strong> asignados correctamente.`;
+
+                                // Reload clients to update the count
+                                loadClients();
+                            } else {
+                                status.style.display = 'block';
+                                status.style.background = '#fee2e2';
+                                status.style.color = '#dc2626';
+                                status.innerHTML = `❌ Error: ${data.error || 'Error desconocido'}`;
+                            }
+                        } catch (error) {
+                            console.error('Error saving assignments:', error);
+                            status.style.display = 'block';
+                            status.style.background = '#fee2e2';
+                            status.style.color = '#dc2626';
+                            status.innerHTML = '❌ Error de conexión.';
+                        }
+                    }
+
+                    // Update showPanel to load clients when switching to clients panel
+                    const originalShowPanel = showPanel;
+                    showPanel = function (panelName) {
+                        // Hide all panels
+                        document.querySelectorAll('.panel-section').forEach(p => p.classList.remove('active'));
+
+                        // Show selected panel
+                        const panel = document.getElementById(panelName + 'Panel');
+                        if (panel) panel.classList.add('active');
+
+                        // Update sidebar buttons
+                        document.querySelectorAll('.sidebar-btn').forEach(btn => btn.classList.remove('active'));
+
+                        // Load data for specific panels
+                        if (panelName === 'clients') {
+                            loadClients();
+                        } else if (panelName === 'assign') {
+                            loadClients(); // To populate the select
+                            loadArticles(); // To have articles available
+                        } else if (panelName === 'articles') {
+                            loadArticles();
+                        } else if (panelName === 'categories') {
+                            loadCategories();
+                        }
+                    };
                 </script>
 </body>
 
