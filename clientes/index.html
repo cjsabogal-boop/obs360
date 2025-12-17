@@ -239,6 +239,22 @@
             justify-content: center;
             position: relative;
             overflow: hidden;
+        }
+
+        /* Colores por categoría - igual que el blog */
+        .article-thumbnail.cpc {
+            background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+        }
+
+        .article-thumbnail.cristal {
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+        }
+
+        .article-thumbnail.porcelana {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        }
+
+        .article-thumbnail.default {
             background: linear-gradient(135deg, #059669 0%, #047857 100%);
         }
 
@@ -431,6 +447,67 @@
             margin-bottom: 10px;
         }
 
+        /* Search Bar */
+        .search-container {
+            position: relative;
+            max-width: 500px;
+            margin: 0 auto 30px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 20px 14px 50px;
+            border: 2px solid #e5e7eb;
+            border-radius: 50px;
+            font-size: 15px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 16px;
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            display: none;
+            font-size: 12px;
+        }
+
+        .search-results {
+            text-align: center;
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.3));
+            padding: 0 2px;
+            border-radius: 3px;
+        }
+
         /* Footer */
         .portal-footer {
             background: #1f2937;
@@ -543,7 +620,17 @@
         <section class="articles-section">
             <div class="container">
                 <h2 class="section-title">Recursos Disponibles</h2>
+
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" id="searchInput"
+                        placeholder="Buscar por título, categoría o contenido..." oninput="handleSearch(this.value)">
+                    <button class="search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+                </div>
+
                 <div class="articles-count" id="articlesCount"></div>
+                <div class="search-results" id="searchResults" style="display: none;"></div>
 
                 <div class="articles-grid" id="articlesGrid">
                     <p style="text-align: center; color: #6b7280; padding: 40px; grid-column: 1 / -1;">
@@ -626,6 +713,19 @@
             location.reload();
         }
 
+        let allArticles = [];
+        let currentSearchQuery = '';
+
+        // Colores por categoría
+        const categoryColors = {
+            'Análisis': 'cpc',
+            'Informe Mensual': 'cristal',
+            'Estrategia': 'porcelana',
+            'Capacitación': 'cpc',
+            'Herramientas': 'cristal',
+            'Otras': 'porcelana'
+        };
+
         async function loadArticles() {
             const grid = document.getElementById('articlesGrid');
             const countEl = document.getElementById('articlesCount');
@@ -633,37 +733,11 @@
             try {
                 const response = await fetch(`${API_URL}/clients/${currentClient.id}/articles`);
                 const data = await response.json();
-                const articles = data.articles || [];
+                allArticles = data.articles || [];
 
-                countEl.textContent = `${articles.length} recurso${articles.length !== 1 ? 's' : ''} disponible${articles.length !== 1 ? 's' : ''}`;
+                countEl.textContent = `${allArticles.length} recurso${allArticles.length !== 1 ? 's' : ''} disponible${allArticles.length !== 1 ? 's' : ''}`;
 
-                if (articles.length === 0) {
-                    grid.innerHTML = `
-                        <div class="empty-state" style="grid-column: 1 / -1;">
-                            <div class="empty-state-icon">📭</div>
-                            <h3>No tienes recursos asignados aún</h3>
-                            <p>Contacta a tu asesor de OBS360 para más información.</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                grid.innerHTML = articles.map(article => `
-                    <a href="article.html?id=${article.id}" class="article-card">
-                        <div class="article-thumbnail">
-                            <span class="article-category">${article.category || 'Recurso'}</span>
-                            <span class="article-icon">${article.icon || '📄'}</span>
-                        </div>
-                        <div class="article-content">
-                            <span class="article-date">${article.date || ''}</span>
-                            <h3 class="article-title">${article.title}</h3>
-                            <p class="article-excerpt">${article.excerpt || ''}</p>
-                            <span class="article-read-more">
-                                Ver recurso →
-                            </span>
-                        </div>
-                    </a>
-                `).join('');
+                renderArticles(allArticles);
             } catch (error) {
                 console.error('Error loading articles:', error);
                 grid.innerHTML = `
@@ -672,6 +746,94 @@
                     </p>
                 `;
             }
+        }
+
+        function renderArticles(articles) {
+            const grid = document.getElementById('articlesGrid');
+
+            if (articles.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <div class="empty-state-icon">${currentSearchQuery ? '🔍' : '📭'}</div>
+                        <h3>${currentSearchQuery ? 'No se encontraron resultados' : 'No tienes recursos asignados aún'}</h3>
+                        <p>${currentSearchQuery ? 'Intenta con otros términos de búsqueda.' : 'Contacta a tu asesor de OBS360 para más información.'}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = articles.map(article => {
+                const colorClass = categoryColors[article.category] || 'default';
+
+                // Highlight search matches
+                const displayTitle = currentSearchQuery
+                    ? highlightMatch(article.title, currentSearchQuery)
+                    : article.title;
+                const displayExcerpt = currentSearchQuery
+                    ? highlightMatch(article.excerpt || '', currentSearchQuery)
+                    : (article.excerpt || '');
+
+                return `
+                    <a href="article.html?id=${article.id}" class="article-card">
+                        <div class="article-thumbnail ${colorClass}">
+                            <span class="article-category">${article.category || 'Recurso'}</span>
+                            <span class="article-icon">${article.icon || '📄'}</span>
+                        </div>
+                        <div class="article-content">
+                            <span class="article-date">${article.date || ''}</span>
+                            <h3 class="article-title">${displayTitle}</h3>
+                            <p class="article-excerpt">${displayExcerpt}</p>
+                            <span class="article-read-more">
+                                Ver recurso →
+                            </span>
+                        </div>
+                    </a>
+                `;
+            }).join('');
+        }
+
+        // Highlight matching text
+        function highlightMatch(text, query) {
+            if (!query || !text) return text;
+            const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            return text.replace(regex, '<span class="highlight">$1</span>');
+        }
+
+        // Search functionality
+        let searchTimeout;
+        function handleSearch(query) {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                currentSearchQuery = query.trim().toLowerCase();
+                const clearBtn = document.getElementById('searchClear');
+                const resultsEl = document.getElementById('searchResults');
+
+                clearBtn.style.display = query ? 'block' : 'none';
+
+                if (!currentSearchQuery) {
+                    resultsEl.style.display = 'none';
+                    renderArticles(allArticles);
+                    return;
+                }
+
+                const filtered = allArticles.filter(article => {
+                    const searchText = `${article.title} ${article.category} ${article.excerpt} ${article.tags || ''}`.toLowerCase();
+                    return searchText.includes(currentSearchQuery);
+                });
+
+                resultsEl.style.display = 'block';
+                resultsEl.textContent = `${filtered.length} resultado${filtered.length !== 1 ? 's' : ''} para "${query}"`;
+
+                renderArticles(filtered);
+            }, 300);
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchClear').style.display = 'none';
+            document.getElementById('searchResults').style.display = 'none';
+            currentSearchQuery = '';
+            renderArticles(allArticles);
         }
     </script>
 </body>
