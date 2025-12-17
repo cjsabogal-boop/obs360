@@ -911,6 +911,9 @@
                     // API Configuration - VERCEL
                     const API_URL = 'https://obs360.vercel.app/api';
 
+                    // Variables globales para clientes
+                    let allClients = [];
+                    let selectedClientId = null;
 
                     // CREDENCIALES FIJAS - SISTEMA SIMPLE
                     const ADMIN_USER = 'obs360admin';
@@ -1858,8 +1861,6 @@
                     loadCategoriesFromAPI();
 
                     // ==================== CLIENTS MANAGEMENT ====================
-                    let allClients = [];
-                    let selectedClientId = null;
 
                     // Load all clients
                     async function loadClients() {
