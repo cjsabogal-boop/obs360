@@ -203,6 +203,23 @@
             border-color: #28529a;
         }
 
+        /* Botones verdes de Clientes */
+        .sidebar-btn[data-panel="clients"],
+        .sidebar-btn[data-panel="assign"] {
+            background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(16, 185, 129, 0.1));
+            border-color: #10b981;
+            color: #059669;
+        }
+
+        .sidebar-btn[data-panel="clients"]:hover,
+        .sidebar-btn[data-panel="clients"].active,
+        .sidebar-btn[data-panel="assign"]:hover,
+        .sidebar-btn[data-panel="assign"].active {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: white;
+            border-color: #059669;
+        }
+
         .main-panel {
             flex: 1;
             padding: 40px;
@@ -556,12 +573,10 @@
                     🏷️ Categorías
                 </button>
                 <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 15px 0;">
-                <button class="sidebar-btn" data-panel="clients" onclick="showPanel('clients')"
-                    style="background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(16, 185, 129, 0.1)); border-color: #10b981;">
+                <button class="sidebar-btn" data-panel="clients" onclick="showPanel('clients')">
                     👥 Clientes
                 </button>
-                <button class="sidebar-btn" data-panel="assign" onclick="showPanel('assign')"
-                    style="background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(16, 185, 129, 0.1)); border-color: #10b981;">
+                <button class="sidebar-btn" data-panel="assign" onclick="showPanel('assign')">
                     📤 Asignar Recursos
                 </button>
                 <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 15px 0;">
