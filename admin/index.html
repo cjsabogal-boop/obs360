@@ -546,26 +546,26 @@
 
         <div class="admin-content">
             <div class="sidebar">
-                <button class="sidebar-btn active" onclick="showPanel('articles')">
+                <button class="sidebar-btn active" data-panel="articles" onclick="showPanel('articles')">
                     📚 Mis Artículos
                 </button>
-                <button class="sidebar-btn" onclick="prepareNewArticle()">
+                <button class="sidebar-btn" data-panel="new" onclick="prepareNewArticle()">
                     ✏️ Nuevo Artículo
                 </button>
-                <button class="sidebar-btn" onclick="showPanel('categories')">
+                <button class="sidebar-btn" data-panel="categories" onclick="showPanel('categories')">
                     🏷️ Categorías
                 </button>
                 <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 15px 0;">
-                <button class="sidebar-btn" onclick="showPanel('clients')"
+                <button class="sidebar-btn" data-panel="clients" onclick="showPanel('clients')"
                     style="background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(16, 185, 129, 0.1)); border-color: #10b981;">
                     👥 Clientes
                 </button>
-                <button class="sidebar-btn" onclick="showPanel('assign')"
+                <button class="sidebar-btn" data-panel="assign" onclick="showPanel('assign')"
                     style="background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(16, 185, 129, 0.1)); border-color: #10b981;">
                     📤 Asignar Recursos
                 </button>
                 <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 15px 0;">
-                <button class="sidebar-btn" onclick="showPanel('settings')">
+                <button class="sidebar-btn" data-panel="settings" onclick="showPanel('settings')">
                     ⚙️ Configuración
                 </button>
             </div>
@@ -1089,37 +1089,39 @@
 
                     // Panel Navigation
                     function showPanel(panelName) {
+                        // Ocultar todos los paneles
                         document.querySelectorAll('.panel-section').forEach(panel => {
                             panel.classList.remove('active');
                         });
 
+                        // Desactivar todos los botones del sidebar
                         document.querySelectorAll('.sidebar-btn').forEach(btn => {
                             btn.classList.remove('active');
                         });
 
+                        // Mostrar panel seleccionado
+                        const panel = document.getElementById(panelName + 'Panel');
+                        if (panel) {
+                            panel.classList.add('active');
+                        }
+
+                        // Activar botón correspondiente usando data-panel
+                        const activeBtn = document.querySelector(`.sidebar-btn[data-panel="${panelName}"]`);
+                        if (activeBtn) {
+                            activeBtn.classList.add('active');
+                        }
+
+                        // Cargar datos según el panel
                         if (panelName === 'articles') {
-                            document.getElementById('articlesPanel').classList.add('active');
-                            document.querySelectorAll('.sidebar-btn')[0].classList.add('active');
                             loadArticles();
-                        } else if (panelName === 'new') {
-                            document.getElementById('newPanel').classList.add('active');
-                            document.querySelectorAll('.sidebar-btn')[1].classList.add('active');
                         } else if (panelName === 'categories') {
-                            document.getElementById('categoriesPanel').classList.add('active');
-                            document.querySelectorAll('.sidebar-btn')[2].classList.add('active');
                             loadCategories();
                         } else if (panelName === 'clients') {
-                            document.getElementById('clientsPanel').classList.add('active');
-                            document.querySelectorAll('.sidebar-btn')[3].classList.add('active');
                             loadClients();
                         } else if (panelName === 'assign') {
-                            document.getElementById('assignPanel').classList.add('active');
-                            document.querySelectorAll('.sidebar-btn')[4].classList.add('active');
                             loadClients();
                             loadArticles();
                         } else if (panelName === 'settings') {
-                            document.getElementById('settingsPanel').classList.add('active');
-                            document.querySelectorAll('.sidebar-btn')[5].classList.add('active');
                             updateStats();
                         }
                     }
