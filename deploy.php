@@ -23,7 +23,7 @@ run("git pull origin main");
 
 // 2. Verificar archivos del frontend
 echo "\n<h3>🔍 2. Verificando Archivos Frontend...</h3>";
-$frontend_files = ['index.html', 'article.html', 'admin/index.html'];
+$frontend_files = ['index.html', 'article.html', 'admin/index.html', 'clientes/index.html', 'clientes/article.html'];
 $files_ok = true;
 
 foreach ($frontend_files as $file) {
